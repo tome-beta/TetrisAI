@@ -12,6 +12,10 @@ namespace tetris
 {
     public partial class GameField : Form
     {
+        const int FIELD_HEIGHT = 20;
+        const int FIELD_WIDTH = 10;
+
+
         public GameField()
         {
             InitializeComponent();
@@ -20,9 +24,43 @@ namespace tetris
             DispTest();
         }
 
-        private void Init()
+        //=============================================================
+        //  private 
+
+
+       private void Init()
+       {
+            //フィールド情報を初期化
+            BlockFieldInit();
+       }
+
+        private void BlockFieldInit()
         {
+            //フィールドを作る
+            //フィールドは１０＊２０の両サイドに壁を表す９９を入れる。
+            //ブロックのスタート位置のために上に３行加える。
+            //床にも１行追加
+            //全体としては１２＊２4
+            this.BlockField = new int[GameField.FIELD_WIDTH + 2, GameField.FIELD_HEIGHT + 4];
+            //壁と床を設置
+            for (int w = 0; w < GameField.FIELD_WIDTH + 2; w++)
+            {
+                for (int h = 0; h < GameField.FIELD_HEIGHT + 4; h++)
+                {
+                    if (w == 0 || w == GameField.FIELD_WIDTH + 1 ||
+                        h == GameField.FIELD_HEIGHT + 3)
+                    {
+                        this.BlockField[w, h] = 99;
+                    }
+                    else
+                    {
+                        this.BlockField[w, h] = 0;
+                    }
+                }
+            }
         }
+   
+
         private void DispTest()
         {
             //描画先とするImageオブジェクトを作成する
@@ -42,5 +80,7 @@ namespace tetris
         }
 
         BlockControle blockControle = new BlockControle();
+
+        public int[,] BlockField { get; set;}
     }
 }
