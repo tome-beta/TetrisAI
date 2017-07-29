@@ -22,66 +22,287 @@ namespace tetris
             MINO_O,
         };
 
-        private int[,] BlockShape = new int[,]
+        public enum BlockRot
         {
-            //ATTACK
-            {
-                1,0,0,0,
-                0,0,0,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //I
-            {
-                0,1,0,0,
-                0,1,0,0,
-                0,1,0,0,
-                0,1,0,0,
-            },
-            //T
-            {
-                0,1,0,0,
-                1,1,1,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //J
-            {
-                1,0,0,0,
-                1,1,1,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //L
-            {
-                0,0,1,0,
-                1,1,1,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //Z
-            {
-                1,1,0,0,
-                0,1,1,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //S
-            {
-                0,1,1,0,
-                1,1,0,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
-            //O
-            {
-                0,1,1,0,
-                0,1,1,0,
-                0,0,0,0,
-                0,0,0,0,
-            },
+            ROT_0,
+            ROT_90,
+            ROT_180,
+            ROT_270,
         };
 
+        //ここにずらずらとミノの情報を取得する関数を書いていくのか
+        //必要なの　ブロックの形＊４
+        //ミノID
+        //今のミノの向き
+        //回転法則
+
+        private void SetMinoInfo_I()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 0,0,0,0, },
+                    { 1,1,1,1, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,0,1,0, },
+                    { 0,0,1,0, },
+                    { 0,0,1,0, },
+                    { 0,0,1,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                    { 1,1,1,1, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 0,1,0,0, },
+                    { 0,1,0,0, },
+                    { 0,1,0,0, },
+                    { 0,1,0,0, },
+                },
+            };
+
+            this.type = BlockType.MINO_I;
+            this.block_rot = BlockRot.ROT_0;
+
+        }
+
+        private void SetMinoInfo_T()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 0,1,0,0, },
+                    { 1,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,1,0,0, },
+                    { 0,1,1,0, },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 1,1,1,0, },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 0,1,0,0, },
+                    { 1,1,0,0, },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_T;
+            this.block_rot = BlockRot.ROT_0;
+        }
+
+        private void SetMinoInfo_J()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,0,0,0, },
+                    { 1,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,1,1,0, },
+                    { 0,1,0,0, },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 1,1,1,0, },
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 0,1,0,0, },
+                    { 0,1,0,0  },
+                    { 1,1,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_J;
+            this.block_rot = BlockRot.ROT_0;
+        }
+
+        private void SetMinoInfo_L()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 0,0,1,0, },
+                    { 1,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,1,0,0, },
+                    { 0,1,0,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 1,1,1,0, },
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,1,0,0, },
+                    { 0,1,0,0  },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_L;
+            this.block_rot = BlockRot.ROT_0;
+        }
+
+        private void SetMinoInfo_Z()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,1,0,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,0,1,0, },
+                    { 0,1,1,0, },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 1,1,0,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 0,1,0,0, },
+                    { 1,1,0,0  },
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_Z;
+            this.block_rot = BlockRot.ROT_0;
+        }
+
+        private void SetMinoInfo_S()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 0,1,1,0, },
+                    { 1,1,0,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,1,0,0, },
+                    { 0,1,1,0, },
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 0,1,1,0, },
+                    { 1,1,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,0,0,0, },
+                    { 1,1,0,0  },
+                    { 0,1,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_S;
+            this.block_rot = BlockRot.ROT_0;
+        }
+
+        private void SetMinoInfo_O()
+        {
+            //ミノの位置
+            this.shape2 = new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 0,1,1,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,1,1,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,1,1,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 0,1,1,0, },
+                    { 0,1,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+            this.type = BlockType.MINO_O;
+            this.block_rot = BlockRot.ROT_0;
+        }
 
         public BlockInfo()
         {
@@ -90,13 +311,46 @@ namespace tetris
 
         public BlockInfo(BlockType type)
         {
-            this.type = type;
+            //            this.shape2 = new int[4, 4, 4]; //回転パターン、x座標、ｙ座標
 
-            shape = new int[16];
-
-            for(int i = 0; i < 16; i++)
+            switch (type)
             {
-                shape[i] = BlockShape[(int)type, i];
+                case BlockType.MINO_I:
+                    {
+                      SetMinoInfo_I();
+                    }
+                    break;
+                case BlockType.MINO_T:
+                    {
+                        SetMinoInfo_T();
+                    }
+                    break;
+                case BlockType.MINO_J:
+                    {
+                        SetMinoInfo_J();
+                    }
+                    break;
+                case BlockType.MINO_L:
+                    {
+                        SetMinoInfo_L();
+                    }
+                    break;
+                case BlockType.MINO_Z:
+                    {
+                        SetMinoInfo_Z();
+                    }
+                    break;
+                case BlockType.MINO_S:
+                    {
+                        SetMinoInfo_S();
+                    }
+                    break;
+                case BlockType.MINO_O:
+                    {
+                        SetMinoInfo_O();
+                    }
+                    break;
+
             }
 
         }
@@ -109,24 +363,27 @@ namespace tetris
             Rectangle srcRect = new Rectangle(0, y_pos, BLOCK_WIDTH, BLOCK_HEIGHT);
             Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
 
-            for(int i = 0; i < 16;i++)
+            for(int y = 0; y < 4;y++)
             {
-                if( shape[i] != 0)
+                for (int x = 0; x < 4; x++)
                 {
-                    int x = i % 4;
-                    int y = i / 4;
-                    desRect.X = x * BLOCK_WIDTH;
-                    desRect.Y = y * BLOCK_HEIGHT;
-                    g.DrawImage(source_image, desRect, srcRect, GraphicsUnit.Pixel);
+                    if (shape2[(int)this.block_rot,y,x] != 0)
+                    {
+                        desRect.X = x * BLOCK_WIDTH;
+                        desRect.Y = y * BLOCK_HEIGHT;
+                        g.DrawImage(source_image, desRect, srcRect, GraphicsUnit.Pixel);
+                    }
                 }
             }
 
         }
 
-        public BlockType type;
-        private int[] shape;
+        public BlockType type;  //ミノの種類
+        private int[,,] shape2;    //ブロックの形＊４
+        private BlockRot block_rot;
+        //作成予定 回転法則
 
-        const int BLOCK_WIDTH = 30;
-        const int BLOCK_HEIGHT = 30;
+        const int BLOCK_WIDTH = 30;     //ブロック画像の幅
+        const int BLOCK_HEIGHT = 30;    //ブロック画像の高さ
     }
 }
