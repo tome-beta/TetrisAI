@@ -82,5 +82,38 @@ namespace tetris
         BlockControle blockControle = new BlockControle();
 
         public int[,] BlockField { get; set;}
+
+        //キー入力
+        private void GameField_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyData == Keys.Up)
+            {
+                Console.WriteLine(@"UP");
+            }
+            if (e.KeyData == Keys.Down)
+            {
+                Console.WriteLine(@"DOWN");
+            }
+            if (e.KeyData == Keys.Right)
+            {
+                Console.WriteLine(@"RIGHT");
+            }
+            if (e.KeyData == Keys.Left)
+            {
+                Console.WriteLine(@"LEFT");
+            }
+        }
+
+        private void GameField_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.X)
+            {
+                Console.WriteLine(@"ROTATE_R");
+            }
+            if (e.KeyData == Keys.Z)
+            {
+                Console.WriteLine(@"ROTATE_L");
+            }
+        }
     }
 }

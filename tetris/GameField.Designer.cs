@@ -188,6 +188,8 @@
             this.Controls.Add(this.pictureBoxField1P);
             this.Name = "GameField";
             this.Text = "GameField";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameField_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameField_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).EndInit();
