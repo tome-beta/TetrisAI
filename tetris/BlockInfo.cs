@@ -9,6 +9,9 @@ namespace tetris
     //テトリミノの個体としての情報
     class BlockInfo
     {
+        public const int BLOCK_WIDTH = 30;     //ブロック画像の幅
+        public const int BLOCK_HEIGHT = 30;    //ブロック画像の高さ
+
         //テトリミノの種類
         public enum BlockType
         {
@@ -39,7 +42,7 @@ namespace tetris
         private void SetMinoInfo_I()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -79,7 +82,7 @@ namespace tetris
         private void SetMinoInfo_T()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -117,7 +120,7 @@ namespace tetris
         private void SetMinoInfo_J()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -155,7 +158,7 @@ namespace tetris
         private void SetMinoInfo_L()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -193,7 +196,7 @@ namespace tetris
         private void SetMinoInfo_Z()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -231,7 +234,7 @@ namespace tetris
         private void SetMinoInfo_S()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -269,7 +272,7 @@ namespace tetris
         private void SetMinoInfo_O()
         {
             //ミノの位置
-            this.shape2 = new int[,,]
+            this.shape = new int[,,]
             {
                 {
                     //ROT_0
@@ -311,8 +314,6 @@ namespace tetris
 
         public BlockInfo(BlockType type)
         {
-            //            this.shape2 = new int[4, 4, 4]; //回転パターン、x座標、ｙ座標
-
             switch (type)
             {
                 case BlockType.MINO_I:
@@ -355,35 +356,12 @@ namespace tetris
 
         }
 
-        //ミノを描く
-        public void Draw(Graphics g, Image source_image)
-        {
-            //ミノの種類により切り出す画像を選ぶ
-            int y_pos = (int)(this.type) * BLOCK_HEIGHT;
-            Rectangle srcRect = new Rectangle(0, y_pos, BLOCK_WIDTH, BLOCK_HEIGHT);
-            Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
 
-            for(int y = 0; y < 4;y++)
-            {
-                for (int x = 0; x < 4; x++)
-                {
-                    if (shape2[(int)this.block_rot,y,x] != 0)
-                    {
-                        desRect.X = x * BLOCK_WIDTH;
-                        desRect.Y = y * BLOCK_HEIGHT;
-                        g.DrawImage(source_image, desRect, srcRect, GraphicsUnit.Pixel);
-                    }
-                }
-            }
-
-        }
 
         public BlockType type;  //ミノの種類
-        private int[,,] shape2;    //ブロックの形＊４
-        private BlockRot block_rot;
+        public int[,,] shape { get; set; }    //ブロックの形＊４
+        public BlockRot block_rot { get; set; }
         //作成予定 回転法則
 
-        const int BLOCK_WIDTH = 30;     //ブロック画像の幅
-        const int BLOCK_HEIGHT = 30;    //ブロック画像の高さ
     }
 }

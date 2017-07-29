@@ -69,8 +69,9 @@ namespace tetris
             Graphics g = Graphics.FromImage(canvas);
 
 
-            BlockInfo I_mino = blockControle.GetBlock(BlockInfo.BlockType.MINO_I);
-            I_mino.Draw(g, blockControle.BlockSourceImage);
+            //操作中のブロックをセット
+            blockControle.SetCurrentBlock(BlockInfo.BlockType.MINO_I);
+            blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
 
             //Imageオブジェクトのリソースを解放する
            //Graphicsオブジェクトのリソースを解放する
