@@ -27,7 +27,12 @@ namespace tetris
             int targetTimes = System.Environment.TickCount & int.MaxValue;
             targetTimes += waitTimes;
 
-            while(field.Created)
+            //最初に一回実行しておく
+            //メインの処理
+            field.MainLoop(frame);
+            field.DrawUpdate();
+
+            while (field.Created)
             {
                 int now = Environment.TickCount;
                 int progress = now - before;
@@ -43,6 +48,9 @@ namespace tetris
                     before = now;
                     frame = 0;
                 }
+
+                //描画処理
+                field.DrawUpdate();
                 Application.DoEvents();             //windouwsメッセージ処理
             }
         }
