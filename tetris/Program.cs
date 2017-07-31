@@ -9,8 +9,10 @@ namespace tetris
     static class Program
     {
         //60FPSでの処理
-        private const int waitTimes = (int)(1000.0 / 60.0);
-        private const int FPS = 60;
+        private const float FPS = 60;
+        private const int waitTime = (int)(1000.0 / FPS);
+
+        
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
@@ -20,38 +22,19 @@ namespace tetris
             GameField field = new GameField();
             field.Show();
 
-            int frame = 0;
-            int before = Environment.TickCount;
-
-
-            int targetTimes = System.Environment.TickCount & int.MaxValue;
-            targetTimes += waitTimes;
-
-            //最初に一回実行しておく
-            //メインの処理
-            field.MainLoop(frame);
-            field.DrawUpdate();
-
+            double targetTime;
+            targetTime = (double)System.Environment.TickCount;
+            targetTime += waitTime;
             while (field.Created)
             {
-                int now = Environment.TickCount;
-                int progress = now - before;
-                int ideal = (int)(frame * (1000.0F / FPS));
-
-                if (ideal > progress) System.Threading.Thread.Sleep(ideal - progress);
-
-                frame++;
-                if (progress >= 1000)
+                if ((double)System.Environment.TickCount >= targetTime)
                 {
                     //メインの処理
-                    field.MainLoop(frame);
-                    before = now;
-                    frame = 0;
+                    field.MainLoop();
+                    targetTime += waitTime;
                 }
-
-                //描画処理
-                field.DrawUpdate();
-                Application.DoEvents();             //windouwsメッセージ処理
+                System.Threading.Thread.Sleep(1);
+                Application.DoEvents();
             }
         }
     }
