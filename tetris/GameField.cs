@@ -29,7 +29,6 @@ namespace tetris
             InitializeComponent();
 
             Init();
-            DispTest();
         }
 
         //=============================================================
@@ -40,6 +39,11 @@ namespace tetris
        {
             //フィールド情報を初期化
             BlockFieldInit();
+
+            //描画先とするImageオブジェクトを作成する
+            this.canvas = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
+            //ImageオブジェクトのGraphicsオブジェクトを作成する
+            this.g = Graphics.FromImage(canvas);
 
             Mode = GANME_MODE.MODE_SET_BLOCK;
        }
@@ -80,14 +84,14 @@ namespace tetris
                 //次のブロックを決める
                 case GANME_MODE.MODE_SET_BLOCK:
                     {
-
+                        blockControle.SetCurrentBlock(BlockInfo.BlockType.MINO_I);
+                        Mode = GANME_MODE.MODE_MOVE_BLOCK;
                     }
                     break;
 
                 //ブロックを設置させるまでの操作
                 case GANME_MODE.MODE_MOVE_BLOCK:
                     {
-
                     }
                     break;
 
@@ -108,47 +112,43 @@ namespace tetris
                 default:
                     break;
             }
+        }
 
+        /// <summary>
+        /// 描画更新
+        /// </summary>
+        public void DrawUpdate()
+        {
+            Console.WriteLine(@"Disp");
+
+            //フィールドのクリア
+            g.Clear(Color.White);
+
+            //TODO 設置したブロックを描画
+
+            //操作中のブロックを描画
+            blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
+
+            //PictureBox1に表示する
+            this.pictureBoxField1P.Image = canvas;
 
             //フォームの書き換え
             Invalidate();
         }
 
-        private void DispTest()
-        {
-            //描画先とするImageオブジェクトを作成する
-            Bitmap canvas = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
-            //ImageオブジェクトのGraphicsオブジェクトを作成する
-            Graphics g = Graphics.FromImage(canvas);
-
-
-            //操作中のブロックをセット
-            blockControle.SetCurrentBlock(BlockInfo.BlockType.MINO_I);
-            blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
-
-            //Imageオブジェクトのリソースを解放する
-           //Graphicsオブジェクトのリソースを解放する
-            g.Dispose();
-            //PictureBox1に表示する
-            this.pictureBoxField1P.Image = canvas;
-        }
-
-        BlockControle blockControle = new BlockControle();
-
-        public int[,] BlockField { get; set;}
-
-        GANME_MODE Mode;
-
+        
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyData == Keys.Up)
+            if (e.KeyData == Keys.Up)
             {
                 Console.WriteLine(@"UP");
+                this.blockControle.CurrentPos.Y -= 1;
             }
             if (e.KeyData == Keys.Down)
             {
                 Console.WriteLine(@"DOWN");
+                this.blockControle.CurrentPos.Y += 1;
             }
             if (e.KeyData == Keys.Right)
             {
@@ -171,5 +171,12 @@ namespace tetris
                 Console.WriteLine(@"ROTATE_L");
             }
         }
+
+
+        BlockControle blockControle = new BlockControle();
+        public int[,] BlockField { get; set;}
+        GANME_MODE Mode;
+        Bitmap canvas;
+        Graphics g;
     }
 }
