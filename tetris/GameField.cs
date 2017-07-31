@@ -26,6 +26,9 @@ namespace tetris
 
         public GameField()
         {
+            fps = 0;
+            oldtime = System.Environment.TickCount;
+
             InitializeComponent();
 
             Init();
@@ -73,12 +76,26 @@ namespace tetris
                 }
             }
         }
-   
-
-        public void MainLoop(int targetTimes)
+        //メインループ
+        public void MainLoop()
         {
-            this.labelFPS.Text = @"FPS: " + targetTimes.ToString();
+            fps++;
+            if (System.Environment.TickCount >= oldtime + 1000)
+            {
+                oldtime = System.Environment.TickCount;
+                this.labelFPS.Text = fps.ToString();
+                fps = 0;
 
+                //演算処理
+                Exec();
+            }
+
+            //描画処理
+            DrawUpdate();
+        }
+
+        public void Exec()
+        {
             switch(Mode)
             {
                 //次のブロックを決める
@@ -179,9 +196,10 @@ namespace tetris
 
         BlockControle blockControle = new BlockControle();
         public int[,] BlockField { get; set;}
-        GANME_MODE Mode;
 
-        bool InputKeyR = false;
+        private GANME_MODE Mode;
+        private int fps;
+        private int oldtime;
 
         //フィールドの描画用
         Bitmap canvas;
