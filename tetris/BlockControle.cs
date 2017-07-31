@@ -54,6 +54,28 @@ namespace tetris
             CurrentBlock = this.blockInfo[(int)type];
         }
 
+        public void RotateCurrentBlock(bool rot_r)
+        {
+            if(rot_r)
+            {
+                //右回転
+                CurrentBlock.block_rot++;
+                if(CurrentBlock.block_rot > BlockInfo.BlockRot.ROT_270)
+                {
+                    CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
+                }
+            }
+            else
+            {
+                //左回転
+                CurrentBlock.block_rot--;
+                if (CurrentBlock.block_rot < BlockInfo.BlockRot.ROT_0)
+                {
+                    CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_270;
+                }
+            }
+        }
+
         //ブロックを取得 (つかわないかも）
         public BlockInfo GetBlock(BlockInfo.BlockType type)
         {

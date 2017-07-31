@@ -153,10 +153,12 @@ namespace tetris
             if (e.KeyData == Keys.Right)
             {
                 Console.WriteLine(@"RIGHT");
+                this.blockControle.CurrentPos.X += 1;
             }
             if (e.KeyData == Keys.Left)
             {
                 Console.WriteLine(@"LEFT");
+                this.blockControle.CurrentPos.X -= 1;
             }
         }
 
@@ -165,10 +167,12 @@ namespace tetris
             if (e.KeyData == Keys.X)
             {
                 Console.WriteLine(@"ROTATE_R");
+                this.blockControle.RotateCurrentBlock(true);
             }
-            if (e.KeyData == Keys.Z)
+            else if (e.KeyData == Keys.Z)
             {
                 Console.WriteLine(@"ROTATE_L");
+                this.blockControle.RotateCurrentBlock(false);
             }
         }
 
@@ -176,6 +180,10 @@ namespace tetris
         BlockControle blockControle = new BlockControle();
         public int[,] BlockField { get; set;}
         GANME_MODE Mode;
+
+        bool InputKeyR = false;
+
+        //フィールドの描画用
         Bitmap canvas;
         Graphics g;
     }
