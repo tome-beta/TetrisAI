@@ -96,7 +96,9 @@ namespace tetris
 
         public void Exec()
         {
-            switch(Mode)
+            Console.WriteLine(@"EXEC");
+
+            switch (Mode)
             {
                 //次のブロックを決める
                 case GANME_MODE.MODE_SET_BLOCK:
@@ -157,6 +159,7 @@ namespace tetris
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
+            //TODO ハードドロップ
             if (e.KeyData == Keys.Up)
             {
                 Console.WriteLine(@"UP");
@@ -177,10 +180,8 @@ namespace tetris
                 Console.WriteLine(@"LEFT");
                 this.blockControle.CurrentPos.X -= 1;
             }
-        }
 
-        private void GameField_KeyUp(object sender, KeyEventArgs e)
-        {
+            //回転
             if (e.KeyData == Keys.X)
             {
                 Console.WriteLine(@"ROTATE_R");
