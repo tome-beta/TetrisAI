@@ -15,6 +15,14 @@ namespace tetris
         const int FIELD_HEIGHT = 20;
         const int FIELD_WIDTH = 10;
 
+        enum GANME_MODE
+        {
+            MODE_SET_BLOCK,     //次のブロックを決める
+            MODE_MOVE_BLOCK,    //ブロックを設置させるまでの操作
+            MODE_ERASE_CHECK,   //ブロックが消えるかチェック
+            MODE_ERASE_BLOCK,   //ブロックを消す処理
+        };
+
 
         public GameField()
         {
@@ -32,6 +40,8 @@ namespace tetris
        {
             //フィールド情報を初期化
             BlockFieldInit();
+
+            Mode = GANME_MODE.MODE_SET_BLOCK;
        }
 
         private void BlockFieldInit()
@@ -65,6 +75,41 @@ namespace tetris
         {
             this.labelFPS.Text = @"FPS: " + targetTimes.ToString();
 
+            switch(Mode)
+            {
+                //次のブロックを決める
+                case GANME_MODE.MODE_SET_BLOCK:
+                    {
+
+                    }
+                    break;
+
+                //ブロックを設置させるまでの操作
+                case GANME_MODE.MODE_MOVE_BLOCK:
+                    {
+
+                    }
+                    break;
+
+                //ブロックが消えるかチェック
+                case GANME_MODE.MODE_ERASE_CHECK:
+                    {
+
+                    }
+                    break;
+
+                //ブロックを消す処理
+                case GANME_MODE.MODE_ERASE_BLOCK:
+                    {
+
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+
             //フォームの書き換え
             Invalidate();
         }
@@ -91,6 +136,8 @@ namespace tetris
         BlockControle blockControle = new BlockControle();
 
         public int[,] BlockField { get; set;}
+
+        GANME_MODE Mode;
 
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
