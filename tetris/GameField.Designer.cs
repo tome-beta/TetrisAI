@@ -40,6 +40,7 @@
             this.labelHold2P = new System.Windows.Forms.Label();
             this.labelNext1P = new System.Windows.Forms.Label();
             this.labelNext2P = new System.Windows.Forms.Label();
+            this.labelFPS = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
@@ -168,12 +169,23 @@
             this.labelNext2P.TabIndex = 11;
             this.labelNext2P.Text = "NEXT";
             // 
+            // labelFPS
+            // 
+            this.labelFPS.AutoSize = true;
+            this.labelFPS.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelFPS.Location = new System.Drawing.Point(31, 666);
+            this.labelFPS.Name = "labelFPS";
+            this.labelFPS.Size = new System.Drawing.Size(46, 28);
+            this.labelFPS.TabIndex = 12;
+            this.labelFPS.Text = "FPS";
+            // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1512, 717);
+            this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.labelNext2P);
             this.Controls.Add(this.labelNext1P);
             this.Controls.Add(this.labelHold2P);
@@ -215,5 +227,6 @@
         private System.Windows.Forms.Label labelHold2P;
         private System.Windows.Forms.Label labelNext1P;
         private System.Windows.Forms.Label labelNext2P;
+        private System.Windows.Forms.Label labelFPS;
     }
 }

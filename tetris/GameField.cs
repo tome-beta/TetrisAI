@@ -61,6 +61,14 @@ namespace tetris
         }
    
 
+        public void MainLoop(int targetTimes)
+        {
+            this.labelFPS.Text = @"FPS: " + targetTimes.ToString();
+
+            //フォームの書き換え
+            Invalidate();
+        }
+
         private void DispTest()
         {
             //描画先とするImageオブジェクトを作成する
