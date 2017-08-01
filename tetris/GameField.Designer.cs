@@ -41,6 +41,7 @@
             this.labelNext1P = new System.Windows.Forms.Label();
             this.labelNext2P = new System.Windows.Forms.Label();
             this.labelFPS = new System.Windows.Forms.Label();
+            this.labelCurrentPos = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
@@ -54,7 +55,7 @@
             this.pictureBoxField1P.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.pictureBoxField1P.Location = new System.Drawing.Point(227, 56);
             this.pictureBoxField1P.Name = "pictureBoxField1P";
-            this.pictureBoxField1P.Size = new System.Drawing.Size(320, 640);
+            this.pictureBoxField1P.Size = new System.Drawing.Size(300, 600);
             this.pictureBoxField1P.TabIndex = 0;
             this.pictureBoxField1P.TabStop = false;
             // 
@@ -63,7 +64,7 @@
             this.pictureBoxField2P.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.pictureBoxField2P.Location = new System.Drawing.Point(984, 56);
             this.pictureBoxField2P.Name = "pictureBoxField2P";
-            this.pictureBoxField2P.Size = new System.Drawing.Size(320, 640);
+            this.pictureBoxField2P.Size = new System.Drawing.Size(300, 600);
             this.pictureBoxField2P.TabIndex = 1;
             this.pictureBoxField2P.TabStop = false;
             // 
@@ -179,12 +180,23 @@
             this.labelFPS.TabIndex = 12;
             this.labelFPS.Text = "FPS";
             // 
+            // labelCurrentPos
+            // 
+            this.labelCurrentPos.AutoSize = true;
+            this.labelCurrentPos.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelCurrentPos.Location = new System.Drawing.Point(31, 618);
+            this.labelCurrentPos.Name = "labelCurrentPos";
+            this.labelCurrentPos.Size = new System.Drawing.Size(44, 28);
+            this.labelCurrentPos.TabIndex = 13;
+            this.labelCurrentPos.Text = "pos";
+            // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1512, 717);
+            this.Controls.Add(this.labelCurrentPos);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.labelNext2P);
             this.Controls.Add(this.labelNext1P);
@@ -227,5 +239,6 @@
         private System.Windows.Forms.Label labelNext1P;
         private System.Windows.Forms.Label labelNext2P;
         private System.Windows.Forms.Label labelFPS;
+        private System.Windows.Forms.Label labelCurrentPos;
     }
 }

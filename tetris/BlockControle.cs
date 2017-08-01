@@ -45,6 +45,22 @@ namespace tetris
                         }
                     }
                 }
+
+                //デバッグ用にブロック領域の線を引いておく
+                using (Pen pen = new Pen(Color.Pink))
+                {
+                    for(int x = 0; x < 5; x++)
+                    {
+                        g.DrawLine(pen, new Point((CurrentPos.X + x) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((CurrentPos.X + x) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                    for (int y = 0; y < 5; y++)
+                    {
+                        g.DrawLine(pen, new Point((CurrentPos.X + 0) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + y) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((CurrentPos.X + 4) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + y) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                }
+
             }
         }
 
