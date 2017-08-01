@@ -143,6 +143,21 @@ namespace tetris
             //フィールドのクリア
             g.Clear(Color.White);
 
+            //デバッグ用にフィールドに線を引いておく
+            using (Pen pen = new Pen(Color.Gray))
+            {
+                for (int x = 1; x < 11; x++)
+                {
+                    g.DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
+                        new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
+                }
+                for (int y = 1; y < 21; y++)
+                {
+                    g.DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
+                }
+            }
+
             //TODO 設置したブロックを描画
 
             //操作中のブロックを描画
@@ -150,6 +165,11 @@ namespace tetris
 
             //PictureBox1に表示する
             this.pictureBoxField1P.Image = canvas;
+
+            //デバッグ用、操作ブロックの位置を表示
+            int pos_x = blockControle.CurrentPos.X;
+            int pos_y = blockControle.CurrentPos.Y;
+            this.labelCurrentPos.Text = @"CurrectPos :("+ pos_x.ToString()+ "," + pos_y.ToString() + @")";
 
             //フォームの書き換え
             Invalidate();
