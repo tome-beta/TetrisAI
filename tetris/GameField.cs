@@ -12,8 +12,8 @@ namespace tetris
 {
     public partial class GameField : Form
     {
-        const int FIELD_HEIGHT = 20;
-        const int FIELD_WIDTH = 10;
+        const int FIELD_HEIGHT = 20 + 1;// + 3; //ミノ領域＋床＋出現位置
+        const int FIELD_WIDTH = 10 + 2;     //ミノ領域 + 壁＊２
 
         enum GANME_MODE
         {
@@ -58,20 +58,20 @@ namespace tetris
             //ブロックのスタート位置のために上に３行加える。
             //床にも１行追加
             //全体としては１２＊２4
-            this.BlockField = new int[GameField.FIELD_WIDTH + 2, GameField.FIELD_HEIGHT + 4];
+            this.BlockField = new int[GameField.FIELD_HEIGHT,GameField.FIELD_WIDTH] ;
             //壁と床を設置
-            for (int w = 0; w < GameField.FIELD_WIDTH + 2; w++)
+            for (int w = 0; w < GameField.FIELD_WIDTH ; w++)
             {
-                for (int h = 0; h < GameField.FIELD_HEIGHT + 4; h++)
+                for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
                 {
-                    if (w == 0 || w == GameField.FIELD_WIDTH + 1 ||
-                        h == GameField.FIELD_HEIGHT + 3)
+                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
+                        h == GameField.FIELD_HEIGHT-1)
                     {
-                        this.BlockField[w, h] = 99;
+                        this.BlockField[h,w] = 99;
                     }
                     else
                     {
-                        this.BlockField[w, h] = 0;
+                        this.BlockField[h,w] = 0;
                     }
                 }
             }
@@ -159,6 +159,7 @@ namespace tetris
             }
 
             //TODO 設置したブロックを描画
+            DrawGameField();
 
             //操作中のブロックを描画
             blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
@@ -173,6 +174,29 @@ namespace tetris
 
             //フォームの書き換え
             Invalidate();
+        }
+
+        //フィールドに置かれたブロックを描く
+        private void DrawGameField()
+        {
+            int y_pos = (int)(BlockInfo.BlockType.MINO_FENCE) * BlockInfo.BLOCK_HEIGHT;
+            Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
+            Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
+            //壁を描く
+            for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+            {
+                for(int x = 0; x < GameField.FIELD_WIDTH; x++)
+                {
+                    if(this.BlockField[y,x] == 99)
+                    {
+                        desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
+                        desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
+                        g.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+
+                    }
+                }
+            }
         }
 
         

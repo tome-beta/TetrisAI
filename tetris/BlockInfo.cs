@@ -23,6 +23,7 @@ namespace tetris
             MINO_Z,
             MINO_S,
             MINO_O,
+            MINO_FENCE,
         };
 
         public enum BlockRot

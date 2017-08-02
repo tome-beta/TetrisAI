@@ -55,7 +55,7 @@
             this.pictureBoxField1P.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.pictureBoxField1P.Location = new System.Drawing.Point(227, 56);
             this.pictureBoxField1P.Name = "pictureBoxField1P";
-            this.pictureBoxField1P.Size = new System.Drawing.Size(300, 600);
+            this.pictureBoxField1P.Size = new System.Drawing.Size(360, 630);
             this.pictureBoxField1P.TabIndex = 0;
             this.pictureBoxField1P.TabStop = false;
             // 
@@ -89,7 +89,7 @@
             // pictureBoxNext1P
             // 
             this.pictureBoxNext1P.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.pictureBoxNext1P.Location = new System.Drawing.Point(553, 56);
+            this.pictureBoxNext1P.Location = new System.Drawing.Point(606, 56);
             this.pictureBoxNext1P.Name = "pictureBoxNext1P";
             this.pictureBoxNext1P.Size = new System.Drawing.Size(168, 502);
             this.pictureBoxNext1P.TabIndex = 4;
@@ -153,7 +153,7 @@
             this.labelNext1P.AutoSize = true;
             this.labelNext1P.BackColor = System.Drawing.SystemColors.Window;
             this.labelNext1P.Font = new System.Drawing.Font("メイリオ", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelNext1P.Location = new System.Drawing.Point(578, 17);
+            this.labelNext1P.Location = new System.Drawing.Point(626, 17);
             this.labelNext1P.Name = "labelNext1P";
             this.labelNext1P.Size = new System.Drawing.Size(79, 36);
             this.labelNext1P.TabIndex = 10;
