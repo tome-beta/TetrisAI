@@ -12,6 +12,9 @@ namespace tetris
         public const int BLOCK_WIDTH = 30;     //ブロック画像の幅
         public const int BLOCK_HEIGHT = 30;    //ブロック画像の高さ
 
+        public const int BLOCK_CELL_WIDTH = 4;     //ブロック領域の幅
+        public const int BLOCK_CELL_HEIGHT = 4;    //ブロック領域の高さ
+
         //テトリミノの種類
         public enum BlockType
         {
