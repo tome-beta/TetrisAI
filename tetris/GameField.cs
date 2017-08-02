@@ -115,8 +115,10 @@ namespace tetris
                         {
                             //ハードドロップ
                             this.blockControle.HardDropCurrentBlock(BlockField);
-
                             this.HardDrop = false;
+
+                            this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
+                            this.blockControle.SetBlockInField(this.BlockField);
                         }
                     }
                     break;
@@ -205,7 +207,6 @@ namespace tetris
                 }
             }
         }
-
         
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)

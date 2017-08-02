@@ -133,6 +133,27 @@ namespace tetris
             CurrentPos.Y += y;
         }
 
+        //フィールドの操作しているブロックを設置する
+        public void SetBlockInField(int[,] field)
+        {
+            int base_x = this.CurrentPos.X;
+            int base_y = this.CurrentPos.Y;
+
+            for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+            {
+                for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                {
+                    //フィールドに何もなくて、操作しているブロックはある所
+                    if (CurrentBlock.shape[(int)CurrentBlock.block_rot, y, x] != 0 &&
+                        field[base_y + y,base_x + x] ==0
+                        )
+                    {
+                        field[base_y + y, base_x + x] = (int)CurrentBlock.type;
+                    }
+                }
+            }
+        }
+
         //=====================================================
         // private 
         //=====================================================
