@@ -12,8 +12,8 @@ namespace tetris
 {
     public partial class GameField : Form
     {
-        const int FIELD_HEIGHT = 20 + 1;// + 3; //ミノ領域＋床＋出現位置
-        const int FIELD_WIDTH = 10 + 2;     //ミノ領域 + 壁＊２
+        public const int FIELD_HEIGHT = 20 + 1;// + 3; //ミノ領域＋床＋出現位置
+        public const int FIELD_WIDTH = 10 + 2;     //ミノ領域 + 壁＊２
 
         enum GANME_MODE
         {
@@ -111,6 +111,13 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GANME_MODE.MODE_MOVE_BLOCK:
                     {
+                        if (this.HardDrop)
+                        {
+                            //ハードドロップ
+                            this.blockControle.HardDropCurrentBlock(BlockField);
+
+                            this.HardDrop = false;
+                        }
                     }
                     break;
 
@@ -204,6 +211,13 @@ namespace tetris
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
             //TODO ハードドロップ
+            if (e.KeyData == Keys.Space)
+            {
+                Console.WriteLine(@"HARD_DROP");
+                //         this.blockControle.CurrentPos.Y -= 1;
+                HardDrop = true;
+            }
+
             if (e.KeyData == Keys.Up)
             {
                 Console.WriteLine(@"UP");
@@ -243,6 +257,7 @@ namespace tetris
         public int[,] BlockField { get; set;}
 
         private GANME_MODE Mode;
+        private bool HardDrop = false;
         private int fps;
         private int oldtime;
 
