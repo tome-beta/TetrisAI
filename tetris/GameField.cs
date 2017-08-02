@@ -226,17 +226,20 @@ namespace tetris
             if (e.KeyData == Keys.Down)
             {
                 Console.WriteLine(@"DOWN");
-                this.blockControle.CurrentPos.Y += 1;
+//                this.blockControle.CurrentPos.Y += 1;
+                this.blockControle.MoveCurrentBlockDown(this.BlockField);
             }
             if (e.KeyData == Keys.Right)
             {
                 Console.WriteLine(@"RIGHT");
-                this.blockControle.CurrentPos.X += 1;
+//                this.blockControle.CurrentPos.X += 1;
+                this.blockControle.MoveCurrentBlockRight(this.BlockField);
             }
             if (e.KeyData == Keys.Left)
             {
                 Console.WriteLine(@"LEFT");
-                this.blockControle.CurrentPos.X -= 1;
+//                this.blockControle.CurrentPos.X -= 1;
+                this.blockControle.MoveCurrentBlockLeft(this.BlockField);
             }
 
             //回転

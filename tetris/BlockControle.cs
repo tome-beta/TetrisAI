@@ -92,24 +92,45 @@ namespace tetris
             }
         }
 
+        //ブロックの右移動
+        public void MoveCurrentBlockRight(int[,] field)
+        {
+            if( CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field) )
+            {
+                CurrentPos.X++;
+            }
+        }
+        //ブロックの左移動
+        public void MoveCurrentBlockLeft(int[,] field)
+        {
+            if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            {
+                CurrentPos.X--;
+            }
+        }
+        //ブロックの下移動
+        public void MoveCurrentBlockDown(int[,] field)
+        {
+            if (CheckPlaceBlock(CurrentPos.X , CurrentPos.Y+1, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            {
+                CurrentPos.Y++;
+            }
+        }
+
         //ハードドロップさせる
         public void HardDropCurrentBlock(int[,] field)
         {
             //ハードドロップさせるとどこまで落とせるかの座標を探す
             int y = 0;
-
             //ブロック設置可能場所までYを増加する
             while (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
             {
                 y++;
             }
-
             //設置できるY位置
             y -= 1;
-
             //移動させる
             CurrentPos.Y += y;
-
         }
 
         //=====================================================
@@ -166,7 +187,7 @@ namespace tetris
         private bool ValidFieldPos(int x, int y)
         {
             //TODO 壁はとりあえず考えない
-            if ( 0 < x && x < GameField.FIELD_WIDTH)
+            if ( 0 <= x && x < GameField.FIELD_WIDTH)
             {
                 if (0 <= y && y < GameField.FIELD_HEIGHT) //出現位置の分までいれたら
                 {
