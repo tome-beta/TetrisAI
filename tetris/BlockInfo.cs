@@ -29,6 +29,7 @@ namespace tetris
             MINO_FENCE,
 
             MINO_IN_FIELD = 10, //設置したブロックを表す
+            MINO_VANISH = 100,  //消す予定のブロックを表す
         };
 
         public enum BlockRot
