@@ -26,11 +26,9 @@ namespace tetris
 
         public GameField()
         {
-            fps = 0;
-            oldtime = System.Environment.TickCount;
-
             InitializeComponent();
 
+            fps = 0;
             Init();
         }
 
@@ -38,8 +36,8 @@ namespace tetris
         //  private 
 
 
-       private void Init()
-       {
+        private void Init()
+        {
             //フィールド情報を初期化
             BlockFieldInit();
 
@@ -49,7 +47,7 @@ namespace tetris
             this.g = Graphics.FromImage(canvas);
 
             Mode = GANME_MODE.MODE_SET_BLOCK;
-       }
+        }
 
         private void BlockFieldInit()
         {
@@ -58,40 +56,23 @@ namespace tetris
             //ブロックのスタート位置のために上に３行加える。
             //床にも１行追加
             //全体としては１２＊２4
-            this.BlockField = new int[GameField.FIELD_HEIGHT,GameField.FIELD_WIDTH] ;
+            this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
             //壁と床を設置
-            for (int w = 0; w < GameField.FIELD_WIDTH ; w++)
+            for (int w = 0; w < GameField.FIELD_WIDTH; w++)
             {
                 for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
                 {
                     if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
-                        h == GameField.FIELD_HEIGHT-1)
+                        h == GameField.FIELD_HEIGHT - 1)
                     {
-                        this.BlockField[h,w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                        this.BlockField[h, w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
                     }
                     else
                     {
-                        this.BlockField[h,w] = 0;
+                        this.BlockField[h, w] = 0;
                     }
                 }
             }
-        }
-        //メインループ
-        public void MainLoop()
-        {
-            fps++;
-            if (System.Environment.TickCount >= oldtime + 1000)
-            {
-                oldtime = System.Environment.TickCount;
-                this.labelFPS.Text = fps.ToString();
-                fps = 0;
-
-                //演算処理
-                Exec();
-            }
-
-            //描画処理
-            DrawUpdate();
         }
 
         public void Exec()
@@ -149,6 +130,8 @@ namespace tetris
         {
             Console.WriteLine(@"Disp");
 
+            this.labelFPS.Text = @"FPS: " + this.fps.ToString();
+
             //フィールドのクリア
             g.Clear(Color.White);
 
@@ -179,7 +162,7 @@ namespace tetris
             //デバッグ用、操作ブロックの位置を表示
             int pos_x = blockControle.CurrentPos.X;
             int pos_y = blockControle.CurrentPos.Y;
-            this.labelCurrentPos.Text = @"CurrectPos :("+ pos_x.ToString()+ "," + pos_y.ToString() + @")";
+            this.labelCurrentPos.Text = @"CurrectPos :(" + pos_x.ToString() + "," + pos_y.ToString() + @")";
 
             //フォームの書き換え
             Invalidate();
@@ -191,19 +174,9 @@ namespace tetris
             //壁と設置されているブロックを描く
             for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
             {
-                for(int x = 0; x < GameField.FIELD_WIDTH; x++)
+                for (int x = 0; x < GameField.FIELD_WIDTH; x++)
                 {
-/*                    if (this.BlockField[y, x] == (int)BlockInfo.BlockType.MINO_FENCE)
-                    {
-                        int y_pos = (int)BlockInfo.BlockType.MINO_FENCE * BlockInfo.BLOCK_HEIGHT;
-                        Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
-                        Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
-
-                        desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
-                        desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
-                        g.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
-                    }
-*/                  if (this.BlockField[y,x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    if (this.BlockField[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
                     {
                         int y_pos = (this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD) * BlockInfo.BLOCK_HEIGHT;
                         Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
@@ -237,19 +210,19 @@ namespace tetris
             if (e.KeyData == Keys.Down)
             {
                 Console.WriteLine(@"DOWN");
-//                this.blockControle.CurrentPos.Y += 1;
+                //                this.blockControle.CurrentPos.Y += 1;
                 this.blockControle.MoveCurrentBlockDown(this.BlockField);
             }
             if (e.KeyData == Keys.Right)
             {
                 Console.WriteLine(@"RIGHT");
-//                this.blockControle.CurrentPos.X += 1;
+                //                this.blockControle.CurrentPos.X += 1;
                 this.blockControle.MoveCurrentBlockRight(this.BlockField);
             }
             if (e.KeyData == Keys.Left)
             {
                 Console.WriteLine(@"LEFT");
-//                this.blockControle.CurrentPos.X -= 1;
+                //                this.blockControle.CurrentPos.X -= 1;
                 this.blockControle.MoveCurrentBlockLeft(this.BlockField);
             }
 
@@ -268,12 +241,11 @@ namespace tetris
 
 
         BlockControle blockControle = new BlockControle();
-        public int[,] BlockField { get; set;}
+        public int[,] BlockField { get; set; }
+        public int fps {get;set;}
 
         private GANME_MODE Mode;
         private bool HardDrop = false;
-        private int fps;
-        private int oldtime;
 
         //フィールドの描画用
         Bitmap canvas;
