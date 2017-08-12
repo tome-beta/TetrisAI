@@ -68,6 +68,11 @@ namespace tetris
         public void SetCurrentBlock(BlockInfo.BlockType type)
         {
             CurrentBlock = this.blockInfo[(int)type];
+
+            //座標をスタート地点に
+            CurrentPos.X = 3;
+            CurrentPos.Y = 0;
+            CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
         }
 
         public void RotateCurrentBlock(bool rot_r)

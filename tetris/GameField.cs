@@ -98,7 +98,7 @@ namespace tetris
                             this.blockControle.HardDropCurrentBlock(BlockField);
                             this.HardDrop = false;
 
-                            this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
+                            this.Mode = GANME_MODE.MODE_ERASE_CHECK;
                             this.blockControle.SetBlockInField(this.BlockField);
                         }
                     }
@@ -107,6 +107,7 @@ namespace tetris
                 //ブロックが消えるかチェック
                 case GANME_MODE.MODE_ERASE_CHECK:
                     {
+                        this.Mode = GANME_MODE.MODE_SET_BLOCK;
 
                     }
                     break;
