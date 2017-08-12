@@ -15,6 +15,9 @@ namespace tetris
         public const int FIELD_HEIGHT = 20 + 1;// + 3; //ミノ領域＋床＋出現位置
         public const int FIELD_WIDTH = 10 + 2;     //ミノ領域 + 壁＊２
 
+        public const int NEXT_BLOCK_MAX = 14;   //７種類＊２で表示は５個。
+        public const int BLOCK_TYPE_NUM = 7;   //ミノは７種類
+
         enum GANME_MODE
         {
             MODE_SET_BLOCK,     //次のブロックを決める
@@ -73,6 +76,9 @@ namespace tetris
                     }
                 }
             }
+
+            //NEXTブロックを収める配列
+            UpdateNextBlock();
         }
 
         public void Exec()
@@ -84,7 +90,11 @@ namespace tetris
                 //次のブロックを決める
                 case GANME_MODE.MODE_SET_BLOCK:
                     {
-                        blockControle.SetCurrentBlock(BlockInfo.BlockType.MINO_I);
+                        //次のブロックを取り出す
+                        UpdateNextBlock();
+                        int type = GetNextBlock();
+
+                        blockControle.SetCurrentBlock((BlockInfo.BlockType)type);
                         Mode = GANME_MODE.MODE_MOVE_BLOCK;
                     }
                     break;
@@ -224,6 +234,48 @@ namespace tetris
             Invalidate();
         }
 
+        //===========================================
+        //  private
+        //===========================================
+
+        //NEXTブロックを取得
+        private int GetNextBlock()
+        {
+            //一つ取り出す
+            int type = this.NextBlock[0];
+            this.NextBlock.RemoveAt(0);
+            return type;
+        }
+
+        //ネクストブロックを更新
+        private void UpdateNextBlock()
+        {
+            //NEXTブロックの数をカウントする
+            int count = this.NextBlock.Count();
+
+            if( count <= NEXT_BLOCK_MAX)
+            {
+                //追加で７つのブロックを選び出す。
+                //１から７の入った配列をランダムでシャッフルして追加する
+                int[] array = { 1, 2, 3, 4, 5, 6, 7 };
+
+                //Fisher–Yatesアルゴリズム
+                for(int i = array.Length - 1; i > 0; i-- )
+                {
+                    int a = i - 1;
+                    int b = MyRandom.Next(array.Length) % i;
+                    var tmp = array[a];
+                    array[a] = array[b];
+                    array[b] = tmp;
+                }
+
+                foreach( int a  in array)
+                {
+                    this.NextBlock.Add(a);
+                }
+            }
+        }
+
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
@@ -311,9 +363,13 @@ namespace tetris
         public int[,] BlockField { get; set; }
         public int fps {get;set;}
 
+        private List<int> NextBlock = new List<int>();
+
         private GANME_MODE Mode;
         private bool HardDrop = false;
         private List<int> EraseLine = new List<int>();
+        System.Random MyRandom = new Random();
+
 
         //フィールドの描画用
         Bitmap canvas;
