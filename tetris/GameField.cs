@@ -137,6 +137,11 @@ namespace tetris
                             //消すラインを予約する
                             if (erase_line)
                             {
+                                //消す予定の情報を加える
+                                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                                {
+                                    this.BlockField[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
+                                }
                                 //消す
                                 line_num++;
                                 this.EraseLine.Add(h);
@@ -156,19 +161,18 @@ namespace tetris
                     {
                         //ブロックを実際に消す処理
                         //アニメーションをそのうちつける
-                        foreach (int line in this.EraseLine)
+                        for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
                         {
+                            //壁の所は見ない
                             for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
                             {
-                                this.BlockField[line, w] = 0;
-                            }
-
-                            //上のラインをずらす
-                            for (int h = line; h > 0; h--)
-                            {
-                                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                                if(this.BlockField[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
                                 {
-                                    this.BlockField[h, w] = this.BlockField[h - 1, w];
+                                    this.BlockField[h, w] = 0;
+                                    for (int h2 = h; h2 > 0; h2--)
+                                    {
+                                        this.BlockField[h2, w] = this.BlockField[h2 - 1, w];
+                                    }
                                 }
                             }
                         }
