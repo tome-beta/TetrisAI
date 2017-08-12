@@ -67,7 +67,7 @@ namespace tetris
                     if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
                         h == GameField.FIELD_HEIGHT-1)
                     {
-                        this.BlockField[h,w] = 99;
+                        this.BlockField[h,w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
                     }
                     else
                     {
@@ -170,7 +170,7 @@ namespace tetris
             //TODO 設置したブロックを描画
             DrawGameField();
 
-            //操作中のブロックを描画
+            //操作中のブロックを描画 TODO これもfieldクラスの中でやるべき
             blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
 
             //PictureBox1に表示する
@@ -188,17 +188,27 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
-            int y_pos = (int)(BlockInfo.BlockType.MINO_FENCE) * BlockInfo.BLOCK_HEIGHT;
-            Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
-            Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
-
-            //壁を描く
+            //壁と設置されているブロックを描く
             for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
             {
                 for(int x = 0; x < GameField.FIELD_WIDTH; x++)
                 {
-                    if(this.BlockField[y,x] == 99)
+/*                    if (this.BlockField[y, x] == (int)BlockInfo.BlockType.MINO_FENCE)
                     {
+                        int y_pos = (int)BlockInfo.BlockType.MINO_FENCE * BlockInfo.BLOCK_HEIGHT;
+                        Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
+                        Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
+                        desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
+                        desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
+                        g.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                    }
+*/                  if (this.BlockField[y,x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    {
+                        int y_pos = (this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD) * BlockInfo.BLOCK_HEIGHT;
+                        Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
+                        Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
                         desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
                         desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
                         g.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
@@ -207,7 +217,7 @@ namespace tetris
                 }
             }
         }
-        
+
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {

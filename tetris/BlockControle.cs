@@ -148,7 +148,7 @@ namespace tetris
                         field[base_y + y,base_x + x] ==0
                         )
                     {
-                        field[base_y + y, base_x + x] = (int)CurrentBlock.type;
+                        field[base_y + y, base_x + x] = (int)CurrentBlock.type + (int)BlockInfo.BlockType.MINO_IN_FIELD;
                     }
                 }
             }

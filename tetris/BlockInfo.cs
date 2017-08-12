@@ -27,6 +27,8 @@ namespace tetris
             MINO_S,
             MINO_O,
             MINO_FENCE,
+
+            MINO_IN_FIELD = 10, //設置したブロックを表す
         };
 
         public enum BlockRot
