@@ -107,7 +107,36 @@ namespace tetris
                 //ブロックが消えるかチェック
                 case GANME_MODE.MODE_ERASE_CHECK:
                     {
-                        this.Mode = GANME_MODE.MODE_SET_BLOCK;
+                        int line_num = 0;
+                        //床から見ていく
+                        for (int h = GameField.FIELD_HEIGHT-2; h >=0; h--)
+                        {
+                            bool erase_line = true;
+                            //壁の所は見ない
+                            for (int w =1; w < GameField.FIELD_WIDTH-1; w++)
+                            {
+                                //設置されていないか
+                                if( this.BlockField[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                                {
+                                    //空きがあれば飛ばす
+                                    erase_line = false;
+                                    break;
+                                }
+                            }
+
+                            //消すラインを予約する
+                            if (erase_line)
+                            {
+                                //消す
+                                line_num++;
+                                this.EraseLine.Add(h);
+                            }
+                        }
+
+                        //TODO 
+                        //ここでTスピン　BtoB　RENのチェックする
+
+                         this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
 
                     }
                     break;
@@ -115,7 +144,33 @@ namespace tetris
                 //ブロックを消す処理
                 case GANME_MODE.MODE_ERASE_BLOCK:
                     {
+                        //ブロックを実際に消す処理
+                        //アニメーションをそのうちつける
+                        foreach (int line in this.EraseLine)
+                        {
+                            for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                            {
+                                this.BlockField[line, w] = 0;
+                            }
 
+                            //上のラインをずらす
+                            for (int h = line; h > 0; h--)
+                            {
+                                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                                {
+                                    this.BlockField[h, w] = this.BlockField[h - 1, w];
+                                }
+                            }
+                        }
+
+                        //一番上のラインを埋める
+                        for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                        {
+                            this.BlockField[0, w] = 0;
+                        }
+
+                        this.EraseLine.Clear();
+                        this.Mode = GANME_MODE.MODE_SET_BLOCK;
                     }
                     break;
 
@@ -192,6 +247,17 @@ namespace tetris
             }
         }
 
+        //消去するラインを調べる
+        private void CheckEraseLine()
+        {
+            //地面から順に上に向かって調べる
+
+            //すべて空のラインがあれば終了
+
+
+        }
+
+
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
@@ -247,6 +313,7 @@ namespace tetris
 
         private GANME_MODE Mode;
         private bool HardDrop = false;
+        private List<int> EraseLine = new List<int>();
 
         //フィールドの描画用
         Bitmap canvas;
