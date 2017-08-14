@@ -10,8 +10,6 @@ namespace tetris
     {
         public BlockControle()
         {
-            //ブロックの元画像を読み込んでおく
-            BlockSourceImage = Image.FromFile(@"..\..\resource\mino.bmp");
             MINO_TYPE_MAX = 8;
 
             this.blockInfo = new BlockInfo[MINO_TYPE_MAX];
@@ -20,47 +18,6 @@ namespace tetris
             {
                 BlockInfo.BlockType type = (BlockInfo.BlockType)i;
                 this.blockInfo[i] = new BlockInfo(type);
-            }
-        }
-
-        //操作中のブロックの描画をここに
-        public void DrawCurrentBlock(Graphics g, Image source_image)
-        {
-            if(CurrentBlock != null)
-            {
-                //ミノの種類により切り出す画像を選ぶ
-                int y_pos = (int)(CurrentBlock.type) * BlockInfo.BLOCK_HEIGHT;
-                Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
-                Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
-
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
-                {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
-                    {
-                        if (CurrentBlock.shape[(int)CurrentBlock.block_rot, y, x] != 0)
-                        {
-                            desRect.X = (CurrentPos.X  + x) * BlockInfo.BLOCK_WIDTH;
-                            desRect.Y = (CurrentPos.Y + y) * BlockInfo.BLOCK_HEIGHT;
-                            g.DrawImage(source_image, desRect, srcRect, GraphicsUnit.Pixel);
-                        }
-                    }
-                }
-
-                //デバッグ用にブロック領域の線を引いておく
-                using (Pen pen = new Pen(Color.Pink))
-                {
-                    for(int x = 0; x < 5; x++)
-                    {
-                        g.DrawLine(pen, new Point((CurrentPos.X + x) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((CurrentPos.X + x) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
-                    }
-                    for (int y = 0; y < 5; y++)
-                    {
-                        g.DrawLine(pen, new Point((CurrentPos.X + 0) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + y) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((CurrentPos.X + 4) * BlockInfo.BLOCK_WIDTH, (CurrentPos.Y + y) * BlockInfo.BLOCK_HEIGHT));
-                    }
-                }
-
             }
         }
 
@@ -77,11 +34,11 @@ namespace tetris
 
         public void RotateCurrentBlock(bool rot_r)
         {
-            if(rot_r)
+            if (rot_r)
             {
                 //右回転
                 CurrentBlock.block_rot++;
-                if(CurrentBlock.block_rot > BlockInfo.BlockRot.ROT_270)
+                if (CurrentBlock.block_rot > BlockInfo.BlockRot.ROT_270)
                 {
                     CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
                 }
@@ -100,7 +57,7 @@ namespace tetris
         //ブロックの右移動
         public void MoveCurrentBlockRight(int[,] field)
         {
-            if( CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field) )
+            if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
             }
@@ -116,7 +73,7 @@ namespace tetris
         //ブロックの下移動
         public void MoveCurrentBlockDown(int[,] field)
         {
-            if (CheckPlaceBlock(CurrentPos.X , CurrentPos.Y+1, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
             }
@@ -150,7 +107,7 @@ namespace tetris
                 {
                     //フィールドに何もなくて、操作しているブロックはある所
                     if (CurrentBlock.shape[(int)CurrentBlock.block_rot, y, x] != 0 &&
-                        field[base_y + y,base_x + x] ==0
+                        field[base_y + y, base_x + x] == 0
                         )
                     {
                         field[base_y + y, base_x + x] = (int)CurrentBlock.type + (int)BlockInfo.BlockType.MINO_IN_FIELD;
@@ -213,7 +170,7 @@ namespace tetris
         private bool ValidFieldPos(int x, int y)
         {
             //TODO 壁はとりあえず考えない
-            if ( 0 <= x && x < GameField.FIELD_WIDTH)
+            if (0 <= x && x < GameField.FIELD_WIDTH)
             {
                 if (0 <= y && y < GameField.FIELD_HEIGHT) //出現位置の分までいれたら
                 {
@@ -229,11 +186,10 @@ namespace tetris
             return this.blockInfo[(int)type];
         }
 
-        public Image BlockSourceImage { get; }
         public readonly int MINO_TYPE_MAX;
 
         //操作中のブロック
-        private BlockInfo CurrentBlock = null;
+        public BlockInfo CurrentBlock = null;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
 
         BlockInfo[] blockInfo;
