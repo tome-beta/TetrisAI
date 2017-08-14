@@ -42,6 +42,10 @@ namespace tetris
 
         private void Init()
         {
+            //ブロックの元画像を読み込んでおく
+            BlockSourceImage = Image.FromFile(@"..\..\resource\mino.bmp");
+
+
             //フィールド情報を初期化
             BlockFieldInit();
 
@@ -157,8 +161,9 @@ namespace tetris
             //NEXTブロックの描画
             DrawNextBlock();
 
-            //操作中のブロックを描画 TODO これもfieldクラスの中でやるべき
-            blockControle.DrawCurrentBlock(gFiled1P, blockControle.BlockSourceImage);
+            //操作中のブロックを描画
+            DrawCurrentBlock();
+
 
             //PictureBox1に表示する
             this.pictureBoxField1P.Image = canvasFiled1P;
@@ -176,6 +181,51 @@ namespace tetris
         //===========================================
         //  private
         //===========================================
+
+        private void DrawCurrentBlock()
+        {
+            if (this.blockControle.CurrentBlock != null)
+            {
+                //名前おきかえ
+                Point Pos = this.blockControle.CurrentPos;
+                BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+
+                //ミノの種類により切り出す画像を選ぶ
+                int y_pos = (int)(CurrnetInfo.type) * BlockInfo.BLOCK_HEIGHT;
+                Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
+                Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                {
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    {
+                        if (CurrnetInfo.shape[(int)CurrnetInfo.block_rot, y, x] != 0)
+                        {
+                            desRect.X = (Pos.X + x) * BlockInfo.BLOCK_WIDTH;
+                            desRect.Y = (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT;
+                            gFiled1P.DrawImage(BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                        }
+                    }
+                }
+
+                //デバッグ用にブロック領域の線を引いておく
+                using (Pen pen = new Pen(Color.Pink))
+                {
+                    for (int x = 0; x < 5; x++)
+                    {
+                        gFiled1P.DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                    for (int y = 0; y < 5; y++)
+                    {
+                        gFiled1P.DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                }
+
+            }
+        }
+
 
         //NEXTブロックを取得
         private int GetNextBlock()
@@ -208,7 +258,7 @@ namespace tetris
                         {
                             desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
                             desRect.Y = (next_num*3 + y) * BlockInfo.BLOCK_HEIGHT;
-                            gNextBlock1P.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                            gNextBlock1P.DrawImage(BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
                         }
                     }
                 }
@@ -277,7 +327,7 @@ namespace tetris
 
                         desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
                         desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
-                        gFiled1P.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                        gFiled1P.DrawImage(BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
 
                     }
                 }
@@ -416,6 +466,7 @@ namespace tetris
 
 
         //フィールドの描画用
+        private Image BlockSourceImage;
         Bitmap canvasFiled1P;
         Graphics gFiled1P;
         Bitmap canvasNextBlock1P;
