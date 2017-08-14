@@ -12,11 +12,12 @@ namespace tetris
 {
     public partial class GameField : Form
     {
-        public const int FIELD_HEIGHT = 20 + 1;// + 3; //ミノ領域＋床＋出現位置
-        public const int FIELD_WIDTH = 10 + 2;     //ミノ領域 + 壁＊２
+        public const int FIELD_HEIGHT = 20 + 1;     // + 3; //ミノ領域＋床＋出現位置
+        public const int FIELD_WIDTH = 10 + 2;      //ミノ領域 + 壁＊２
 
-        public const int NEXT_BLOCK_MAX = 14;   //７種類＊２で表示は５個。
-        public const int BLOCK_TYPE_NUM = 7;   //ミノは７種類
+        public const int NEXT_BLOCK_MAX = 14;       //７種類＊２で表示は５個。
+        public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類
+        public const int NEXT_BLOCK_DISP_NUM = 5;   //表示は５個。
 
         enum GANME_MODE
         {
@@ -45,9 +46,13 @@ namespace tetris
             BlockFieldInit();
 
             //描画先とするImageオブジェクトを作成する
-            this.canvas = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
+            this.canvasFiled1P = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
             //ImageオブジェクトのGraphicsオブジェクトを作成する
-            this.g = Graphics.FromImage(canvas);
+            this.gFiled1P = Graphics.FromImage(canvasFiled1P);
+
+            this.canvasNextBlock1P = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
+            //ImageオブジェクトのGraphicsオブジェクトを作成する
+            this.gNextBlock1P = Graphics.FromImage(canvasNextBlock1P);
 
             Mode = GANME_MODE.MODE_SET_BLOCK;
         }
@@ -117,73 +122,18 @@ namespace tetris
                 //ブロックが消えるかチェック
                 case GANME_MODE.MODE_ERASE_CHECK:
                     {
-                        int line_num = 0;
-                        //床から見ていく
-                        for (int h = GameField.FIELD_HEIGHT-2; h >=0; h--)
-                        {
-                            bool erase_line = true;
-                            //壁の所は見ない
-                            for (int w =1; w < GameField.FIELD_WIDTH-1; w++)
-                            {
-                                //設置されていないか
-                                if( this.BlockField[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
-                                {
-                                    //空きがあれば飛ばす
-                                    erase_line = false;
-                                    break;
-                                }
-                            }
+                        //消えるラインのチェック
+                        CheckEraseLine();
 
-                            //消すラインを予約する
-                            if (erase_line)
-                            {
-                                //消す予定の情報を加える
-                                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
-                                {
-                                    this.BlockField[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
-                                }
-                                //消す
-                                line_num++;
-                                this.EraseLine.Add(h);
-                            }
-                        }
-
-                        //TODO 
-                        //ここでTスピン　BtoB　RENのチェックする
-
-                         this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
-
+                        this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
                     }
                     break;
 
                 //ブロックを消す処理
                 case GANME_MODE.MODE_ERASE_BLOCK:
                     {
-                        //ブロックを実際に消す処理
-                        //アニメーションをそのうちつける
-                        for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
-                        {
-                            //壁の所は見ない
-                            for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
-                            {
-                                if(this.BlockField[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
-                                {
-                                    this.BlockField[h, w] = 0;
-                                    for (int h2 = h; h2 > 0; h2--)
-                                    {
-                                        this.BlockField[h2, w] = this.BlockField[h2 - 1, w];
-                                    }
-                                }
-                            }
-                        }
+                        ExecEraseLine();
 
-                        //一番上のラインを埋める
-                        for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
-                        {
-                            this.BlockField[0, w] = 0;
-                        }
-
-                        this.EraseLine.Clear();
                         this.Mode = GANME_MODE.MODE_SET_BLOCK;
                     }
                     break;
@@ -199,35 +149,20 @@ namespace tetris
         public void DrawUpdate()
         {
             Console.WriteLine(@"Disp");
-
             this.labelFPS.Text = @"FPS: " + this.fps.ToString();
 
-            //フィールドのクリア
-            g.Clear(Color.White);
-
-            //デバッグ用にフィールドに線を引いておく
-            using (Pen pen = new Pen(Color.Gray))
-            {
-                for (int x = 1; x < 11; x++)
-                {
-                    g.DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
-                        new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
-                }
-                for (int y = 1; y < 21; y++)
-                {
-                    g.DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
-                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
-                }
-            }
-
-            //TODO 設置したブロックを描画
+            //設置したブロックを描画
             DrawGameField();
 
+            //NEXTブロックの描画
+            DrawNextBlock();
+
             //操作中のブロックを描画 TODO これもfieldクラスの中でやるべき
-            blockControle.DrawCurrentBlock(g, blockControle.BlockSourceImage);
+            blockControle.DrawCurrentBlock(gFiled1P, blockControle.BlockSourceImage);
 
             //PictureBox1に表示する
-            this.pictureBoxField1P.Image = canvas;
+            this.pictureBoxField1P.Image = canvasFiled1P;
+            this.pictureBoxNext1P.Image = canvasNextBlock1P;
 
             //デバッグ用、操作ブロックの位置を表示
             int pos_x = blockControle.CurrentPos.X;
@@ -251,7 +186,35 @@ namespace tetris
             return type;
         }
 
-        //ネクストブロックを更新
+        //NEXTブロックの描画
+        private void DrawNextBlock()
+        {
+            //表示位置のクリア
+            gNextBlock1P.Clear(Color.White);
+
+            //ミノの種類により切り出す画像を選ぶ
+            for (int next_num = 0;next_num < NEXT_BLOCK_DISP_NUM; next_num++)
+            {
+                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(NextBlock[next_num]));
+                int y_pos = (int)(NextBlock[next_num]) * BlockInfo.BLOCK_HEIGHT;
+                Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
+                Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                {
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    {
+                        if (info.shape[(int)info.block_rot, y, x] != 0)
+                        {
+                            desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
+                            desRect.Y = (next_num*3 + y) * BlockInfo.BLOCK_HEIGHT;
+                            gNextBlock1P.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                        }
+                    }
+                }
+            }
+        }
+        //NEXTブロックを更新
         private void UpdateNextBlock()
         {
             //NEXTブロックの数をカウントする
@@ -283,6 +246,24 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
+            //フィールドのクリア
+            gFiled1P.Clear(Color.White);
+
+            //デバッグ用にフィールドに線を引いておく
+            using (Pen pen = new Pen(Color.Gray))
+            {
+                for (int x = 1; x < 11; x++)
+                {
+                    gFiled1P.DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
+                        new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
+                }
+                for (int y = 1; y < 21; y++)
+                {
+                    gFiled1P.DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
+                }
+            }
+
             //壁と設置されているブロックを描く
             for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
             {
@@ -296,7 +277,7 @@ namespace tetris
 
                         desRect.X = (x) * BlockInfo.BLOCK_WIDTH;
                         desRect.Y = (y) * BlockInfo.BLOCK_HEIGHT;
-                        g.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+                        gFiled1P.DrawImage(blockControle.BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
 
                     }
                 }
@@ -306,11 +287,70 @@ namespace tetris
         //消去するラインを調べる
         private void CheckEraseLine()
         {
-            //地面から順に上に向かって調べる
+            int line_num = 0;
+            //床から見ていく
+            for (int h = GameField.FIELD_HEIGHT - 2; h >= 0; h--)
+            {
+                bool erase_line = true;
+                //壁の所は見ない
+                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                {
+                    //設置されていないか
+                    if (this.BlockField[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    {
+                        //空きがあれば飛ばす
+                        erase_line = false;
+                        break;
+                    }
+                }
 
-            //すべて空のラインがあれば終了
+                //消すラインを予約する
+                if (erase_line)
+                {
+                    //消す予定の情報を加える
+                    for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                    {
+                        this.BlockField[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
+                    }
+                    //消す
+                    line_num++;
+                    this.EraseLine.Add(h);
+                }
+            }
 
+            //TODO 
+            //ここでTスピン　BtoB　RENのチェックする
 
+        }
+
+        //消去するラインを調べる
+        private void ExecEraseLine()
+        {
+            //ブロックを実際に消す処理
+            //アニメーションをそのうちつける
+            for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
+            {
+                //壁の所は見ない
+                for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                {
+                    if (this.BlockField[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
+                    {
+                        this.BlockField[h, w] = 0;
+                        for (int h2 = h; h2 > 0; h2--)
+                        {
+                            this.BlockField[h2, w] = this.BlockField[h2 - 1, w];
+                        }
+                    }
+                }
+            }
+
+            //一番上のラインを埋める
+            for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+            {
+                this.BlockField[0, w] = 0;
+            }
+
+            this.EraseLine.Clear();
         }
 
 
@@ -376,7 +416,9 @@ namespace tetris
 
 
         //フィールドの描画用
-        Bitmap canvas;
-        Graphics g;
+        Bitmap canvasFiled1P;
+        Graphics gFiled1P;
+        Bitmap canvasNextBlock1P;
+        Graphics gNextBlock1P;
     }
 }
