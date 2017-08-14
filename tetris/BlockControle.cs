@@ -32,24 +32,41 @@ namespace tetris
             CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
         }
 
-        public void RotateCurrentBlock(bool rot_r)
+        public void RotateCurrentBlock(bool rot_r, int[,] field)
         {
+            //回転した後の情報を仮でつくり、成立するかをチェックする
+            BlockInfo.BlockRot tmp_rot = this.CurrentBlock.block_rot;
+            BlockInfo.BlockType tmp_type = this.CurrentBlock.type;
+            Point tmp_pos = new Point();
+            tmp_pos = this.CurrentPos;
+
             if (rot_r)
             {
+                //TODO SRSの判定が追加される
                 //右回転
-                CurrentBlock.block_rot++;
-                if (CurrentBlock.block_rot > BlockInfo.BlockRot.ROT_270)
+                tmp_rot++;
+                if (tmp_rot > BlockInfo.BlockRot.ROT_270)
                 {
-                    CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
+                    tmp_rot = BlockInfo.BlockRot.ROT_0;
+                }
+                if ( CheckPlaceBlock(tmp_pos.X, tmp_pos.Y, tmp_rot, tmp_type,field) )
+                {
+                    //回転できる
+                    this.CurrentBlock.block_rot = tmp_rot;
                 }
             }
             else
             {
                 //左回転
-                CurrentBlock.block_rot--;
-                if (CurrentBlock.block_rot < BlockInfo.BlockRot.ROT_0)
+                tmp_rot--;
+                if (tmp_rot < BlockInfo.BlockRot.ROT_0)
                 {
-                    CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_270;
+                    tmp_rot = BlockInfo.BlockRot.ROT_270;
+                }
+                if (CheckPlaceBlock(tmp_pos.X, tmp_pos.Y, tmp_rot, tmp_type, field))
+                {
+                    //回転できる
+                    this.CurrentBlock.block_rot = tmp_rot;
                 }
             }
         }
