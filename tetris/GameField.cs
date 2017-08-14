@@ -331,12 +331,12 @@ namespace tetris
             if (e.KeyData == Keys.X)
             {
                 Console.WriteLine(@"ROTATE_R");
-                this.blockControle.RotateCurrentBlock(true);
+                this.blockControle.RotateCurrentBlock(true, this.BlockField);
             }
             else if (e.KeyData == Keys.Z)
             {
                 Console.WriteLine(@"ROTATE_L");
-                this.blockControle.RotateCurrentBlock(false);
+                this.blockControle.RotateCurrentBlock(false, this.BlockField);
             }
         }
 
