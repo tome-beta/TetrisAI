@@ -363,7 +363,7 @@ namespace tetris
 
         }
 
-
+        //TODO 持つのは形と回転法則だけっぽい
 
         public BlockType type;  //ミノの種類
         public int[,,] shape { get; set; }    //ブロックの形＊４
