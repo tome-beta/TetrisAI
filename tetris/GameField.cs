@@ -51,12 +51,13 @@ namespace tetris
 
             //描画先とするImageオブジェクトを作成する
             this.canvasFiled1P = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
-            //ImageオブジェクトのGraphicsオブジェクトを作成する
             this.gFiled1P = Graphics.FromImage(canvasFiled1P);
 
             this.canvasNextBlock1P = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
-            //ImageオブジェクトのGraphicsオブジェクトを作成する
             this.gNextBlock1P = Graphics.FromImage(canvasNextBlock1P);
+
+            this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
+            this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
 
             Mode = GANME_MODE.MODE_SET_BLOCK;
         }
@@ -177,10 +178,13 @@ namespace tetris
             //操作中のブロックを描画
             DrawCurrentBlock();
 
+            //HOLDブロックを描画
+            DrawHoldBlock();
 
-            //PictureBox1に表示する
+            //PictureBoxを更新
             this.pictureBoxField1P.Image = canvasFiled1P;
             this.pictureBoxNext1P.Image = canvasNextBlock1P;
+            this.pictureBoxHold1P.Image = canvasHoldBlock1P;
 
             //デバッグ用、操作ブロックの位置を表示
             int pos_x = blockControle.CurrentPos.X;
@@ -381,5 +385,9 @@ namespace tetris
         Graphics gFiled1P;
         Bitmap canvasNextBlock1P;
         Graphics gNextBlock1P;
+
+        Bitmap canvasHoldBlock1P;
+        Graphics gHoldBlock1P;
+
     }
 }
