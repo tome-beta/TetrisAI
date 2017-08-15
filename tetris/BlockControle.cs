@@ -5,9 +5,11 @@ namespace tetris
 {
     class BlockControle
     {
+        //コンストラクタ   
         public BlockControle()
         {
             MINO_TYPE_MAX = 8;
+            MINO_START_POS = new Point(3,0);
 
             this.blockInfo = new BlockInfo[MINO_TYPE_MAX];
             //ミノ情報を作る
@@ -24,11 +26,11 @@ namespace tetris
             CurrentBlock = this.blockInfo[(int)type];
 
             //座標をスタート地点に
-            CurrentPos.X = 3;
-            CurrentPos.Y = 0;
+            CurrentPos = MINO_START_POS;
             CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
         }
 
+        //操作しているブロックを回転させる
         public void RotateCurrentBlock(bool rot_r, int[,] field)
         {
             //回転した後の情報を仮でつくり、成立するかをチェックする
@@ -164,6 +166,37 @@ namespace tetris
                     }
                 }
             }
+        }
+
+        /// <summary>
+        //  HOLD機能
+        /// </summary>
+        /// <returns>既に保持しているブロックがあればtrue 無ければfalse</returns>
+        public bool UpdateHold()
+        {
+            bool ret = false;
+
+            //HOLDしているブロックがあれば交換
+            if(BlockInfo.BlockType.MINO_I <= HoldBlock && HoldBlock <= BlockInfo.BlockType.MINO_O)
+            {
+                //CurrentBlockとHoldBlockを交換する
+                BlockInfo.BlockType tmp_type = HoldBlock;
+                HoldBlock = CurrentBlock.type;
+                CurrentBlock.type = tmp_type;
+
+                SetCurrentBlock((BlockInfo.BlockType)CurrentBlock.type);
+                ret = true;
+            }
+            else
+            {
+                //操作しているブロックをHOLDするだけ
+                HoldBlock = CurrentBlock.type;
+            }
+
+            //位置を初期化
+            CurrentPos = MINO_START_POS;
+
+            return ret;
         }
 
         //=====================================================
@@ -736,10 +769,13 @@ namespace tetris
             return this.blockInfo[(int)type];
         }
 
-        public readonly int MINO_TYPE_MAX;
+        public readonly int MINO_TYPE_MAX;      //ミノとしての種類
+        public readonly Point MINO_START_POS;   //ミノを出現させる位置
+
 
         //操作中のブロック
         public BlockInfo CurrentBlock = null;
+        public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
 
         BlockInfo[] blockInfo;

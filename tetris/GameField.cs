@@ -111,7 +111,20 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GANME_MODE.MODE_MOVE_BLOCK:
                     {
-                        if (this.HardDrop)
+                        if(this.InputHold)
+                        {
+                            if(this.blockControle.UpdateHold())
+                            {
+                            }
+                            else
+                            {
+                                //HOLDブロックが無かったとき
+                                Mode = GANME_MODE.MODE_SET_BLOCK;
+                            }
+                            //HOLD
+                            this.InputHold = false;
+                        }
+                        else if (this.HardDrop)
                         {
                             //ハードドロップ
                             this.blockControle.HardDropCurrentBlock(BlockField);
@@ -295,7 +308,15 @@ namespace tetris
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
-            //TODO ハードドロップ
+            //HOLD
+            if(e.KeyData == Keys.C)
+            {
+                Console.WriteLine(@"HOLD");
+                InputHold = true;
+                return;
+            }
+
+            //ハードドロップ
             if (e.KeyData == Keys.Space)
             {
                 Console.WriteLine(@"HARD_DROP");
@@ -349,6 +370,7 @@ namespace tetris
 
         private GANME_MODE Mode;
         private bool HardDrop = false;
+        private bool InputHold = false;
         private List<int> EraseLine = new List<int>();
         System.Random MyRandom = new Random();
 
