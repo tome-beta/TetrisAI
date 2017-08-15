@@ -125,5 +125,31 @@ namespace tetris
             }
         }
 
+        //HOLD中のブロックを描く
+        private void DrawHoldBlock()
+        {
+            //表示位置のクリア
+            gHoldBlock1P.Clear(Color.White);
+
+            if (BlockInfo.BlockType.MINO_I <= blockControle.HoldBlock && blockControle.HoldBlock <= BlockInfo.BlockType.MINO_O)
+            {
+                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle.HoldBlock));
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                {
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    {
+                        if (info.shape[(int)info.block_rot, y, x] != 0)
+                        {
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gHoldBlock1P,
+                                (x) * BlockInfo.BLOCK_WIDTH,
+                                (y) * BlockInfo.BLOCK_HEIGHT,
+                                (int)(blockControle.HoldBlock));
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
