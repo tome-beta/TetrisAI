@@ -213,6 +213,21 @@ namespace tetris
             return ret;
         }
 
+        //ゲームオーバーかをチェックする
+        public bool CheckGameOver(int[,] field)
+        {
+            if( CheckPlaceBlock(this.CurrentPos.X, this.CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type,field) )
+            {
+                //おける
+                return false;
+            }
+            else
+            {
+                //おけない
+                return true;
+            }
+        }
+
         //=====================================================
         // private 
         //=====================================================
