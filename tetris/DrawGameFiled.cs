@@ -10,7 +10,15 @@ namespace tetris
     public partial class GameField : Form
     {
         //指定した座標にブロックを描く
-        private void DrawOneBlock(Graphics g,int x,int y,int type)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <param name="alpha">true で半透明</param>
+        private void DrawOneBlock(Graphics g,int x,int y,int type,bool alpha = false)
         {
             int y_pos = type * BlockInfo.BLOCK_HEIGHT;
             Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
@@ -18,7 +26,31 @@ namespace tetris
 
             desRect.X = x;
             desRect.Y = y;
-            g.DrawImage(BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+
+            if (alpha)
+            {
+                //ColorMatrixオブジェクトの作成
+                System.Drawing.Imaging.ColorMatrix cm =
+                    new System.Drawing.Imaging.ColorMatrix();
+                //ColorMatrixの行列の値を変更して、アルファ値が0.5に変更されるようにする
+                cm.Matrix00 = 1;
+                cm.Matrix11 = 1;
+                cm.Matrix22 = 1;
+                cm.Matrix33 = 0.5F;
+                cm.Matrix44 = 1;
+
+                //ImageAttributesオブジェクトの作成
+                System.Drawing.Imaging.ImageAttributes ia =
+                    new System.Drawing.Imaging.ImageAttributes();
+                //ColorMatrixを設定する
+                ia.SetColorMatrix(cm);
+
+                g.DrawImage(BlockSourceImage, desRect, srcRect.X,srcRect.Y,srcRect.Width,srcRect.Height, GraphicsUnit.Pixel,ia);
+            }
+            else
+            {
+                g.DrawImage(BlockSourceImage, desRect, srcRect, GraphicsUnit.Pixel);
+            }
         }
 
         //フィールドに置かれたブロックを描く
@@ -97,6 +129,36 @@ namespace tetris
 #endif
             }
         }
+
+        //落下位置ガイドブロックを描画
+        private void DrawGuideBlock()
+        {
+            if (this.blockControle.CurrentBlock != null)
+            {
+                int move_y = this.blockControle.HardDropCurrentBlock(this.BlockField);
+
+                //名前おきかえ
+                Point Pos = this.blockControle.CurrentPos;
+                BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                {
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    {
+                        if (CurrnetInfo.shape[(int)CurrnetInfo.block_rot, y, x] != 0)
+                        {
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gFiled1P,
+                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                                (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
+                                (int)(CurrnetInfo.type),
+                                true);
+                        }
+                    }
+                }
+            }
+
+            }
 
         //NEXTブロックの描画
         private void DrawNextBlock()
