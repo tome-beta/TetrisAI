@@ -21,6 +21,7 @@ namespace tetris
 
         enum GANME_MODE
         {
+            MODE_WAIT,          //開始待ち
             MODE_SET_BLOCK,     //次のブロックを決める
             MODE_MOVE_BLOCK,    //ブロックを設置させるまでの操作
             MODE_ERASE_CHECK,   //ブロックが消えるかチェック
@@ -59,7 +60,7 @@ namespace tetris
             this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
             this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
 
-            Mode = GANME_MODE.MODE_SET_BLOCK;
+            Mode = GANME_MODE.MODE_WAIT;
         }
 
         private void BlockFieldInit()
@@ -97,6 +98,15 @@ namespace tetris
 
             switch (Mode)
             {
+                case GANME_MODE.MODE_WAIT:
+                    {
+                        if(this.GameStart)
+                        {
+                            this.GameStart = false;
+                            Mode = GANME_MODE.MODE_SET_BLOCK;
+                        }
+                    }
+                    break;
                 //次のブロックを決める
                 case GANME_MODE.MODE_SET_BLOCK:
                     {
@@ -313,56 +323,68 @@ namespace tetris
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
-            //HOLD
-            if(e.KeyData == Keys.C)
+            //GameStart
+            if (e.KeyData == Keys.F1)
             {
-                Console.WriteLine(@"HOLD");
-                InputHold = true;
+                Console.WriteLine(@"GAME_START");
+                this.GameStart = true;
                 return;
             }
 
-            //ハードドロップ
-            if (e.KeyData == Keys.Space)
+            if( this.Mode == GANME_MODE.MODE_MOVE_BLOCK)
             {
-                Console.WriteLine(@"HARD_DROP");
-                //         this.blockControle.CurrentPos.Y -= 1;
-                HardDrop = true;
-            }
+                //HOLD
+                if (e.KeyData == Keys.C)
+                {
+                    Console.WriteLine(@"HOLD");
+                    InputHold = true;
+                    return;
+                }
 
-            if (e.KeyData == Keys.Up)
-            {
-                Console.WriteLine(@"UP");
-                this.blockControle.CurrentPos.Y -= 1;
-            }
-            if (e.KeyData == Keys.Down)
-            {
-                Console.WriteLine(@"DOWN");
-                //                this.blockControle.CurrentPos.Y += 1;
-                this.blockControle.MoveCurrentBlockDown(this.BlockField);
-            }
-            if (e.KeyData == Keys.Right)
-            {
-                Console.WriteLine(@"RIGHT");
-                //                this.blockControle.CurrentPos.X += 1;
-                this.blockControle.MoveCurrentBlockRight(this.BlockField);
-            }
-            if (e.KeyData == Keys.Left)
-            {
-                Console.WriteLine(@"LEFT");
-                //                this.blockControle.CurrentPos.X -= 1;
-                this.blockControle.MoveCurrentBlockLeft(this.BlockField);
-            }
+                //ハードドロップ
+                if (e.KeyData == Keys.Space)
+                {
+                    Console.WriteLine(@"HARD_DROP");
+                    //         this.blockControle.CurrentPos.Y -= 1;
+                    HardDrop = true;
+                }
 
-            //回転
-            if (e.KeyData == Keys.X)
-            {
-                Console.WriteLine(@"ROTATE_R");
-                this.blockControle.RotateCurrentBlock(true, this.BlockField);
-            }
-            else if (e.KeyData == Keys.Z)
-            {
-                Console.WriteLine(@"ROTATE_L");
-                this.blockControle.RotateCurrentBlock(false, this.BlockField);
+                if (e.KeyData == Keys.Up)
+                {
+                    Console.WriteLine(@"UP");
+                    this.blockControle.CurrentPos.Y -= 1;
+                }
+                if (e.KeyData == Keys.Down)
+                {
+                    Console.WriteLine(@"DOWN");
+                    //                this.blockControle.CurrentPos.Y += 1;
+                    this.blockControle.MoveCurrentBlockDown(this.BlockField);
+                }
+                if (e.KeyData == Keys.Right)
+                {
+                    Console.WriteLine(@"RIGHT");
+                    //                this.blockControle.CurrentPos.X += 1;
+                    this.blockControle.MoveCurrentBlockRight(this.BlockField);
+                }
+                if (e.KeyData == Keys.Left)
+                {
+                    Console.WriteLine(@"LEFT");
+                    //                this.blockControle.CurrentPos.X -= 1;
+                    this.blockControle.MoveCurrentBlockLeft(this.BlockField);
+                }
+
+                //回転
+                if (e.KeyData == Keys.X)
+                {
+                    Console.WriteLine(@"ROTATE_R");
+                    this.blockControle.RotateCurrentBlock(true, this.BlockField);
+                }
+                else if (e.KeyData == Keys.Z)
+                {
+                    Console.WriteLine(@"ROTATE_L");
+                    this.blockControle.RotateCurrentBlock(false, this.BlockField);
+                }
+
             }
         }
 
@@ -374,10 +396,13 @@ namespace tetris
         private List<int> NextBlock = new List<int>();
 
         private GANME_MODE Mode;
-        private bool HardDrop = false;
-        private bool InputHold = false;
         private List<int> EraseLine = new List<int>();
         System.Random MyRandom = new Random();
+
+        //キー入力持ち
+        private bool HardDrop = false;
+        private bool InputHold = false;
+        private bool GameStart = false;
 
 
         //フィールドの描画用
