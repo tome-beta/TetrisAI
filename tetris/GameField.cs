@@ -19,13 +19,14 @@ namespace tetris
         public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類
         public const int NEXT_BLOCK_DISP_NUM = 5;   //表示は５個。
 
-        enum GANME_MODE
+        enum GAME_MODE
         {
             MODE_WAIT,          //開始待ち
             MODE_SET_BLOCK,     //次のブロックを決める
             MODE_MOVE_BLOCK,    //ブロックを設置させるまでの操作
             MODE_ERASE_CHECK,   //ブロックが消えるかチェック
             MODE_ERASE_BLOCK,   //ブロックを消す処理
+            MODE_GAME_OVER,   //ゲームオーバー
         };
 
 
@@ -46,7 +47,6 @@ namespace tetris
             //ブロックの元画像を読み込んでおく
             BlockSourceImage = Image.FromFile(@"..\..\resource\mino.bmp");
 
-
             //フィールド情報を初期化
             BlockFieldInit();
 
@@ -60,7 +60,7 @@ namespace tetris
             this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
             this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
 
-            Mode = GANME_MODE.MODE_WAIT;
+            Mode = GAME_MODE.MODE_WAIT;
         }
 
         private void BlockFieldInit()
@@ -98,29 +98,39 @@ namespace tetris
 
             switch (Mode)
             {
-                case GANME_MODE.MODE_WAIT:
+                case GAME_MODE.MODE_WAIT:
                     {
                         if(this.GameStart)
                         {
                             this.GameStart = false;
-                            Mode = GANME_MODE.MODE_SET_BLOCK;
+                            Mode = GAME_MODE.MODE_SET_BLOCK;
                         }
                     }
                     break;
                 //次のブロックを決める
-                case GANME_MODE.MODE_SET_BLOCK:
+                case GAME_MODE.MODE_SET_BLOCK:
                     {
                         //次のブロックを取り出す
                         UpdateNextBlock();
                         int type = GetNextBlock();
 
                         blockControle.SetCurrentBlock((BlockInfo.BlockType)type);
-                        Mode = GANME_MODE.MODE_MOVE_BLOCK;
+
+                        //ここでブロックを置くことができなければゲームオーバー
+                        if(this.blockControle.CheckGameOver(this.BlockField))
+                        {
+                            Mode = GAME_MODE.MODE_GAME_OVER;
+                        }
+                        else
+                        {
+                            Mode = GAME_MODE.MODE_MOVE_BLOCK;
+                        }
+                        
                     }
                     break;
 
                 //ブロックを設置させるまでの操作
-                case GANME_MODE.MODE_MOVE_BLOCK:
+                case GAME_MODE.MODE_MOVE_BLOCK:
                     {
                         if (this.InputHold)
                         {
@@ -130,7 +140,7 @@ namespace tetris
                                 if (!this.blockControle.UpdateHold())
                                 {
                                     //HOLDブロックが無かったとき
-                                    Mode = GANME_MODE.MODE_SET_BLOCK;
+                                    Mode = GAME_MODE.MODE_SET_BLOCK;
                                 }
                             }
                             this.InputHold = false;
@@ -142,31 +152,37 @@ namespace tetris
                             this.blockControle.DoHold = false;
                             this.HardDrop = false;
 
-                            this.Mode = GANME_MODE.MODE_ERASE_CHECK;
+                            this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                             this.blockControle.SetBlockInField(this.BlockField);
                         }
                     }
                     break;
 
                 //ブロックが消えるかチェック
-                case GANME_MODE.MODE_ERASE_CHECK:
+                case GAME_MODE.MODE_ERASE_CHECK:
                     {
                         //消えるラインのチェック
                         CheckEraseLine();
 
-                        this.Mode = GANME_MODE.MODE_ERASE_BLOCK;
+                        this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
                     break;
 
                 //ブロックを消す処理
-                case GANME_MODE.MODE_ERASE_BLOCK:
+                case GAME_MODE.MODE_ERASE_BLOCK:
                     {
                         ExecEraseLine();
 
-                        this.Mode = GANME_MODE.MODE_SET_BLOCK;
+                        this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
                     break;
 
+                //ゲームオーバー
+                case GAME_MODE.MODE_GAME_OVER:
+                    {
+                        this.Mode = GAME_MODE.MODE_WAIT;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -331,7 +347,7 @@ namespace tetris
                 return;
             }
 
-            if( this.Mode == GANME_MODE.MODE_MOVE_BLOCK)
+            if( this.Mode == GAME_MODE.MODE_MOVE_BLOCK)
             {
                 //HOLD
                 if (e.KeyData == Keys.C)
@@ -395,7 +411,7 @@ namespace tetris
 
         private List<int> NextBlock = new List<int>();
 
-        private GANME_MODE Mode;
+        private GAME_MODE Mode;
         private List<int> EraseLine = new List<int>();
         System.Random MyRandom = new Random();
 
