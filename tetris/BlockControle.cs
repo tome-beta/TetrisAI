@@ -23,7 +23,19 @@ namespace tetris
         //ブロックを取得
         public void SetCurrentBlock(BlockInfo.BlockType type)
         {
-            CurrentBlock = this.blockInfo[(int)type];
+            //TODO　うまいコピーの仕方を
+            CurrentBlock.type = type;
+
+            for (int rot = 0; rot < 4; rot++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    for (int x = 0; x < 4; x++)
+                    {
+                        CurrentBlock.shape[rot,y, x] = this.blockInfo[(int)type].shape[rot, y, x];
+                    }
+                }
+            }
 
             //座標をスタート地点に
             CurrentPos = MINO_START_POS;
@@ -195,6 +207,8 @@ namespace tetris
 
             //位置を初期化
             CurrentPos = MINO_START_POS;
+
+            DoHold = true;
 
             return ret;
         }
@@ -774,9 +788,11 @@ namespace tetris
 
 
         //操作中のブロック
-        public BlockInfo CurrentBlock = null;
+        public BlockInfo CurrentBlock = new BlockInfo(BlockInfo.BlockType.MINO_I);
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
+
+        public bool DoHold = false;        //HOLDを実行したかどうか
 
         BlockInfo[] blockInfo;
     }

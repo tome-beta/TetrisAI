@@ -112,23 +112,24 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GANME_MODE.MODE_MOVE_BLOCK:
                     {
-                        if(this.InputHold)
+                        if (this.InputHold)
                         {
-                            if(this.blockControle.UpdateHold())
-                            {
-                            }
-                            else
-                            {
-                                //HOLDブロックが無かったとき
-                                Mode = GANME_MODE.MODE_SET_BLOCK;
-                            }
                             //HOLD
+                            if (!this.blockControle.DoHold)
+                            {
+                                if (!this.blockControle.UpdateHold())
+                                {
+                                    //HOLDブロックが無かったとき
+                                    Mode = GANME_MODE.MODE_SET_BLOCK;
+                                }
+                            }
                             this.InputHold = false;
                         }
                         else if (this.HardDrop)
                         {
                             //ハードドロップ
                             this.blockControle.HardDropCurrentBlock(BlockField);
+                            this.blockControle.DoHold = false;
                             this.HardDrop = false;
 
                             this.Mode = GANME_MODE.MODE_ERASE_CHECK;
