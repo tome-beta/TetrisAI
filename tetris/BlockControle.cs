@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Diagnostics;
+
 namespace tetris
 {
     class BlockControle
@@ -203,6 +200,7 @@ namespace tetris
                             delta_pos.Y = 2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -232,6 +230,7 @@ namespace tetris
                             delta_pos.Y =-1;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -261,6 +260,7 @@ namespace tetris
                             delta_pos.Y = -2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -290,6 +290,7 @@ namespace tetris
                             delta_pos.Y = 1;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
                 }
@@ -322,6 +323,7 @@ namespace tetris
                             delta_pos.Y = -1;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
                 }
@@ -350,6 +352,7 @@ namespace tetris
                             delta_pos.Y = -2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -379,6 +382,7 @@ namespace tetris
                             delta_pos.Y = 1;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -408,6 +412,7 @@ namespace tetris
                             delta_pos.Y = 2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
                 }
@@ -447,6 +452,7 @@ namespace tetris
                             delta_pos.Y = -2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -476,6 +482,7 @@ namespace tetris
                             delta_pos.Y = 2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -505,6 +512,7 @@ namespace tetris
                             delta_pos.Y = -2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
 
@@ -534,10 +542,9 @@ namespace tetris
                             delta_pos.Y = 2;
                             break;
                         default:
+                            Debug.Assert(false);
                             break;
                     }
-
-
                 }
             }
             //左回転
