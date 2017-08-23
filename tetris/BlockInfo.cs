@@ -82,8 +82,6 @@ namespace tetris
             };
 
             this.type = BlockType.MINO_I;
-            this.block_rot = BlockRot.ROT_0;
-
         }
 
         private void SetMinoInfo_T()
@@ -121,7 +119,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_T;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         private void SetMinoInfo_J()
@@ -159,7 +156,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_J;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         private void SetMinoInfo_L()
@@ -197,7 +193,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_L;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         private void SetMinoInfo_Z()
@@ -235,7 +230,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_Z;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         private void SetMinoInfo_S()
@@ -273,7 +267,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_S;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         private void SetMinoInfo_O()
@@ -311,7 +304,6 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_O;
-            this.block_rot = BlockRot.ROT_0;
         }
 
         public BlockInfo()
@@ -367,7 +359,6 @@ namespace tetris
 
         public BlockType type;  //ミノの種類
         public int[,,] shape { get; set; }    //ブロックの形＊４
-        public BlockRot block_rot { get; set; }
         //作成予定 回転法則
 
     }

@@ -69,7 +69,7 @@ namespace tetris
                 {
                     for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        if (CurrnetInfo.shape[(int)CurrnetInfo.block_rot, y, x] != 0)
+                        if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
                         {
                             //ミノの種類により切り出す画像を選ぶ
                             DrawOneBlock(gFiled1P, 
@@ -112,7 +112,7 @@ namespace tetris
                 {
                     for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        if (info.shape[(int)info.block_rot, y, x] != 0)
+                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
                         {
                             //ミノの種類により切り出す画像を選ぶ
                             DrawOneBlock(gNextBlock1P,
@@ -138,7 +138,7 @@ namespace tetris
                 {
                     for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        if (info.shape[(int)info.block_rot, y, x] != 0)
+                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
                         {
                             //ミノの種類により切り出す画像を選ぶ
                             DrawOneBlock(gHoldBlock1P,

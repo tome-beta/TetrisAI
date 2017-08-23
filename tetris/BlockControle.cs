@@ -38,15 +38,15 @@ namespace tetris
             }
 
             //座標をスタート地点に
-            CurrentPos = MINO_START_POS;
-            CurrentBlock.block_rot = BlockInfo.BlockRot.ROT_0;
+            this.CurrentPos = MINO_START_POS;
+            this.CurrentRot = BlockInfo.BlockRot.ROT_0;
         }
 
         //操作しているブロックを回転させる
         public void RotateCurrentBlock(bool rot_r, int[,] field)
         {
             //回転した後の情報を仮でつくり、成立するかをチェックする
-            BlockInfo.BlockRot tmp_rot = this.CurrentBlock.block_rot;
+            BlockInfo.BlockRot tmp_rot = this.CurrentRot;
             BlockInfo.BlockType tmp_type = this.CurrentBlock.type;
             Point tmp_pos = new Point();
             Point delta_pos = new Point();
@@ -68,18 +68,18 @@ namespace tetris
                 {
                     if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
                     {
-                        delta_pos = CheckSRS(i, rot_r, this.CurrentBlock.block_rot);
+                        delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     }
                     else
                     {
-                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentBlock.block_rot);
+                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentRot);
                     }
 
 
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
                         //回転できる
-                        this.CurrentBlock.block_rot = tmp_rot;
+                        this.CurrentRot = tmp_rot;
                         this.CurrentPos.X += delta_pos.X;
                         this.CurrentPos.Y += delta_pos.Y;
                         break;
@@ -99,17 +99,17 @@ namespace tetris
                 {
                     if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
                     {
-                        delta_pos = CheckSRS(i, rot_r, this.CurrentBlock.block_rot);
+                        delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     }
                     else
                     {
-                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentBlock.block_rot);
+                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentRot);
                     }
 
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
                         //回転できる
-                        this.CurrentBlock.block_rot = tmp_rot;
+                        this.CurrentRot = tmp_rot;
                         this.CurrentPos.X += delta_pos.X;
                         this.CurrentPos.Y += delta_pos.Y;
                         break;
@@ -121,7 +121,7 @@ namespace tetris
         //ブロックの右移動
         public void MoveCurrentBlockRight(int[,] field)
         {
-            if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
             }
@@ -129,7 +129,7 @@ namespace tetris
         //ブロックの左移動
         public void MoveCurrentBlockLeft(int[,] field)
         {
-            if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
             }
@@ -137,7 +137,7 @@ namespace tetris
         //ブロックの下移動
         public void MoveCurrentBlockDown(int[,] field)
         {
-            if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
             }
@@ -149,7 +149,7 @@ namespace tetris
             //ハードドロップさせるとどこまで落とせるかの座標を探す
             int y = 0;
             //ブロック設置可能場所までYを増加する
-            while (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + y, this.CurrentBlock.block_rot, this.CurrentBlock.type, field))
+            while (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 y++;
             }
@@ -170,7 +170,7 @@ namespace tetris
                 for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                 {
                     //フィールドに何もなくて、操作しているブロックはある所
-                    if (CurrentBlock.shape[(int)CurrentBlock.block_rot, y, x] != 0 &&
+                    if (CurrentBlock.shape[(int)CurrentRot, y, x] != 0 &&
                         field[base_y + y, base_x + x] == 0
                         )
                     {
@@ -216,7 +216,7 @@ namespace tetris
         //ゲームオーバーかをチェックする
         public bool CheckGameOver(int[,] field)
         {
-            if( CheckPlaceBlock(this.CurrentPos.X, this.CurrentPos.Y, this.CurrentBlock.block_rot, this.CurrentBlock.type,field) )
+            if( CheckPlaceBlock(this.CurrentPos.X, this.CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type,field) )
             {
                 //おける
                 return false;
@@ -806,6 +806,7 @@ namespace tetris
         public BlockInfo CurrentBlock = new BlockInfo(BlockInfo.BlockType.MINO_I);
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
+        public BlockInfo.BlockRot CurrentRot { get; set; }
 
         public bool DoHold = false;        //HOLDを実行したかどうか
 
