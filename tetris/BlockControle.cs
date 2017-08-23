@@ -6,9 +6,6 @@ namespace tetris
 {
     class BlockControle
     {
-        //SRS回転法則の数
-        const int SRS_ROT_NUM = 5;
-
         //コンストラクタ   
         public BlockControle()
         {
@@ -21,20 +18,6 @@ namespace tetris
             {
                 BlockInfo.BlockType type = (BlockInfo.BlockType)i;
                 this.blockInfo[i] = new BlockInfo(type);
-                
-                //回転法則（SRS）を設定
-                if(type == BlockInfo.BlockType.MINO_I)
-                {
-                    //配列のコピー
-                    Array.Copy(this.SRS_Imino_dx, this.blockInfo[i].SRS_dx, this.SRS_Imino_dx.Length);
-                    Array.Copy(this.SRS_Imino_dy, this.blockInfo[i].SRS_dy, this.SRS_Imino_dy.Length);
-                }
-                else
-                {
-                    //配列のコピー
-                    Array.Copy(this.SRS_General_dx, this.blockInfo[i].SRS_dx, this.SRS_General_dx.Length);
-                    Array.Copy(this.SRS_General_dy, this.blockInfo[i].SRS_dy, this.SRS_General_dy.Length);
-                }
             }
         }
 
@@ -74,7 +57,7 @@ namespace tetris
                 }
 
                 //TODO SRSの判定が追加される
-                for (int i = 0; i < SRS_ROT_NUM;i++)
+                for (int i = 0; i < BlockInfo.SRS_ROT_NUM;i++)
                 {
                     delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
 
@@ -97,7 +80,7 @@ namespace tetris
                     tmp_rot = BlockInfo.BlockRot.ROT_270;
                 }
                 //TODO SRSの判定が追加される
-                for (int i = 0; i < SRS_ROT_NUM; i++)
+                for (int i = 0; i < BlockInfo.SRS_ROT_NUM; i++)
                 {
                     delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
@@ -327,80 +310,5 @@ namespace tetris
 
         public bool DoHold = false;        //HOLDを実行したかどうか
         BlockInfo[] blockInfo;
-
-
-
-        //回転法則作成
-        private int[,,] SRS_General_dx = new int[2,4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
-        {
-            //右回転
-            {
-               { 0,-1,-1,0,-1 },//ROT_0
-               { 0, 1, 1,0, 1 },//ROT_90
-               { 0, 1, 1,0, 1 },//ROT_180
-               { 0,-1,-1,0,-1 },//ROT_270
-            },
-            //左回転
-            {
-               { 0, 1, 1,0, 1 },//ROT_0
-               { 0, 1, 1,0, 1 },//ROT_90
-               { 0,-1,-1,0,-1 },//ROT_180
-               { 0,-1,-1,0,-1 },//ROT_270
-            },
-        };
-        private int[,,] SRS_General_dy = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
-        {
-            //右回転
-            {
-               { 0, 0,-1, 2, 2 },//ROT_0
-               { 0, 0, 1,-2,-2 },//ROT_90
-               { 0, 0,-1, 2, 2 },//ROT_180
-               { 0, 0, 1,-2,-2 },//ROT_270
-            },
-            //左回転
-            {
-               { 0, 0,-1, 2, 2 },//ROT_0
-               { 0, 0, 1,-2,-2 },//ROT_90
-               { 0, 0,-1, 2, 2 },//ROT_180
-               { 0, 0, 1,-2,-2 },//ROT_270
-            },
-        };
-
-        //Iミノ用の回転法則
-        private int[,,] SRS_Imino_dx = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
-        {
-            //右回転
-            {
-               { 0,-2, 1,-2, 1 },//ROT_0
-               { 0,-1, 2,-1, 2 },//ROT_90
-               { 0, 2,-1, 2,-1 },//ROT_180
-               { 0, 1,-2, 1,-2 },//ROT_270
-            },
-            //左回転
-            {
-               { 0,-1, 2,-1, 2 },//ROT_0
-               { 0, 2,-1, 2,-1 },//ROT_90
-               { 0, 1,-2, 1,-2 },//ROT_180
-               { 0,-2, 1,-2, 1 },//ROT_270
-            },
-        };
-        private int[,,] SRS_Imino_dy = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
-        {
-            //右回転
-            {
-               { 0, 0, 0, 1,-2 },//ROT_0
-               { 0, 0, 0,-2, 1 },//ROT_90
-               { 0, 0, 0,-1, 2 },//ROT_180
-               { 0, 0, 0, 2,-1 },//ROT_270
-            },
-            //左回転
-            {
-               { 0, 0, 0,-2, 1 },//ROT_0
-               { 0, 0, 0,-1, 2 },//ROT_90
-               { 0, 0, 0, 2,-1 },//ROT_180
-               { 0, 0, 0, 1,-2 },//ROT_270
-            },
-        };
-
     }
 }

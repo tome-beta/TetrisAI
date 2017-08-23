@@ -15,6 +15,9 @@ namespace tetris
         public const int BLOCK_CELL_WIDTH = 4;     //ブロック領域の幅
         public const int BLOCK_CELL_HEIGHT = 4;    //ブロック領域の高さ
 
+        //SRS回転法則の数
+        public const int SRS_ROT_NUM = 5;
+
         //テトリミノの種類
         public enum BlockType
         {
@@ -79,6 +82,10 @@ namespace tetris
             };
 
             this.type = BlockType.MINO_I;
+
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_Imino_dx;
+            this.SRS_dy = this.SRS_Imino_dy;
         }
 
         private void SetMinoInfo_T()
@@ -116,6 +123,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_T;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         private void SetMinoInfo_J()
@@ -153,6 +163,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_J;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         private void SetMinoInfo_L()
@@ -190,6 +203,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_L;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         private void SetMinoInfo_Z()
@@ -227,6 +243,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_Z;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         private void SetMinoInfo_S()
@@ -264,6 +283,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_S;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         private void SetMinoInfo_O()
@@ -301,6 +323,9 @@ namespace tetris
                 },
             };
             this.type = BlockType.MINO_O;
+            //回転法則（SRS）を設定
+            this.SRS_dx = this.SRS_General_dx;
+            this.SRS_dy = this.SRS_General_dy;
         }
 
         public BlockInfo()
@@ -358,6 +383,80 @@ namespace tetris
 
         public BlockType type;  //ミノの種類
         public int[,,] shape { get; set; }    //ブロックの形＊４
+
+
+        //回転法則作成
+        private readonly int[,,] SRS_General_dx = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0,-1,-1,0,-1 },//ROT_0
+               { 0, 1, 1,0, 1 },//ROT_90
+               { 0, 1, 1,0, 1 },//ROT_180
+               { 0,-1,-1,0,-1 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 1, 1,0, 1 },//ROT_0
+               { 0, 1, 1,0, 1 },//ROT_90
+               { 0,-1,-1,0,-1 },//ROT_180
+               { 0,-1,-1,0,-1 },//ROT_270
+            },
+        };
+        private readonly int[,,] SRS_General_dy = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0, 0,-1, 2, 2 },//ROT_0
+               { 0, 0, 1,-2,-2 },//ROT_90
+               { 0, 0,-1, 2, 2 },//ROT_180
+               { 0, 0, 1,-2,-2 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 0,-1, 2, 2 },//ROT_0
+               { 0, 0, 1,-2,-2 },//ROT_90
+               { 0, 0,-1, 2, 2 },//ROT_180
+               { 0, 0, 1,-2,-2 },//ROT_270
+            },
+        };
+
+        //Iミノ用の回転法則
+        private readonly int[,,] SRS_Imino_dx = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0,-2, 1,-2, 1 },//ROT_0
+               { 0,-1, 2,-1, 2 },//ROT_90
+               { 0, 2,-1, 2,-1 },//ROT_180
+               { 0, 1,-2, 1,-2 },//ROT_270
+            },
+            //左回転
+            {
+               { 0,-1, 2,-1, 2 },//ROT_0
+               { 0, 2,-1, 2,-1 },//ROT_90
+               { 0, 1,-2, 1,-2 },//ROT_180
+               { 0,-2, 1,-2, 1 },//ROT_270
+            },
+        };
+        private readonly int[,,] SRS_Imino_dy = new int[2, 4, SRS_ROT_NUM]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0, 0, 0, 1,-2 },//ROT_0
+               { 0, 0, 0,-2, 1 },//ROT_90
+               { 0, 0, 0,-1, 2 },//ROT_180
+               { 0, 0, 0, 2,-1 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 0, 0,-2, 1 },//ROT_0
+               { 0, 0, 0,-1, 2 },//ROT_90
+               { 0, 0, 0, 2,-1 },//ROT_180
+               { 0, 0, 0, 1,-2 },//ROT_270
+            },
+        };
+
 
     }
 }
