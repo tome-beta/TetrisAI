@@ -43,9 +43,6 @@ namespace tetris
         //ここにずらずらとミノの情報を取得する関数を書いていくのか
         //必要なの　ブロックの形＊４
         //ミノID
-        //今のミノの向き
-        //回転法則
-
         private void SetMinoInfo_I()
         {
             //ミノの位置
@@ -361,7 +358,6 @@ namespace tetris
 
         public BlockType type;  //ミノの種類
         public int[,,] shape { get; set; }    //ブロックの形＊４
-        //作成予定 回転法則
 
     }
 }
