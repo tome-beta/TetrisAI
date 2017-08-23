@@ -355,7 +355,9 @@ namespace tetris
 
         }
 
-        //TODO 持つのは形と回転法則だけっぽい
+        //持つのは形と回転法則だけっぽい。ミノを作るごとに回転法則を当てはめる
+        public int[,,] SRS_dx = new int[2,4,5];//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        public int[,,] SRS_dy = new int[2, 4, 5];//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
 
         public BlockType type;  //ミノの種類
         public int[,,] shape { get; set; }    //ブロックの形＊４

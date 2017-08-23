@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Diagnostics;
+using System;
 
 namespace tetris
 {
@@ -17,6 +18,22 @@ namespace tetris
             {
                 BlockInfo.BlockType type = (BlockInfo.BlockType)i;
                 this.blockInfo[i] = new BlockInfo(type);
+                
+                //回転法則（SRS）を設定
+                if(type == BlockInfo.BlockType.MINO_I)
+                {
+                    Array.Copy(this.SRS_Imino_dx, this.blockInfo[i].SRS_dx, this.SRS_Imino_dx.Length);
+                    Array.Copy(this.SRS_Imino_dy, this.blockInfo[i].SRS_dy, this.SRS_Imino_dy.Length);
+                    //                    this.blockInfo[i].SRS_dx = this.SRS_Imino_dx;
+                    //                    this.blockInfo[i].SRS_dy = this.SRS_Imino_dy;
+                }
+                else
+                {
+                    Array.Copy(this.SRS_General_dx, this.blockInfo[i].SRS_dx, this.SRS_General_dx.Length);
+                    Array.Copy(this.SRS_General_dy, this.blockInfo[i].SRS_dy, this.SRS_General_dy.Length);
+//                    this.blockInfo[i].SRS_dx = this.SRS_General_dx;
+//                    this.blockInfo[i].SRS_dy = this.SRS_General_dy;
+                }
             }
         }
 
@@ -36,6 +53,10 @@ namespace tetris
                     }
                 }
             }
+
+            CurrentBlock.SRS_dx = this.blockInfo[(int)type].SRS_dx;
+            CurrentBlock.SRS_dy = this.blockInfo[(int)type].SRS_dy;
+
 
             //座標をスタート地点に
             this.CurrentPos = MINO_START_POS;
@@ -66,14 +87,14 @@ namespace tetris
                 //TODO SRSの判定が追加される
                 for (int i = 0; i < SRS_ROT_NUM;i++)
                 {
-                    if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
-                    {
+//                    if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
+//                    {
                         delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
-                    }
-                    else
-                    {
-                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentRot);
-                    }
+ //                   }
+//                    else
+//                    {
+//                        delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentRot);
+//                    }
 
 
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
@@ -97,15 +118,15 @@ namespace tetris
                 //TODO SRSの判定が追加される
                 for (int i = 0; i < SRS_ROT_NUM; i++)
                 {
-                    if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
+//                    if (this.CurrentBlock.type == BlockInfo.BlockType.MINO_I)
                     {
                         delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     }
-                    else
+/*                    else
                     {
                         delta_pos = CheckSRS_Imino(i, rot_r, this.CurrentRot);
                     }
-
+*/
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
                         //回転できる
@@ -483,251 +504,261 @@ namespace tetris
             return delta_pos;
         }
 
-        private Point CheckSRS(int cnt,bool right_rot,BlockInfo.BlockRot current_rot)
+        private Point CheckSRS(int SRS_rule,bool right_rot,BlockInfo.BlockRot current_rot)
         {
             Point delta_pos = new Point();
-            //右回転
-            if (right_rot)
+
+            int rot_num = 1;
+            if(right_rot)
             {
-                if (current_rot == BlockInfo.BlockRot.ROT_0)
-                {
-                    switch(cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = -2;
-                            break;
-                        case 4:
-                            delta_pos.X = -1;
-                            delta_pos.Y = -2;
-                            break;
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
-
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_90)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = 1;
-                            delta_pos.Y = -1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 2;
-                            break;
-                        case 4:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 2;
-                            break;
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
-
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_180)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = -2;
-                            break;
-                        case 4:
-                            delta_pos.X = 1;
-                            delta_pos.Y = -2;
-                            break;
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
-
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_270)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = -1;
-                            delta_pos.Y = -1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 2;
-                            break;
-                        case 4:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 2;
-                            break;
-                        default:
-                            Debug.Assert(false);
-                            break;
-                    }
-                }
-            }
-            //左回転
-            else
-            {
-                if (current_rot == BlockInfo.BlockRot.ROT_0)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = -2;
-                            break;
-                        case 4:
-                            delta_pos.X = 1;
-                            delta_pos.Y = -2;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_90)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = 1;
-                            delta_pos.Y = -1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 2;
-                            break;
-                        case 4:
-                            delta_pos.X = 1;
-                            delta_pos.Y = 2;
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_180)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = -2;
-                            break;
-                        case 4:
-                            delta_pos.X = -1;
-                            delta_pos.Y = -2;
-                            break;
-                        default:
-                            break;
-                    }
-
-                }
-                else if (current_rot == BlockInfo.BlockRot.ROT_270)
-                {
-                    switch (cnt)
-                    {
-                        case 0:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 0;
-                            break;
-                        case 1:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 0;
-                            break;
-                        case 2:
-                            delta_pos.X = -1;
-                            delta_pos.Y = -1;
-                            break;
-                        case 3:
-                            delta_pos.X = 0;
-                            delta_pos.Y = 2;
-                            break;
-                        case 4:
-                            delta_pos.X = -1;
-                            delta_pos.Y = 2;
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                rot_num = 0;
             }
 
+            delta_pos.X = this.CurrentBlock.SRS_dx[rot_num, (int)current_rot, SRS_rule];
+            delta_pos.Y = this.CurrentBlock.SRS_dy[rot_num, (int)current_rot, SRS_rule];
+            /*
+                        //右回転
+                        if (right_rot)
+                        {
+                            if (current_rot == BlockInfo.BlockRot.ROT_0)
+                            {
+                                switch(cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    default:
+                                        Debug.Assert(false);
+                                        break;
+                                }
+
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_90)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = -1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    default:
+                                        Debug.Assert(false);
+                                        break;
+                                }
+
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_180)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    default:
+                                        Debug.Assert(false);
+                                        break;
+                                }
+
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_270)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = -1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    default:
+                                        Debug.Assert(false);
+                                        break;
+                                }
+                            }
+                        }
+                        //左回転
+                        else
+                        {
+                            if (current_rot == BlockInfo.BlockRot.ROT_0)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_90)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = -1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = 1;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_180)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = -2;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                            }
+                            else if (current_rot == BlockInfo.BlockRot.ROT_270)
+                            {
+                                switch (cnt)
+                                {
+                                    case 0:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 1:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 0;
+                                        break;
+                                    case 2:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = -1;
+                                        break;
+                                    case 3:
+                                        delta_pos.X = 0;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    case 4:
+                                        delta_pos.X = -1;
+                                        delta_pos.Y = 2;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+            */
             return delta_pos;
         }
 
@@ -809,7 +840,81 @@ namespace tetris
         public BlockInfo.BlockRot CurrentRot { get; set; }
 
         public bool DoHold = false;        //HOLDを実行したかどうか
-
         BlockInfo[] blockInfo;
+
+
+
+        //回転法則作成
+        private int[,,] SRS_General_dx = new int[2,4,5]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0,-1,-1,0,-1 },//ROT_0
+               { 0, 1, 1,0, 1 },//ROT_90
+               { 0, 1, 1,0, 1 },//ROT_180
+               { 0,-1,-1,0,-1 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 1, 1,0, 1 },//ROT_0
+               { 0, 1, 1,0, 1 },//ROT_90
+               { 0,-1,-1,0,-1 },//ROT_180
+               { 0,-1,-1,0,-1 },//ROT_270
+            },
+        };
+        private int[,,] SRS_General_dy = new int[2, 4, 5]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0, 0,-1, 2, 2 },//ROT_0
+               { 0, 0, 1,-2,-2 },//ROT_90
+               { 0, 0,-1, 2, 2 },//ROT_180
+               { 0, 0, 1,-2,-2 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 0,-1, 2, 2 },//ROT_0
+               { 0, 0, 1,-2,-2 },//ROT_90
+               { 0, 0,-1, 2, 2 },//ROT_180
+               { 0, 0, 1,-2,-2 },//ROT_270
+            },
+        };
+
+        //Iミノ用の回転法則
+        private int[,,] SRS_Imino_dx = new int[2, 4, 5]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0,-2, 1,-2, 1 },//ROT_0
+               { 0,-1, 2,-1, 2 },//ROT_90
+               { 0, 2,-1, 2,-1 },//ROT_180
+               { 0, 1,-2, 1,-2 },//ROT_270
+            },
+            //左回転
+            {
+               { 0,-1, 2,-1, 2 },//ROT_0
+               { 0, 2,-1, 2,-1 },//ROT_90
+               { 0, 1,-2, 1,-2 },//ROT_180
+               { 0,-2, 1,-2, 1 },//ROT_270
+            },
+        };
+        private int[,,] SRS_Imino_dy = new int[2, 4, 5]//[回転方向（０＝右、１＝左][回転前の向き][回転ルール番号]
+        {
+            //右回転
+            {
+               { 0, 0, 0, 1,-2 },//ROT_0
+               { 0, 0, 0,-2, 1 },//ROT_90
+               { 0, 0, 0,-1, 2 },//ROT_180
+               { 0, 0, 0, 2,-1 },//ROT_270
+            },
+            //左回転
+            {
+               { 0, 0, 0,-2, 1 },//ROT_0
+               { 0, 0, 0,-1, 2 },//ROT_90
+               { 0, 0, 0, 2,-1 },//ROT_180
+               { 0, 0, 0, 1,-2 },//ROT_270
+            },
+        };
+
     }
 }
