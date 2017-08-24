@@ -196,7 +196,7 @@ namespace tetris
             DrawNextBlock();
 
             //操作中のブロックを描画
-            DrawGuideBlock();
+            DrawCurrentBlock(GameOverFlag);
 
             //落下位置ブロックを描画
             DrawGuideBlock();
