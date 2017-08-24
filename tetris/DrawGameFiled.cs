@@ -57,7 +57,7 @@ namespace tetris
         }
 
         //操作中のブロックを描画
-        private void DrawCurrentBlock()
+        private void DrawCurrentBlock(bool game_over)
         {
             if (this.blockControle.CurrentBlock != null)
             {
@@ -71,11 +71,18 @@ namespace tetris
                     {
                         if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
                         {
+                            int draw_type = (int)(CurrnetInfo.type);
+                            if( game_over)
+                            {
+                                draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
+                            }
+
+
                             //ミノの種類により切り出す画像を選ぶ
                             DrawOneBlock(gFiled1P, 
                                 (Pos.X + x) * BlockInfo.BLOCK_WIDTH, 
                                 (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(CurrnetInfo.type));
+                                draw_type);
                         }
                     }
                 }

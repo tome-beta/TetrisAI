@@ -21,7 +21,7 @@ namespace tetris
         //テトリミノの種類
         public enum BlockType
         {
-            MINO_ATTACK = 0,
+            MINO_NULL = 0,
             MINO_I,
             MINO_T,
             MINO_J,
@@ -30,6 +30,7 @@ namespace tetris
             MINO_S,
             MINO_O,
             MINO_FENCE,
+            MINO_ATTACK,
 
             MINO_IN_FIELD = 10, //設置したブロックを表す
             MINO_VANISH = 100,  //消す予定のブロックを表す
