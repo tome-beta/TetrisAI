@@ -138,7 +138,9 @@ namespace tetris
                         else if (this.HardDrop)
                         {
                             //ハードドロップ
-                            this.blockControle.HardDropCurrentBlock(BlockField);
+                            int y = this.blockControle.HardDropCurrentBlock(BlockField);
+                            this.blockControle.CurrentPos.Y += y;   //TODO 関数化
+
                             this.blockControle.DoHold = false;
                             this.HardDrop = false;
 
@@ -194,7 +196,10 @@ namespace tetris
             DrawNextBlock();
 
             //操作中のブロックを描画
-            DrawCurrentBlock(GameOverFlag);
+            DrawCurrentBlock();
+
+            //落下位置ブロックを描画
+            DrawGuideBlock();
 
             
             //HOLDブロックを描画

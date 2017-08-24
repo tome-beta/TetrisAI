@@ -120,8 +120,12 @@ namespace tetris
             }
         }
 
-        //ハードドロップさせる
-        public void HardDropCurrentBlock(int[,] field)
+        /// <summary>
+        ///ハードドロップさせる 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns>移動させるY位置を返す</returns>
+        public int HardDropCurrentBlock(int[,] field)
         {
             //ハードドロップさせるとどこまで落とせるかの座標を探す
             int y = 0;
@@ -132,8 +136,7 @@ namespace tetris
             }
             //設置できるY位置
             y -= 1;
-            //移動させる
-            CurrentPos.Y += y;
+            return y;
         }
 
         //フィールドの操作しているブロックを設置する
