@@ -47,6 +47,8 @@ namespace tetris
             //ブロックの元画像を読み込んでおく
             BlockSourceImage = Image.FromFile(@"..\..\resource\mino.bmp");
 
+            this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
+
             //フィールド情報を初期化
             BlockFieldInit();
 
@@ -62,36 +64,6 @@ namespace tetris
 
             Mode = GAME_MODE.MODE_WAIT;
         }
-
-        private void BlockFieldInit()
-        {
-            //フィールドを作る
-            //フィールドは１０＊２０の両サイドに壁を表す９９を入れる。
-            //ブロックのスタート位置のために上に３行加える。
-            //床にも１行追加
-            //全体としては１２＊２4
-            this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
-            //壁と床を設置
-            for (int w = 0; w < GameField.FIELD_WIDTH; w++)
-            {
-                for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
-                {
-                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
-                        h == GameField.FIELD_HEIGHT - 1)
-                    {
-                        this.BlockField[h, w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
-                    }
-                    else
-                    {
-                        this.BlockField[h, w] = 0;
-                    }
-                }
-            }
-
-            //NEXTブロックを収める配列
-            UpdateNextBlock();
-        }
-
         public void Exec()
         {
             Console.WriteLine(@"EXEC");
@@ -102,6 +74,8 @@ namespace tetris
                     {
                         if(this.GameStart)
                         {
+                            //フィールドの初期化をする
+                            BlockFieldInit();
                             this.GameStart = false;
                             Mode = GAME_MODE.MODE_SET_BLOCK;
                         }
@@ -120,6 +94,22 @@ namespace tetris
                         if(this.blockControle.CheckGameOver(this.BlockField))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
+
+                            //置いているブロックをすべて灰色にする
+                            //壁と設置されているブロックを描く
+                            for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                            {
+                                for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                                {
+                                    int field_block = this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD;
+
+                                    if ((int)BlockInfo.BlockType.MINO_I <= field_block &&
+                                        field_block <= (int)BlockInfo.BlockType.MINO_O)
+                                    {
+                                        this.BlockField[y, x] = (int)BlockInfo.BlockType.MINO_ATTACK + (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -181,6 +171,7 @@ namespace tetris
                 case GAME_MODE.MODE_GAME_OVER:
                     {
                         this.Mode = GAME_MODE.MODE_WAIT;
+                        GameOverFlag = true;
                     }
                     break;
                 default:
@@ -203,8 +194,9 @@ namespace tetris
             DrawNextBlock();
 
             //操作中のブロックを描画
-            DrawCurrentBlock();
+            DrawCurrentBlock(GameOverFlag);
 
+            
             //HOLDブロックを描画
             DrawHoldBlock();
 
@@ -225,6 +217,36 @@ namespace tetris
         //===========================================
         //  private
         //===========================================
+
+        private void BlockFieldInit()
+        {
+            //フィールドを作る
+            //フィールドは１０＊２０の両サイドに壁を表す９９を入れる。
+            //ブロックのスタート位置のために上に３行加える。
+            //床にも１行追加
+            //全体としては１２＊２4
+            //壁と床を設置
+            for (int w = 0; w < GameField.FIELD_WIDTH; w++)
+            {
+                for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
+                {
+                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
+                        h == GameField.FIELD_HEIGHT - 1)
+                    {
+                        this.BlockField[h, w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                    }
+                    else
+                    {
+                        this.BlockField[h, w] = 0;
+                    }
+                }
+            }
+
+            GameOverFlag = false;
+
+            //NEXTブロックを収める配列
+            UpdateNextBlock();
+        }
 
 
         //NEXTブロックを取得
@@ -406,12 +428,15 @@ namespace tetris
 
 
         BlockControle blockControle = new BlockControle();
-        public int[,] BlockField { get; set; }
         public int fps {get;set;}
 
-        private List<int> NextBlock = new List<int>();
-
+        //ゲーム管理
         private GAME_MODE Mode;
+        private bool GameOverFlag = false;
+
+        //データ配列
+        public int[,] BlockField { get; set; }
+        private List<int> NextBlock = new List<int>();
         private List<int> EraseLine = new List<int>();
         System.Random MyRandom = new Random();
 
