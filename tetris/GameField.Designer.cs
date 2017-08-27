@@ -42,6 +42,7 @@
             this.labelNext2P = new System.Windows.Forms.Label();
             this.labelFPS = new System.Windows.Forms.Label();
             this.labelCurrentPos = new System.Windows.Forms.Label();
+            this.labelMessage1P = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
@@ -190,12 +191,24 @@
             this.labelCurrentPos.TabIndex = 13;
             this.labelCurrentPos.Text = "pos";
             // 
+            // labelMessage1P
+            // 
+            this.labelMessage1P.AutoSize = true;
+            this.labelMessage1P.BackColor = System.Drawing.Color.White;
+            this.labelMessage1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelMessage1P.Location = new System.Drawing.Point(222, 701);
+            this.labelMessage1P.Name = "labelMessage1P";
+            this.labelMessage1P.Size = new System.Drawing.Size(145, 28);
+            this.labelMessage1P.TabIndex = 14;
+            this.labelMessage1P.Text = "メッセージ表示";
+            // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(1512, 717);
+            this.ClientSize = new System.Drawing.Size(1512, 750);
+            this.Controls.Add(this.labelMessage1P);
             this.Controls.Add(this.labelCurrentPos);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.labelNext2P);
@@ -240,5 +253,6 @@
         private System.Windows.Forms.Label labelNext2P;
         private System.Windows.Forms.Label labelFPS;
         private System.Windows.Forms.Label labelCurrentPos;
+        private System.Windows.Forms.Label labelMessage1P;
     }
 }

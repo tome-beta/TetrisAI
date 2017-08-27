@@ -63,6 +63,11 @@ namespace tetris
             this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
 
             Mode = GAME_MODE.MODE_WAIT;
+
+            //メッセージ
+            messageControle.Message1P = this.labelMessage1P;
+
+            messageControle.SetMessage(@"Press F1 key to start", false);
         }
         public void Exec()
         {
@@ -78,6 +83,8 @@ namespace tetris
                             BlockFieldInit();
                             this.GameStart = false;
                             Mode = GAME_MODE.MODE_SET_BLOCK;
+
+                            this.messageControle.ClearMessage();
                         }
                     }
                     break;
@@ -172,6 +179,7 @@ namespace tetris
                 //ゲームオーバー
                 case GAME_MODE.MODE_GAME_OVER:
                     {
+                        messageControle.SetMessage(@"Press F1 key to start", false);
                         this.Mode = GAME_MODE.MODE_WAIT;
                         GameOverFlag = true;
                     }
@@ -179,6 +187,7 @@ namespace tetris
                 default:
                     break;
             }
+
         }
 
         /// <summary>
@@ -201,9 +210,11 @@ namespace tetris
             //落下位置ブロックを描画
             DrawGuideBlock();
 
-            
             //HOLDブロックを描画
             DrawHoldBlock();
+
+            //メッセージの表示
+            this.messageControle.DrawUpdate();
 
             //PictureBoxを更新
             this.pictureBoxField1P.Image = canvasFiled1P;
@@ -330,6 +341,36 @@ namespace tetris
             //TODO 
             //ここでTスピン　BtoB　RENのチェックする
 
+            //消去するラインによってメッセージを変える
+            string str = @"";
+            switch(line_num)
+            {
+                case 1:
+                    {
+                        str = @"single";
+                    }
+                    break;
+                case 2:
+                    {
+                        str = @"double";
+                    }
+                    break;
+                case 3:
+                    {
+                        str = @"triple";
+                    }
+                    break;
+                case 4:
+                    {
+                        str = @"tetlis !";
+                    }
+                    break;
+            }
+
+            if( line_num >0 )
+            {
+                this.messageControle.SetMessage(str, true);
+            }
         }
 
         //消去するラインを調べる
@@ -431,12 +472,12 @@ namespace tetris
             }
         }
 
-
-        BlockControle blockControle = new BlockControle();
         public int fps {get;set;}
 
         //ゲーム管理
         private GAME_MODE Mode;
+        BlockControle blockControle = new BlockControle();
+        MessageControle messageControle = new MessageControle();
         private bool GameOverFlag = false;
 
         //データ配列

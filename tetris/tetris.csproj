@@ -57,6 +57,7 @@
     <Compile Include="GameField.Designer.cs">
       <DependentUpon>GameField.cs</DependentUpon>
     </Compile>
+    <Compile Include="MessageControle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GameField.resx">
