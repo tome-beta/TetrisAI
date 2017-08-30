@@ -45,7 +45,7 @@ namespace tetris
         private void Init()
         {
             //ブロックの元画像を読み込んでおく
-            BlockSourceImage = Image.FromFile(@"..\..\resource\mino.bmp");
+            BlockSourceImage = Image.FromFile(@"..\..\..\resource\mino.bmp");
 
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
 
