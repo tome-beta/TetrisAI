@@ -6,12 +6,9 @@ namespace tetris
 {
     class BlockControle
     {
-        public enum CONTROLE_STATUS
-        {
-            ROTATE_ACTION    = 0x0001,     //設置前の最後の操作が回転
-            TSPIN           = 0x0002,      //Tスピン成功
-            TSPIN_MINI      = 0x0004,      //Tスピンミニの成功
-        };
+        public const int ROTATE_ACTION = 0x0001;     //設置前の最後の操作が回転
+        public const int TSPIN = 0x0002;      //Tスピン成功
+        public const int TSPIN_MINI = 0x0004;      //Tスピンミニの成功
 
         //コンストラクタ   
         public BlockControle()
@@ -58,6 +55,7 @@ namespace tetris
             //座標をスタート地点に
             this.CurrentPos = MINO_START_POS;
             this.CurrentRot = BlockInfo.BlockRot.ROT_0;
+            this.status = 0;
         }
 
         //操作しているブロックを回転させる
@@ -119,7 +117,7 @@ namespace tetris
             if (rot_ok == true)
             {
                 //回転できる
-                this.status &= CONTROLE_STATUS.ROTATE_ACTION;
+                this.status |= ROTATE_ACTION;
                 this.CurrentRot = tmp_rot;
                 this.CurrentPos.X += delta_pos.X;
                 this.CurrentPos.Y += delta_pos.Y;
@@ -134,7 +132,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
-                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
+                this.status &= ~ROTATE_ACTION;
             }
         }
         //ブロックの左移動
@@ -143,7 +141,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
-                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
+                this.status &= ~ROTATE_ACTION;
             }
         }
         //ブロックの下移動
@@ -152,7 +150,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
-                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
+                this.status &= ~ROTATE_ACTION;
             }
         }
 
@@ -351,7 +349,7 @@ namespace tetris
             }
 
             //最後に回転させたか？
-            if (((int)this.status | (int)BlockControle.CONTROLE_STATUS.ROTATE_ACTION) != 1)
+            if (((int)this.status | (int)BlockControle.ROTATE_ACTION) != 1)
             {
                 return;
             }
@@ -397,12 +395,12 @@ namespace tetris
                 {
                     //３箇所以上囲まれていたらT-SPIN成立
                     //この条件でT-SPIN
-                    this.status |= CONTROLE_STATUS.TSPIN;
+                    this.status |= TSPIN;
                 }
                 else
                 {
                     //これはT-SPIN_MINI
-                    this.status |= CONTROLE_STATUS.TSPIN_MINI;
+                    this.status |= TSPIN_MINI;
                 }
             }
         }
@@ -487,7 +485,7 @@ namespace tetris
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
-        public CONTROLE_STATUS status { get; set; }
+        public int status { get; set; }
         public bool DoHold = false;        //HOLDを実行したかどうか
 
         private BlockInfo[] blockInfo;

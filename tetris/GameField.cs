@@ -349,26 +349,40 @@ namespace tetris
 
             //消去するラインによってメッセージを変える
             string str = @"";
-            switch(line_num)
+
+            //T-SPINのメッセージ
+            int test = BlockControle.TSPIN;
+            test = test & BlockControle.TSPIN;
+
+            if((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            {
+                str += @"T-SPIN ";
+            }
+            else if ((this.blockControle.status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
+            {
+                str += @"T-SPIN mini ";
+            }
+
+            switch (line_num)
             {
                 case 1:
                     {
-                        str = @"single";
+                        str += @"single";
                     }
                     break;
                 case 2:
                     {
-                        str = @"double";
+                        str += @"double";
                     }
                     break;
                 case 3:
                     {
-                        str = @"triple";
+                        str += @"triple";
                     }
                     break;
                 case 4:
                     {
-                        str = @"tetlis !";
+                        str += @"tetlis !";
                     }
                     break;
             }
