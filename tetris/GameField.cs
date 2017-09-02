@@ -45,7 +45,16 @@ namespace tetris
         private void Init()
         {
             //ブロックの元画像を読み込んでおく
-            BlockSourceImage = Image.FromFile(@"..\..\..\resource\mino.bmp");
+            string BlockImageFile = @"..\..\..\resource\mino.bmp";
+            if (System.IO.File.Exists(BlockImageFile))
+            {
+                BlockSourceImage = Image.FromFile(BlockImageFile);
+            }
+            else
+            {
+                BlockImageFile = @"..\..\resource\mino.bmp";
+                BlockSourceImage = Image.FromFile(BlockImageFile);
+            }
 
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
 
@@ -338,31 +347,42 @@ namespace tetris
                 }
             }
 
-            //TODO 
-            //ここでTスピン　BtoB　RENのチェックする
-
             //消去するラインによってメッセージを変える
             string str = @"";
-            switch(line_num)
+
+            //T-SPINのメッセージ
+            int test = BlockControle.TSPIN;
+            test = test & BlockControle.TSPIN;
+
+            if((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            {
+                str += @"T-SPIN ";
+            }
+            else if ((this.blockControle.status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
+            {
+                str += @"T-SPIN mini ";
+            }
+
+            switch (line_num)
             {
                 case 1:
                     {
-                        str = @"single";
+                        str += @"single";
                     }
                     break;
                 case 2:
                     {
-                        str = @"double";
+                        str += @"double";
                     }
                     break;
                 case 3:
                     {
-                        str = @"triple";
+                        str += @"triple";
                     }
                     break;
                 case 4:
                     {
-                        str = @"tetlis !";
+                        str += @"tetlis !";
                     }
                     break;
             }
@@ -402,7 +422,6 @@ namespace tetris
 
             this.EraseLine.Clear();
         }
-
 
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)

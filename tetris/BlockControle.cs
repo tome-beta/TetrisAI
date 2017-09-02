@@ -6,6 +6,10 @@ namespace tetris
 {
     class BlockControle
     {
+        public const int ROTATE_ACTION = 0x0001;     //設置前の最後の操作が回転
+        public const int TSPIN = 0x0002;      //Tスピン成功
+        public const int TSPIN_MINI = 0x0004;      //Tスピンミニの成功
+
         //コンストラクタ   
         public BlockControle()
         {
@@ -19,6 +23,22 @@ namespace tetris
                 BlockInfo.BlockType type = (BlockInfo.BlockType)i;
                 this.blockInfo[i] = new BlockInfo(type);
             }
+        }
+
+        //指定した場所はフィールド配列の有効な位置か
+        public bool IsFieldPos(int y, int x)
+        {
+            if( 0 <= x && x < GameField.FIELD_WIDTH &&
+                0 <= y && y < GameField.FIELD_HEIGHT
+                )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
         //ブロックを取得
@@ -35,6 +55,7 @@ namespace tetris
             //座標をスタート地点に
             this.CurrentPos = MINO_START_POS;
             this.CurrentRot = BlockInfo.BlockRot.ROT_0;
+            this.status = 0;
         }
 
         //操作しているブロックを回転させる
@@ -47,6 +68,8 @@ namespace tetris
             Point delta_pos = new Point();
             tmp_pos = this.CurrentPos;
 
+            int rot_rule = 0;
+            bool rot_ok = false;
             if (rot_r)
             {
                 //右回転
@@ -63,10 +86,8 @@ namespace tetris
 
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
-                        //回転できる
-                        this.CurrentRot = tmp_rot;
-                        this.CurrentPos.X += delta_pos.X;
-                        this.CurrentPos.Y += delta_pos.Y;
+                        rot_rule = i;
+                        rot_ok = true;
                         break;
                     }
                 }
@@ -85,13 +106,23 @@ namespace tetris
                     delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
-                        //回転できる
-                        this.CurrentRot = tmp_rot;
-                        this.CurrentPos.X += delta_pos.X;
-                        this.CurrentPos.Y += delta_pos.Y;
+                        rot_rule = i;
+                        rot_ok = true;
                         break;
                     }
                 }
+            }
+
+            //回転できるのでT-SPINの判定
+            if (rot_ok == true)
+            {
+                //回転できる
+                this.status |= ROTATE_ACTION;
+                this.CurrentRot = tmp_rot;
+                this.CurrentPos.X += delta_pos.X;
+                this.CurrentPos.Y += delta_pos.Y;
+
+                CheckTspin(field,rot_rule);
             }
         }
 
@@ -101,6 +132,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
+                this.status &= ~ROTATE_ACTION;
             }
         }
         //ブロックの左移動
@@ -109,6 +141,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
+                this.status &= ~ROTATE_ACTION;
             }
         }
         //ブロックの下移動
@@ -117,6 +150,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
+                this.status &= ~ROTATE_ACTION;
             }
         }
 
@@ -301,6 +335,147 @@ namespace tetris
             return this.blockInfo[(int)type];
         }
 
+        /// <summary>
+        /// T-SPINが出来たかを判定
+        ///ブロックは回転させた後の状態になっている
+        /// </summary>
+        /// <param name="field"></param>
+        private void CheckTspin(int[,] field,int rot_rule)
+        {
+            //動かしているブロックたTか？
+            if (CurrentBlock.type != BlockInfo.BlockType.MINO_T)
+            {
+                return;
+            }
+
+            //最後に回転させたか？
+            if (((int)this.status | (int)BlockControle.ROTATE_ACTION) != 1)
+            {
+                return;
+            }
+
+            int[,,] t_spin_checker = this.Get_TSPIN_Shape();
+            int[,,] t_spin_mini_checker = this.Get_TSPIN_MINI_Shape();
+
+            //T-SPINカウンタ
+            int t_spin_cnt = 0;
+            int t_mini_cnt = 0;
+
+
+            for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+            {
+                for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                {
+                    int tspin_block = t_spin_checker[(int)this.CurrentRot, y, x];
+                    int tspin_mini_block = t_spin_mini_checker[(int)this.CurrentRot, y, x];
+
+                    int field_block = 0;
+                    if ( IsFieldPos(this.CurrentPos.Y + y, this.CurrentPos.X + x))
+                    {
+                        field_block = field[this.CurrentPos.Y + y, this.CurrentPos.X + x];
+                    }
+                    //TーSPIN判定する場所に進行できないブロックがあるか？
+                    
+                    if (tspin_block == 1 && field_block != 0)
+                    {
+                        t_spin_cnt++;
+                    }
+                    if (tspin_mini_block == 1 && field_block != 0)
+                    {
+                        t_mini_cnt++;
+                    }
+                }
+            }
+
+            //最終判定
+            if( t_spin_cnt >= 3)
+            {
+                //３箇所以上囲まれている
+                if( t_mini_cnt >= 2 || rot_rule == 4)
+                {
+                    //３箇所以上囲まれていたらT-SPIN成立
+                    //この条件でT-SPIN
+                    this.status |= TSPIN;
+                }
+                else
+                {
+                    //これはT-SPIN_MINI
+                    this.status |= TSPIN_MINI;
+                }
+            }
+        }
+        public int[,,] Get_TSPIN_Shape()
+        {
+            //ミノの位置
+            return new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+            };
+        }
+        public int[,,] Get_TSPIN_MINI_Shape()
+        {
+            //ミノの位置
+            return new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+        }
+
+
         public readonly int MINO_TYPE_MAX;      //ミノとしての種類
         public readonly Point MINO_START_POS;   //ミノを出現させる位置
 
@@ -310,8 +485,9 @@ namespace tetris
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
-
+        public int status { get; set; }
         public bool DoHold = false;        //HOLDを実行したかどうか
-        BlockInfo[] blockInfo;
+
+        private BlockInfo[] blockInfo;
     }
 }

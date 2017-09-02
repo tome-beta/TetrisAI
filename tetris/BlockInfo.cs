@@ -329,6 +329,7 @@ namespace tetris
             this.SRS_dy = this.SRS_General_dy;
         }
 
+
         public BlockInfo()
         {
             //使わない
