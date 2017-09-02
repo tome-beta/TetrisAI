@@ -54,6 +54,8 @@ namespace tetris
             Point delta_pos = new Point();
             tmp_pos = this.CurrentPos;
 
+
+            bool rot_ok = false;
             if (rot_r)
             {
                 //右回転
@@ -70,12 +72,7 @@ namespace tetris
 
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
-                        //回転できる
-                        this.CurrentRot = tmp_rot;
-                        this.CurrentPos.X += delta_pos.X;
-                        this.CurrentPos.Y += delta_pos.Y;
-
-                        this.status &= CONTROLE_STATUS.ROTATE_ACTION;
+                        rot_ok = true;
                         break;
                     }
                 }
@@ -94,15 +91,21 @@ namespace tetris
                     delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
                     if (CheckPlaceBlock(tmp_pos.X + delta_pos.X, tmp_pos.Y + delta_pos.Y, tmp_rot, tmp_type, field))
                     {
-                        //回転できる
-                        this.CurrentRot = tmp_rot;
-                        this.CurrentPos.X += delta_pos.X;
-                        this.CurrentPos.Y += delta_pos.Y;
-
-                        this.status &= CONTROLE_STATUS.ROTATE_ACTION;
+                        rot_ok = true;
                         break;
                     }
                 }
+            }
+
+            //回転できるのでT-SPINの判定
+            if (rot_ok == true)
+            {
+                //回転できる
+                this.status &= CONTROLE_STATUS.ROTATE_ACTION;
+                this.CurrentRot = tmp_rot;
+                this.CurrentPos.X += delta_pos.X;
+                this.CurrentPos.Y += delta_pos.Y;
+
             }
         }
 
@@ -314,6 +317,78 @@ namespace tetris
         {
             return this.blockInfo[(int)type];
         }
+
+        public int[,,] Get_TSPIN_Shape()
+        {
+            //ミノの位置
+            return new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+            };
+        }
+        public int[,,] Get_TSPIN_MINI_Shape()
+        {
+            //ミノの位置
+            return new int[,,]
+            {
+                {
+                    //ROT_0
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_90
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                    { 0,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_180
+                    { 0,0,0,0, },
+                    { 0,0,0,0, },
+                    { 1,0,1,0, },
+                    { 0,0,0,0, },
+                },
+                {
+                    //ROT_270
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                    { 1,0,0,0, },
+                    { 0,0,0,0, },
+                },
+            };
+        }
+
 
         public readonly int MINO_TYPE_MAX;      //ミノとしての種類
         public readonly Point MINO_START_POS;   //ミノを出現させる位置

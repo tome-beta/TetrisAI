@@ -45,7 +45,16 @@ namespace tetris
         private void Init()
         {
             //ブロックの元画像を読み込んでおく
-            BlockSourceImage = Image.FromFile(@"..\..\..\resource\mino.bmp");
+            string BlockImageFile = @"..\..\..\resource\mino.bmp";
+            if (System.IO.File.Exists(BlockImageFile))
+            {
+                BlockSourceImage = Image.FromFile(BlockImageFile);
+            }
+            else
+            {
+                BlockImageFile = @"..\..\resource\mino.bmp";
+                BlockSourceImage = Image.FromFile(BlockImageFile);
+            }
 
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
 
@@ -340,6 +349,8 @@ namespace tetris
 
             //TODO 
             //ここでTスピン　BtoB　RENのチェックする
+            CheckTspin();
+
 
             //消去するラインによってメッセージを変える
             string str = @"";
@@ -402,6 +413,45 @@ namespace tetris
 
             this.EraseLine.Clear();
         }
+
+        /// <summary>
+        /// T-SPINが出来たかを判定
+        /// </summary>
+        private void CheckTspin()
+        {
+            //動かしているブロックたTか？
+            if(this.blockControle.CurrentBlock.type != BlockInfo.BlockType.MINO_T)
+            {
+                return;
+            }
+
+            //最後に回転させたか？
+            if( ((int)this.blockControle.status | (int)BlockControle.CONTROLE_STATUS.ROTATE_ACTION) != 1)
+            {
+                return;
+            }
+
+            int[,,] t_spin_checker = this.blockControle.Get_TSPIN_Shape();
+            int[,,] t_spin_mini_checker = this.blockControle.Get_TSPIN_MINI_Shape();
+
+
+            for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+            {
+                for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                {
+
+
+                }
+            }
+
+                    //T-SPINチェック
+
+
+                    //T-SPIN-MINIチェック
+
+
+
+                }
 
 
         //キー入力
