@@ -6,6 +6,13 @@ namespace tetris
 {
     class BlockControle
     {
+        public enum CONTROLE_STATUS
+        {
+            ROTATE_ACTION    = 0x0001,     //設置前の最後の操作が回転
+            TSPIN           = 0x0002,      //Tスピン成功
+            TSPIN_MINI      = 0x0004,      //Tスピンミニの成功
+        };
+
         //コンストラクタ   
         public BlockControle()
         {
@@ -67,6 +74,8 @@ namespace tetris
                         this.CurrentRot = tmp_rot;
                         this.CurrentPos.X += delta_pos.X;
                         this.CurrentPos.Y += delta_pos.Y;
+
+                        this.status &= CONTROLE_STATUS.ROTATE_ACTION;
                         break;
                     }
                 }
@@ -89,6 +98,8 @@ namespace tetris
                         this.CurrentRot = tmp_rot;
                         this.CurrentPos.X += delta_pos.X;
                         this.CurrentPos.Y += delta_pos.Y;
+
+                        this.status &= CONTROLE_STATUS.ROTATE_ACTION;
                         break;
                     }
                 }
@@ -101,6 +112,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
+                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
             }
         }
         //ブロックの左移動
@@ -109,6 +121,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
+                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
             }
         }
         //ブロックの下移動
@@ -117,6 +130,7 @@ namespace tetris
             if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
+                this.status |= ~CONTROLE_STATUS.ROTATE_ACTION;
             }
         }
 
@@ -310,8 +324,9 @@ namespace tetris
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
-
+        public CONTROLE_STATUS status { get; set; }
         public bool DoHold = false;        //HOLDを実行したかどうか
-        BlockInfo[] blockInfo;
+
+        private BlockInfo[] blockInfo;
     }
 }
