@@ -174,10 +174,6 @@ namespace tetris
                         //消えるラインによって判定
                         CalcAttackLine(line_num);
 
-                        //作成したメッセージの処理
-                        List<MessageControle.MESSAGE_TYPE> message_list = new List<MessageControle.MESSAGE_TYPE>();
-                        this.messageControle.MakeMessage(message_list);
-
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
                     break;
@@ -364,9 +360,6 @@ namespace tetris
         {
             //TODO　消去イベントが起きた順にメッセージを追加していく
 
-            //消去するラインによってメッセージを変える
-            string str = @"";
-
             int attack_line = 0; //攻撃ラインの数
 
             //Back to Back（バックトゥバック）とは、テトリス消しやT-Spinによるライン消しを連続で行うこと
@@ -377,14 +370,12 @@ namespace tetris
             //T-SPINのメッセージ
             if ((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
             {
-                str += @"T-SPIN ";
                 //BtoBをつける
                 this.blockControle.BtoB = true;
                 t_spin = true;
             }
             else if ((this.blockControle.status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
             {
-                str += @"T-SPIN mini ";
                 //BtoBをつける
                 this.blockControle.BtoB = true;
             }
@@ -400,13 +391,15 @@ namespace tetris
                             if (back_to_back)
                             {
                                 tmp_attack_line += 1;
+                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
                             }
+                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
                         }
                         else
                         {
                             this.blockControle.BtoB = false;
                         }
-                        str += @"single";
+                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);
                     }
                     break;
                 case 2:
@@ -418,13 +411,15 @@ namespace tetris
                             if (back_to_back)
                             {
                                 tmp_attack_line++;
+                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
                             }
+                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
                         }
                         else
                         {
                             this.blockControle.BtoB = false;
                         }
-                        str += @"double";
+                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE);
                     }
                     break;
                 case 3:
@@ -436,13 +431,15 @@ namespace tetris
                             if (back_to_back)
                             {
                                 tmp_attack_line++;
+                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
                             }
+                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
                         }
                         else
                         {
                             this.blockControle.BtoB = false;
                         }
-                        str += @"triple";
+                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE);
                     }
                     break;
                 case 4:
@@ -453,9 +450,10 @@ namespace tetris
                         if (back_to_back)
                         {
                             tmp_attack_line += 1;
+                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
                         }
 
-                        str += @"tetlis !";
+                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS);
                     }
                     break;
             }
@@ -463,10 +461,9 @@ namespace tetris
             //攻撃ライン数を確定
             attack_line = tmp_attack_line;
 
-
             if (line_num > 0)
             {
-                this.messageControle.SetMessage(str, true);
+                this.messageControle.MakeMessage();
             }
         }
 
