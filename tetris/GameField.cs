@@ -29,7 +29,6 @@ namespace tetris
             MODE_GAME_OVER,   //ゲームオーバー
         };
 
-
         public GameField()
         {
             InitializeComponent();
@@ -173,7 +172,11 @@ namespace tetris
                         int line_num = CheckEraseLine();
 
                         //消えるラインによって判定
-                        UpdateEraseLine(line_num);
+                        CalcAttackLine(line_num);
+
+                        //作成したメッセージの処理
+                        List<MessageControle.MESSAGE_TYPE> message_list = new List<MessageControle.MESSAGE_TYPE>();
+                        this.messageControle.MakeMessage(message_list);
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
@@ -353,8 +356,14 @@ namespace tetris
             return line_num;
         }
 
-        private void UpdateEraseLine(int line_num)
+        /// <summary>
+        /// 攻撃ラインの数を決める
+        /// </summary>
+        /// <param name="line_num"></param>
+        private void CalcAttackLine(int line_num)
         {
+            //TODO　消去イベントが起きた順にメッセージを追加していく
+
             //消去するラインによってメッセージを変える
             string str = @"";
 
@@ -380,11 +389,11 @@ namespace tetris
                 this.blockControle.BtoB = true;
             }
 
+            //消したラインによって攻撃ラインの数を決める
             switch (line_num)
             {
                 case 1:
                     {
-                        str += @"single";
                         if (t_spin)
                         {
                             tmp_attack_line = 2;
@@ -397,11 +406,11 @@ namespace tetris
                         {
                             this.blockControle.BtoB = false;
                         }
+                        str += @"single";
                     }
                     break;
                 case 2:
                     {
-                        str += @"double";
                         tmp_attack_line = 1;
                         if ( t_spin )
                         {
@@ -415,11 +424,11 @@ namespace tetris
                         {
                             this.blockControle.BtoB = false;
                         }
+                        str += @"double";
                     }
                     break;
                 case 3:
                     {
-                        str += @"triple";
                         tmp_attack_line = 2;
                         if (t_spin)
                         {
@@ -433,11 +442,11 @@ namespace tetris
                         {
                             this.blockControle.BtoB = false;
                         }
+                        str += @"triple";
                     }
                     break;
                 case 4:
                     {
-                        str += @"tetlis !";
                         //BtoBをつける
                         this.blockControle.BtoB = true;
                         tmp_attack_line = 4;
@@ -445,6 +454,8 @@ namespace tetris
                         {
                             tmp_attack_line += 1;
                         }
+
+                        str += @"tetlis !";
                     }
                     break;
             }
@@ -457,11 +468,7 @@ namespace tetris
             {
                 this.messageControle.SetMessage(str, true);
             }
-
-
-
         }
-
 
         //消去するラインを調べる
         private void ExecEraseLine()

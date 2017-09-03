@@ -15,12 +15,48 @@ namespace tetris
         //メッセージを表示するフレーム
         const int DISP_FRAME = 600;
 
+        public enum MESSAGE_TYPE
+        {
+            SINGLE,
+            DOUBLE,
+            TRIPLE,
+            TETRIS,
+            T_SPIN_MINI,
+            T_SPIN,
+            BACK_TO_BACK,
+        };
+
         //コンストラクタ
         public MessageControle()
         {
             DispCouint = 0;
             eraseFlag = false;
         }
+
+        /// <summary>
+        /// メッセージを作成する
+        /// </summary>
+        /// <param name="message_list"></param>
+        public void MakeMessage(List<MESSAGE_TYPE> message_list)
+        {
+            string message = @"";
+
+            foreach (MESSAGE_TYPE no in message_list)
+            {
+                switch (no)
+                {
+                    case MESSAGE_TYPE.SINGLE: message += "SINGLE"; break;
+                    case MESSAGE_TYPE.DOUBLE: message += "DOUBLE"; break;
+                    case MESSAGE_TYPE.TRIPLE: message += "TRIPLE"; break;
+                    case MESSAGE_TYPE.TETRIS: message += "TETRiS"; break;
+                    case MESSAGE_TYPE.T_SPIN_MINI: message += "T-SPIN MINI"; break;
+                    case MESSAGE_TYPE.T_SPIN: message += "T-SPIN"; break;
+                    case MESSAGE_TYPE.BACK_TO_BACK: message += "BACK to BACK"; break;
+                }
+            }
+
+        }
+
 
         //メッセージを表示する
         public void DrawUpdate()
