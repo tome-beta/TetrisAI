@@ -9,6 +9,7 @@ namespace tetris
         public const int ROTATE_ACTION = 0x0001;     //設置前の最後の操作が回転
         public const int TSPIN = 0x0002;      //Tスピン成功
         public const int TSPIN_MINI = 0x0004;      //Tスピンミニの成功
+        public const int BACK_TO_BACK = 0x0008;      //バック・トゥ・バック
 
         //コンストラクタ   
         public BlockControle()
@@ -487,6 +488,7 @@ namespace tetris
         public BlockInfo.BlockRot CurrentRot { get; set; }
         public int status { get; set; }
         public bool DoHold = false;        //HOLDを実行したかどうか
+        public bool BtoB = false;
 
         private BlockInfo[] blockInfo;
     }

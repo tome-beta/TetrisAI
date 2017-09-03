@@ -170,7 +170,10 @@ namespace tetris
                 case GAME_MODE.MODE_ERASE_CHECK:
                     {
                         //消えるラインのチェック
-                        CheckEraseLine();
+                        int line_num = CheckEraseLine();
+
+                        //消えるラインによって判定
+                        UpdateEraseLine(line_num);
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
@@ -314,7 +317,7 @@ namespace tetris
 
 
         //消去するラインを調べる
-        private void CheckEraseLine()
+        private int  CheckEraseLine()
         {
             int line_num = 0;
             //床から見ていく
@@ -347,20 +350,34 @@ namespace tetris
                 }
             }
 
+            return line_num;
+        }
+
+        private void UpdateEraseLine(int line_num)
+        {
             //消去するラインによってメッセージを変える
             string str = @"";
 
-            //T-SPINのメッセージ
-            int test = BlockControle.TSPIN;
-            test = test & BlockControle.TSPIN;
+            int attack_line = 0; //攻撃ラインの数
 
-            if((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            //Back to Back（バックトゥバック）とは、テトリス消しやT-Spinによるライン消しを連続で行うこと
+            bool back_to_back = this.blockControle.BtoB; //BtoBがついているか
+            bool t_spin = false;
+            int tmp_attack_line = 0;
+
+            //T-SPINのメッセージ
+            if ((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
             {
                 str += @"T-SPIN ";
+                //BtoBをつける
+                this.blockControle.BtoB = true;
+                t_spin = true;
             }
             else if ((this.blockControle.status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
             {
                 str += @"T-SPIN mini ";
+                //BtoBをつける
+                this.blockControle.BtoB = true;
             }
 
             switch (line_num)
@@ -368,30 +385,83 @@ namespace tetris
                 case 1:
                     {
                         str += @"single";
+                        if (t_spin)
+                        {
+                            tmp_attack_line = 2;
+                            if (back_to_back)
+                            {
+                                tmp_attack_line += 1;
+                            }
+                        }
+                        else
+                        {
+                            this.blockControle.BtoB = false;
+                        }
                     }
                     break;
                 case 2:
                     {
                         str += @"double";
+                        tmp_attack_line = 1;
+                        if ( t_spin )
+                        {
+                            tmp_attack_line  = 4;
+                            if (back_to_back)
+                            {
+                                tmp_attack_line++;
+                            }
+                        }
+                        else
+                        {
+                            this.blockControle.BtoB = false;
+                        }
                     }
                     break;
                 case 3:
                     {
                         str += @"triple";
+                        tmp_attack_line = 2;
+                        if (t_spin)
+                        {
+                            tmp_attack_line = 6;
+                            if (back_to_back)
+                            {
+                                tmp_attack_line++;
+                            }
+                        }
+                        else
+                        {
+                            this.blockControle.BtoB = false;
+                        }
                     }
                     break;
                 case 4:
                     {
                         str += @"tetlis !";
+                        //BtoBをつける
+                        this.blockControle.BtoB = true;
+                        tmp_attack_line = 4;
+                        if (back_to_back)
+                        {
+                            tmp_attack_line += 1;
+                        }
                     }
                     break;
             }
 
-            if( line_num >0 )
+            //攻撃ライン数を確定
+            attack_line = tmp_attack_line;
+
+
+            if (line_num > 0)
             {
                 this.messageControle.SetMessage(str, true);
             }
+
+
+
         }
+
 
         //消去するラインを調べる
         private void ExecEraseLine()
