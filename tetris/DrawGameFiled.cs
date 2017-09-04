@@ -220,5 +220,20 @@ namespace tetris
             }
         }
 
+        //スコアの表示
+        private void DrawScore()
+        {
+            this.label1Line1P.Text = @"1Line : " + this.scoreManage.EraseCount[0];
+            this.label2Line1P.Text = @"2Line : " + this.scoreManage.EraseCount[1];
+            this.label3Line1P.Text = @"3Line : " + this.scoreManage.EraseCount[2];
+            this.label4Line1P.Text = @"4Line : " + this.scoreManage.EraseCount[3];
+
+            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage.TspinEraseCount[0];
+            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage.TspinEraseCount[1];
+            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage.TspinEraseCount[2];
+
+
+        }
+
     }
 }

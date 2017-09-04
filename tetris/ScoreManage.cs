@@ -14,12 +14,6 @@ namespace tetris
 
         }
 
-        //画面表示の更新
-        public void DrawUpdate()
-        {
-            
-        }
-
         //1試合の記録を消去
         public void ScoreClear()
         {
@@ -41,6 +35,8 @@ namespace tetris
         /// <param name="tspin"></param>
         public void SetEraseLine(int line_num,bool tspin)
         {
+
+
             if(tspin)
             {
                 TspinEraseCount[line_num-1]++;
@@ -53,12 +49,9 @@ namespace tetris
             TotalEraseLine += line_num;
         }
 
-
-
-
-        private int[] TspinEraseCount = new int[3];
-        private int[] EraseCount = new int[4];
-        private int TotalEraseLine = 0;
+        public int[] TspinEraseCount = new int[3];
+        public int[] EraseCount = new int[4];
+        public int TotalEraseLine = 0;
     }
 
 }

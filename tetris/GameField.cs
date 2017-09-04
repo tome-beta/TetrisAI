@@ -172,10 +172,15 @@ namespace tetris
                         //消えるラインのチェック
                         int line_num = CheckEraseLine();
 
-
-
                         //消えるラインによって判定
                         CalcAttackLine(line_num);
+
+                        //スコアを記録
+                        if( line_num > 0)
+                        {
+                            int tspin = CheckTspin(this.blockControle.status);
+                            this.scoreManage.SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
+                        }
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
@@ -228,7 +233,7 @@ namespace tetris
             DrawHoldBlock();
 
             //スコア表示の描画
-            this.scoreManage.DrawUpdate();
+            DrawScore();
 
 
             //メッセージの表示
@@ -360,6 +365,26 @@ namespace tetris
         }
 
         /// <summary>
+        /// Tspinで有るかをチェック
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        private int CheckTspin(int status)
+        {
+            int ret = BlockControle.NUN;
+            if ((status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            {
+                ret = BlockControle.TSPIN;
+            }
+            else if ((status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
+            {
+                ret = BlockControle.TSPIN_MINI;
+            }
+
+            return ret;
+        }
+
+        /// <summary>
         /// 攻撃ラインの数を決める
         /// </summary>
         /// <param name="line_num"></param>
@@ -374,14 +399,16 @@ namespace tetris
             bool t_spin = false;
             int tmp_attack_line = 0;
 
+            int tspin_type = CheckTspin(this.blockControle.status);
+
             //T-SPINのメッセージ
-            if ((this.blockControle.status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            if (tspin_type == BlockControle.TSPIN)
             {
                 //BtoBをつける
                 this.blockControle.BtoB = true;
                 t_spin = true;
             }
-            else if ((this.blockControle.status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
+            else if (tspin_type == BlockControle.TSPIN_MINI)
             {
                 //BtoBをつける
                 this.blockControle.BtoB = true;

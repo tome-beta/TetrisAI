@@ -6,6 +6,7 @@ namespace tetris
 {
     class BlockControle
     {
+        public const int NUN = 0x0000;     //
         public const int ROTATE_ACTION = 0x0001;     //設置前の最後の操作が回転
         public const int TSPIN = 0x0002;      //Tスピン成功
         public const int TSPIN_MINI = 0x0004;      //Tスピンミニの成功
