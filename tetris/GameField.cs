@@ -93,6 +93,7 @@ namespace tetris
                             Mode = GAME_MODE.MODE_SET_BLOCK;
 
                             this.messageControle.ClearMessage();
+                            this.scoreManage.ScoreClear();
                         }
                     }
                     break;
@@ -171,6 +172,8 @@ namespace tetris
                         //消えるラインのチェック
                         int line_num = CheckEraseLine();
 
+
+
                         //消えるラインによって判定
                         CalcAttackLine(line_num);
 
@@ -223,6 +226,10 @@ namespace tetris
 
             //HOLDブロックを描画
             DrawHoldBlock();
+
+            //スコア表示の描画
+            this.scoreManage.DrawUpdate();
+
 
             //メッセージの表示
             this.messageControle.DrawUpdate();
@@ -571,7 +578,9 @@ namespace tetris
         private GAME_MODE Mode;
         BlockControle blockControle = new BlockControle();
         MessageControle messageControle = new MessageControle();
+        ScoreManage scoreManage = new ScoreManage();
         private bool GameOverFlag = false;
+
 
         //データ配列
         public int[,] BlockField { get; set; }

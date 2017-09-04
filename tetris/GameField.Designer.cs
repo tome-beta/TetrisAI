@@ -43,6 +43,13 @@
             this.labelFPS = new System.Windows.Forms.Label();
             this.labelCurrentPos = new System.Windows.Forms.Label();
             this.labelMessage1P = new System.Windows.Forms.Label();
+            this.labelT3Count1P = new System.Windows.Forms.Label();
+            this.labelT2Count1P = new System.Windows.Forms.Label();
+            this.labelT1Count1P = new System.Windows.Forms.Label();
+            this.label4Line1P = new System.Windows.Forms.Label();
+            this.label3Line1P = new System.Windows.Forms.Label();
+            this.label2Line1P = new System.Windows.Forms.Label();
+            this.label1Line1P = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
@@ -175,7 +182,7 @@
             // 
             this.labelFPS.AutoSize = true;
             this.labelFPS.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFPS.Location = new System.Drawing.Point(31, 666);
+            this.labelFPS.Location = new System.Drawing.Point(31, 701);
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(46, 28);
             this.labelFPS.TabIndex = 12;
@@ -185,7 +192,7 @@
             // 
             this.labelCurrentPos.AutoSize = true;
             this.labelCurrentPos.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelCurrentPos.Location = new System.Drawing.Point(31, 618);
+            this.labelCurrentPos.Location = new System.Drawing.Point(31, 658);
             this.labelCurrentPos.Name = "labelCurrentPos";
             this.labelCurrentPos.Size = new System.Drawing.Size(44, 28);
             this.labelCurrentPos.TabIndex = 13;
@@ -202,12 +209,96 @@
             this.labelMessage1P.TabIndex = 14;
             this.labelMessage1P.Text = "メッセージ表示";
             // 
+            // labelT3Count1P
+            // 
+            this.labelT3Count1P.AutoSize = true;
+            this.labelT3Count1P.BackColor = System.Drawing.Color.White;
+            this.labelT3Count1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelT3Count1P.Location = new System.Drawing.Point(12, 413);
+            this.labelT3Count1P.Name = "labelT3Count1P";
+            this.labelT3Count1P.Size = new System.Drawing.Size(122, 28);
+            this.labelT3Count1P.TabIndex = 15;
+            this.labelT3Count1P.Text = "Tspin3: 000";
+            // 
+            // labelT2Count1P
+            // 
+            this.labelT2Count1P.AutoSize = true;
+            this.labelT2Count1P.BackColor = System.Drawing.Color.White;
+            this.labelT2Count1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelT2Count1P.Location = new System.Drawing.Point(12, 441);
+            this.labelT2Count1P.Name = "labelT2Count1P";
+            this.labelT2Count1P.Size = new System.Drawing.Size(122, 28);
+            this.labelT2Count1P.TabIndex = 16;
+            this.labelT2Count1P.Text = "Tspin2: 000";
+            // 
+            // labelT1Count1P
+            // 
+            this.labelT1Count1P.AutoSize = true;
+            this.labelT1Count1P.BackColor = System.Drawing.Color.White;
+            this.labelT1Count1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelT1Count1P.Location = new System.Drawing.Point(12, 469);
+            this.labelT1Count1P.Name = "labelT1Count1P";
+            this.labelT1Count1P.Size = new System.Drawing.Size(122, 28);
+            this.labelT1Count1P.TabIndex = 17;
+            this.labelT1Count1P.Text = "Tspin1: 000";
+            // 
+            // label4Line1P
+            // 
+            this.label4Line1P.AutoSize = true;
+            this.label4Line1P.BackColor = System.Drawing.Color.White;
+            this.label4Line1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label4Line1P.Location = new System.Drawing.Point(12, 497);
+            this.label4Line1P.Name = "label4Line1P";
+            this.label4Line1P.Size = new System.Drawing.Size(119, 28);
+            this.label4Line1P.TabIndex = 18;
+            this.label4Line1P.Text = "4Line:  000";
+            // 
+            // label3Line1P
+            // 
+            this.label3Line1P.AutoSize = true;
+            this.label3Line1P.BackColor = System.Drawing.Color.White;
+            this.label3Line1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label3Line1P.Location = new System.Drawing.Point(12, 525);
+            this.label3Line1P.Name = "label3Line1P";
+            this.label3Line1P.Size = new System.Drawing.Size(113, 28);
+            this.label3Line1P.TabIndex = 19;
+            this.label3Line1P.Text = "3Line: 000";
+            // 
+            // label2Line1P
+            // 
+            this.label2Line1P.AutoSize = true;
+            this.label2Line1P.BackColor = System.Drawing.Color.White;
+            this.label2Line1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label2Line1P.Location = new System.Drawing.Point(12, 553);
+            this.label2Line1P.Name = "label2Line1P";
+            this.label2Line1P.Size = new System.Drawing.Size(113, 28);
+            this.label2Line1P.TabIndex = 20;
+            this.label2Line1P.Text = "2Line: 000";
+            // 
+            // label1Line1P
+            // 
+            this.label1Line1P.AutoSize = true;
+            this.label1Line1P.BackColor = System.Drawing.Color.White;
+            this.label1Line1P.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1Line1P.Location = new System.Drawing.Point(12, 581);
+            this.label1Line1P.Name = "label1Line1P";
+            this.label1Line1P.Size = new System.Drawing.Size(113, 28);
+            this.label1Line1P.TabIndex = 21;
+            this.label1Line1P.Text = "1Line: 000";
+            // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1512, 750);
+            this.Controls.Add(this.label1Line1P);
+            this.Controls.Add(this.label2Line1P);
+            this.Controls.Add(this.label3Line1P);
+            this.Controls.Add(this.label4Line1P);
+            this.Controls.Add(this.labelT1Count1P);
+            this.Controls.Add(this.labelT2Count1P);
+            this.Controls.Add(this.labelT3Count1P);
             this.Controls.Add(this.labelMessage1P);
             this.Controls.Add(this.labelCurrentPos);
             this.Controls.Add(this.labelFPS);
@@ -254,5 +345,12 @@
         private System.Windows.Forms.Label labelFPS;
         private System.Windows.Forms.Label labelCurrentPos;
         private System.Windows.Forms.Label labelMessage1P;
+        private System.Windows.Forms.Label labelT3Count1P;
+        private System.Windows.Forms.Label labelT2Count1P;
+        private System.Windows.Forms.Label labelT1Count1P;
+        private System.Windows.Forms.Label label4Line1P;
+        private System.Windows.Forms.Label label3Line1P;
+        private System.Windows.Forms.Label label2Line1P;
+        private System.Windows.Forms.Label label1Line1P;
     }
 }
