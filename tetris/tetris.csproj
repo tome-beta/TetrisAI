@@ -80,6 +80,7 @@
     <Compile Include="MessageControle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScoreManage.cs" />
     <EmbeddedResource Include="GameField.resx">
       <DependentUpon>GameField.cs</DependentUpon>
     </EmbeddedResource>
