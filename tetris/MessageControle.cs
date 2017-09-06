@@ -24,6 +24,7 @@ namespace tetris
             T_SPIN_MINI,
             T_SPIN,
             BACK_TO_BACK,
+            REN,
         };
 
         //コンストラクタ
@@ -51,6 +52,10 @@ namespace tetris
                     case MESSAGE_TYPE.T_SPIN_MINI: message += "T-SPIN MINI "; break;
                     case MESSAGE_TYPE.T_SPIN: message += "T-SPIN "; break;
                     case MESSAGE_TYPE.BACK_TO_BACK: message += "BACK to BACK "; break;
+                    case MESSAGE_TYPE.REN:
+                        {
+                            message += " REN " + this.ren_num; break;
+                        }
                 }
             }
             message_list.Clear();
@@ -95,5 +100,7 @@ namespace tetris
         private int DispCouint;     //表示フレーム
         private bool eraseFlag;     //時間で消すか
         public List<MESSAGE_TYPE> message_list = new List<MESSAGE_TYPE>();
+
+        public int ren_num;         //REN数を表示するため
     }
 }

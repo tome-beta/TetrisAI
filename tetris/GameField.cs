@@ -94,6 +94,7 @@ namespace tetris
 
                             this.messageControle.ClearMessage();
                             this.scoreManage.ScoreClear();
+                            this.RenCount = 0;
                         }
                     }
                     break;
@@ -181,6 +182,7 @@ namespace tetris
                             int tspin = CheckTspin(this.blockControle.status);
                             this.scoreManage.SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
                         }
+
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
@@ -390,7 +392,16 @@ namespace tetris
         /// <param name="line_num"></param>
         private void CalcAttackLine(int line_num)
         {
-            //TODO　消去イベントが起きた順にメッセージを追加していく
+            //REN数のチェック
+            if( line_num == 0)
+            {
+                this.RenCount = 0;
+                return;
+            }
+            else
+            {
+                this.RenCount++;
+            }
 
             int attack_line = 0; //攻撃ラインの数
 
@@ -492,9 +503,21 @@ namespace tetris
                     break;
             }
 
+            //RENの判定
+            int[] REN_ADD = { 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5 };
+            int ren = this.RenCount >= REN_ADD.Length ? REN_ADD.Length : this.RenCount;
+            tmp_attack_line += REN_ADD[ren];
+            this.messageControle.ren_num = this.RenCount;
+            
+            if(this.RenCount >= 3)
+            {
+                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.REN);
+            }
+
             //攻撃ライン数を確定
             attack_line = tmp_attack_line;
 
+            //メッセージを作成
             if (line_num > 0)
             {
                 this.messageControle.MakeMessage();
@@ -607,7 +630,7 @@ namespace tetris
         MessageControle messageControle = new MessageControle();
         ScoreManage scoreManage = new ScoreManage();
         private bool GameOverFlag = false;
-
+        private int RenCount = 0;
 
         //データ配列
         public int[,] BlockField { get; set; }

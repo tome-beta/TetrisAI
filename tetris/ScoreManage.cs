@@ -35,8 +35,6 @@ namespace tetris
         /// <param name="tspin"></param>
         public void SetEraseLine(int line_num,bool tspin)
         {
-
-
             if(tspin)
             {
                 TspinEraseCount[line_num-1]++;
