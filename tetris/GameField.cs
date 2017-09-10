@@ -93,8 +93,8 @@ namespace tetris
                             Mode = GAME_MODE.MODE_SET_BLOCK;
 
                             this.messageControle.ClearMessage();
-                            this.scoreManage.ScoreClear();
-                            this.RenCount = 0;
+                            this.scoreManage.ClearScore();
+                            this.attackLineManage.ClearAttackLine();
                         }
                     }
                     break;
@@ -173,11 +173,16 @@ namespace tetris
                         //消えるラインのチェック
                         int line_num = CheckEraseLine();
 
-                        //消えるラインによって判定
-                        CalcAttackLine(line_num);
+                        int tspin_type = CheckTspin(this.blockControle.status);
+
+                        AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult(); ;
+                        this.attackLineManage.CalcAttackLine(line_num, tspin_type,ref this.blockControle.BtoB,ref result);
+
+                        //メッセージを作る
+                        MakeEraseLineMessage(result);
 
                         //スコアを記録
-                        if( line_num > 0)
+                        if ( line_num > 0)
                         {
                             int tspin = CheckTspin(this.blockControle.status);
                             this.scoreManage.SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
@@ -387,141 +392,46 @@ namespace tetris
         }
 
         /// <summary>
-        /// 攻撃ラインの数を決める
+        /// 消去したラインによってメッセージを作る
         /// </summary>
-        /// <param name="line_num"></param>
-        private void CalcAttackLine(int line_num)
+        /// <param name="result"></param>
+        private void MakeEraseLineMessage(AttackLineManage.EraseLineResult result)
         {
-            //REN数のチェック
-            if( line_num == 0)
+            if(result.Line <= 0)
             {
-                this.RenCount = 0;
                 return;
             }
-            else
+
+            if (result.BtoB)
             {
-                this.RenCount++;
+                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
+            }
+            if (result.Tspin == BlockControle.TSPIN)
+            {
+                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
+            }
+            else if (result.Tspin == BlockControle.TSPIN_MINI)
+            {
+                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN_MINI);
             }
 
-            int attack_line = 0; //攻撃ラインの数
-
-            //Back to Back（バックトゥバック）とは、テトリス消しやT-Spinによるライン消しを連続で行うこと
-            bool back_to_back = this.blockControle.BtoB; //BtoBがついているか
-            bool t_spin = false;
-            int tmp_attack_line = 0;
-
-            int tspin_type = CheckTspin(this.blockControle.status);
-
-            //T-SPINのメッセージ
-            if (tspin_type == BlockControle.TSPIN)
+            switch(result.Line)
             {
-                //BtoBをつける
-                this.blockControle.BtoB = true;
-                t_spin = true;
-            }
-            else if (tspin_type == BlockControle.TSPIN_MINI)
-            {
-                //BtoBをつける
-                this.blockControle.BtoB = true;
+                case 1: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);  break;
+                case 2: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
+                case 3: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
+                case 4: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
+                default: break;
             }
 
-            //消したラインによって攻撃ラインの数を決める
-            switch (line_num)
+            //REN
+            if( result.Ren >= 3)
             {
-                case 1:
-                    {
-                        if (t_spin)
-                        {
-                            tmp_attack_line = 2;
-                            if (back_to_back)
-                            {
-                                tmp_attack_line += 1;
-                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
-                            }
-                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
-                        }
-                        else
-                        {
-                            this.blockControle.BtoB = false;
-                        }
-                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);
-                    }
-                    break;
-                case 2:
-                    {
-                        tmp_attack_line = 1;
-                        if ( t_spin )
-                        {
-                            tmp_attack_line  = 4;
-                            if (back_to_back)
-                            {
-                                tmp_attack_line++;
-                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
-                            }
-                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
-                        }
-                        else
-                        {
-                            this.blockControle.BtoB = false;
-                        }
-                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE);
-                    }
-                    break;
-                case 3:
-                    {
-                        tmp_attack_line = 2;
-                        if (t_spin)
-                        {
-                            tmp_attack_line = 6;
-                            if (back_to_back)
-                            {
-                                tmp_attack_line++;
-                                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
-                            }
-                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
-                        }
-                        else
-                        {
-                            this.blockControle.BtoB = false;
-                        }
-                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE);
-                    }
-                    break;
-                case 4:
-                    {
-                        //BtoBをつける
-                        this.blockControle.BtoB = true;
-                        tmp_attack_line = 4;
-                        if (back_to_back)
-                        {
-                            tmp_attack_line += 1;
-                            this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
-                        }
-
-                        this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS);
-                    }
-                    break;
-            }
-
-            //RENの判定
-            int[] REN_ADD = { 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5 };
-            int ren = this.RenCount >= REN_ADD.Length ? REN_ADD.Length : this.RenCount;
-            tmp_attack_line += REN_ADD[ren];
-            this.messageControle.ren_num = this.RenCount;
-            
-            if(this.RenCount >= 3)
-            {
+                this.messageControle.ren_num = result.Ren;
                 this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.REN);
             }
 
-            //攻撃ライン数を確定
-            attack_line = tmp_attack_line;
-
-            //メッセージを作成
-            if (line_num > 0)
-            {
-                this.messageControle.MakeMessage();
-            }
+            this.messageControle.MakeMessage();
         }
 
         //消去するラインを調べる
@@ -629,8 +539,8 @@ namespace tetris
         BlockControle blockControle = new BlockControle();
         MessageControle messageControle = new MessageControle();
         ScoreManage scoreManage = new ScoreManage();
+        AttackLineManage attackLineManage = new AttackLineManage();
         private bool GameOverFlag = false;
-        private int RenCount = 0;
 
         //データ配列
         public int[,] BlockField { get; set; }

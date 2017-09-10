@@ -15,7 +15,7 @@ namespace tetris
         }
 
         //1試合の記録を消去
-        public void ScoreClear()
+        public void ClearScore()
         {
             for(int i = 0; i < 3;i++)
             {
