@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttackLineManage.cs" />
     <Compile Include="BlockControle.cs" />
     <Compile Include="BlockInfo.cs" />
     <Compile Include="DrawGameFiled.cs">
