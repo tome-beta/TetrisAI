@@ -25,6 +25,7 @@ namespace tetris
             T_SPIN,
             BACK_TO_BACK,
             REN,
+            PERFECT,
         };
 
         //コンストラクタ
@@ -32,6 +33,7 @@ namespace tetris
         {
             DispCouint = 0;
             eraseFlag = false;
+            message_list.Clear();
         }
 
         /// <summary>
@@ -56,6 +58,12 @@ namespace tetris
                         {
                             message += " REN " + this.ren_num; break;
                         }
+                    case MESSAGE_TYPE.PERFECT:
+                        {
+                            message = @"PERFECT !!"; break;
+                        }
+                    default:
+                        break;
                 }
             }
             message_list.Clear();
