@@ -172,11 +172,16 @@ namespace tetris
                     {
                         //消えるラインのチェック
                         int line_num = CheckEraseLine();
-
+                        bool perfect = CheckPerfect(line_num);
                         int tspin_type = CheckTspin(this.blockControle.status);
 
-                        AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult(); ;
-                        this.attackLineManage.CalcAttackLine(line_num, tspin_type,ref this.blockControle.BtoB,ref result);
+                        AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
+                        this.attackLineManage.CalcAttackLine(
+                            line_num, 
+                            tspin_type,
+                            perfect,
+                            ref this.blockControle.BtoB,
+                            ref result);
 
                         //メッセージを作る
                         MakeEraseLineMessage(result);
@@ -372,6 +377,52 @@ namespace tetris
         }
 
         /// <summary>
+        /// パーフェクトチェック
+        /// </summary>
+        /// <param name="erase_line_num"></param>
+        /// <returns></returns>
+        private bool CheckPerfect(int erase_line_num)
+        {
+            bool ok = false;
+
+            //パーフェクトチェック
+            //床から見ていく
+            int perfect_count = 0;
+            for (int h = GameField.FIELD_HEIGHT - 2; h > GameField.FIELD_HEIGHT - 2 - 4; h--)
+            {
+                bool line_check = true;
+                //壁の所は見ない
+                for (int w = 1; w < GameField.FIELD_WIDTH - 2; w++)
+                {
+                    //消す予定になっているor何もない
+                    int block_data = this.BlockField[h, w];
+                    if( block_data >= (int)BlockInfo.BlockType.MINO_VANISH ||
+                        block_data == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        line_check = false;
+                        break;
+                    }
+                }
+                if (line_check)
+                {
+                    perfect_count++;
+                }
+            }
+
+            //消したライン数と床から探索して消す予定ライン数が一致していたらパーフェクト
+            if (perfect_count == 4)
+            {
+                ok = true;
+            }
+
+            return ok;
+        }
+
+        /// <summary>
         /// Tspinで有るかをチェック
         /// </summary>
         /// <param name="status"></param>
@@ -397,8 +448,16 @@ namespace tetris
         /// <param name="result"></param>
         private void MakeEraseLineMessage(AttackLineManage.EraseLineResult result)
         {
-            if(result.Line <= 0)
+            if (result.Line <= 0)
             {
+                return;
+            }
+
+            if (result.perfect)
+            {
+                //パーフェクトは他にメッセージを出さない
+                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.PERFECT);
+                this.messageControle.MakeMessage();
                 return;
             }
 

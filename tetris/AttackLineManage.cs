@@ -16,6 +16,7 @@ namespace tetris
             public int Ren;
             public int Tspin;
             public bool BtoB;
+            public bool perfect;
         };
 
         public AttackLineManage()
@@ -31,6 +32,7 @@ namespace tetris
 
         public void CalcAttackLine(int erase_line,
             int tspin_type,
+            bool perfect,
             ref bool ref_BtoB,
             ref EraseLineResult out_result)
         {
@@ -145,6 +147,12 @@ namespace tetris
             int ren = this.RenCount >= REN_ADD.Length ? REN_ADD.Length : this.RenCount;
             tmp_attack_line += REN_ADD[ren];
 
+            //パーフェクトのチェック
+            if(perfect)
+            {
+                tmp_attack_line += 6;
+                out_result.perfect = perfect;
+            }
             //攻撃ライン数を確定
             attack_line = tmp_attack_line;
 
