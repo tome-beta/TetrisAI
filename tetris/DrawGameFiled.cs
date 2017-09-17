@@ -231,9 +231,23 @@ namespace tetris
             this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage.TspinEraseCount[0];
             this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage.TspinEraseCount[1];
             this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage.TspinEraseCount[2];
-
-
         }
 
+
+        //攻撃ラインの表示
+        private void DrawAttackLine()
+        {
+            //TODO　実際は相手側の攻撃ライン数をチェックする
+            int attack_line = this.attackLineManage.AttackLineNum;
+
+            gAttackLine1P.Clear(Color.White);
+
+            int h = canvasAttackLine1P.Height - BlockInfo.BLOCK_HEIGHT * attack_line;
+            gAttackLine1P.FillRectangle(Brushes.Red,
+                0,
+                h,
+                canvasAttackLine1P.Width,
+                canvasAttackLine1P.Height - h);
+        }
     }
 }
