@@ -19,6 +19,14 @@ namespace tetris
         public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類
         public const int NEXT_BLOCK_DISP_NUM = 5;   //表示は５個。
 
+        //描画先のpictureBoxの切り替え
+        enum PICTURE_BOX_DEFINE
+        {
+            PICTURE_BOX_1P = 0,
+            PICTURE_BOX_2P = 1,
+            PICTURE_BOX_NUM = 2,
+        };
+
         enum GAME_MODE
         {
             MODE_WAIT,          //開始待ち
@@ -250,10 +258,22 @@ namespace tetris
             this.messageControle.DrawUpdate();
 
             //PictureBoxを更新
-            this.pictureBoxField1P.Image = canvasFiled1P;
-            this.pictureBoxNext1P.Image = canvasNextBlock1P;
-            this.pictureBoxHold1P.Image = canvasHoldBlock1P;
-            this.pictureBoxAttackLine1P.Image = canvasAttackLine1P;
+            {
+                int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
+                int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
+                this.pictureBoxField1P.Image = canvasFiled[p1];
+                this.pictureBoxField2P.Image = canvasFiled[p2];
+
+                this.pictureBoxNext1P.Image = canvasNextBlock[p1];
+                this.pictureBoxNext2P.Image = canvasNextBlock[p2];
+
+                this.pictureBoxHold1P.Image = canvasHoldBlock[p1];
+                this.pictureBoxHold2P.Image = canvasHoldBlock[p2];
+
+                this.pictureBoxAttackLine1P.Image = canvasAttackLine[p1];
+                this.pictureBoxAttackLine2P.Image = canvasAttackLine[p2];
+            }
+
 
             //デバッグ用、操作ブロックの位置を表示
             int pos_x = blockControle.CurrentPos.X;
@@ -525,17 +545,40 @@ namespace tetris
 
         private void CreateImageObject()
         {
-            this.canvasFiled1P = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
-            this.gFiled1P = Graphics.FromImage(canvasFiled1P);
+            const int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
+            const int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
+            const int make_num = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM;
+            canvasFiled = new Bitmap[make_num];
+            gFiled = new Graphics[make_num];
+            canvasNextBlock = new Bitmap[make_num];
+            gNextBlock = new Graphics[make_num];
+            canvasNextBlock = new Bitmap[make_num];
+            gNextBlock = new Graphics[make_num];
+            canvasHoldBlock = new Bitmap[make_num];
+            gHoldBlock = new Graphics[make_num];
+            canvasAttackLine = new Bitmap[make_num];
+            gAttackLine = new Graphics[make_num];
 
-            this.canvasNextBlock1P = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
-            this.gNextBlock1P = Graphics.FromImage(canvasNextBlock1P);
+            this.canvasFiled[p1] = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
+            this.gFiled[p1] = Graphics.FromImage(canvasFiled[p1]);
+            this.canvasFiled[p2] = new Bitmap(this.pictureBoxField2P.Width, this.pictureBoxField2P.Height);
+            this.gFiled[p2] = Graphics.FromImage(canvasFiled[p2]);
 
-            this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
-            this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
 
-            this.canvasAttackLine1P = new Bitmap(this.pictureBoxAttackLine1P.Width, this.pictureBoxAttackLine1P.Height);
-            this.gAttackLine1P = Graphics.FromImage(canvasAttackLine1P);
+            this.canvasNextBlock[p1] = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
+            this.gNextBlock[p1] = Graphics.FromImage(canvasNextBlock[p1]);
+            this.canvasNextBlock[p2] = new Bitmap(this.pictureBoxNext2P.Width, this.pictureBoxNext2P.Height);
+            this.gNextBlock[p2] = Graphics.FromImage(canvasNextBlock[p2]);
+
+            this.canvasHoldBlock[p1] = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
+            this.gHoldBlock[p1] = Graphics.FromImage(canvasHoldBlock[p1]);
+            this.canvasHoldBlock[p2] = new Bitmap(this.pictureBoxHold2P.Width, this.pictureBoxHold2P.Height);
+            this.gHoldBlock[p2] = Graphics.FromImage(canvasHoldBlock[p2]);
+
+            this.canvasAttackLine[p1] = new Bitmap(this.pictureBoxAttackLine1P.Width, this.pictureBoxAttackLine1P.Height);
+            this.gAttackLine[p1] = Graphics.FromImage(canvasAttackLine[p1]);
+            this.canvasAttackLine[p2] = new Bitmap(this.pictureBoxAttackLine2P.Width, this.pictureBoxAttackLine2P.Height);
+            this.gAttackLine[p2] = Graphics.FromImage(canvasAttackLine[p2]);
 
         }
 
@@ -632,14 +675,15 @@ namespace tetris
 
         //フィールドの描画用
         private Image BlockSourceImage;
-        Bitmap canvasFiled1P;
-        Graphics gFiled1P;
-        Bitmap canvasNextBlock1P;
-        Graphics gNextBlock1P;
-        Bitmap canvasHoldBlock1P;
-        Graphics gHoldBlock1P;
-        Bitmap canvasAttackLine1P;
-        Graphics gAttackLine1P;
+        Bitmap[] canvasFiled;
+        Graphics[] gFiled;
+        Bitmap[] canvasNextBlock;
+        Graphics[] gNextBlock;
+        Bitmap[] canvasHoldBlock;
+        Graphics[] gHoldBlock;
+        Bitmap[] canvasAttackLine;
+        Graphics[] gAttackLine;
+
 
     }
 }
