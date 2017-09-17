@@ -30,6 +30,14 @@ namespace tetris
             this.RenCount = 0;
         }
 
+        /// <summary>
+        /// 攻撃ラインの計算
+        /// </summary>
+        /// <param name="erase_line">消したライン数</param>
+        /// <param name="tspin_type">TSPINしたか</param>
+        /// <param name="perfect">パーフェクトか</param>
+        /// <param name="ref_BtoB">BtoB</param>
+        /// <param name="out_result">結果出力</param>
         public void CalcAttackLine(int erase_line,
             int tspin_type,
             bool perfect,
@@ -162,5 +170,6 @@ namespace tetris
 
         public int AttackLineNum = 0;
         public int RenCount = 0;
+
     }
 }

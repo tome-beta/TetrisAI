@@ -61,14 +61,7 @@ namespace tetris
             BlockFieldInit();
 
             //描画先とするImageオブジェクトを作成する
-            this.canvasFiled1P = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
-            this.gFiled1P = Graphics.FromImage(canvasFiled1P);
-
-            this.canvasNextBlock1P = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
-            this.gNextBlock1P = Graphics.FromImage(canvasNextBlock1P);
-
-            this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
-            this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
+            CreateImageObject();
 
             Mode = GAME_MODE.MODE_WAIT;
 
@@ -247,6 +240,8 @@ namespace tetris
             //スコア表示の描画
             DrawScore();
 
+            //攻撃ライン表示
+            DrawAttackLine();
 
             //メッセージの表示
             this.messageControle.DrawUpdate();
@@ -255,6 +250,7 @@ namespace tetris
             this.pictureBoxField1P.Image = canvasFiled1P;
             this.pictureBoxNext1P.Image = canvasNextBlock1P;
             this.pictureBoxHold1P.Image = canvasHoldBlock1P;
+            this.pictureBoxAttackLine1P.Image = canvasAttackLine1P;
 
             //デバッグ用、操作ブロックの位置を表示
             int pos_x = blockControle.CurrentPos.X;
@@ -523,6 +519,23 @@ namespace tetris
             this.EraseLine.Clear();
         }
 
+        private void CreateImageObject()
+        {
+            this.canvasFiled1P = new Bitmap(this.pictureBoxField1P.Width, this.pictureBoxField1P.Height);
+            this.gFiled1P = Graphics.FromImage(canvasFiled1P);
+
+            this.canvasNextBlock1P = new Bitmap(this.pictureBoxNext1P.Width, this.pictureBoxNext1P.Height);
+            this.gNextBlock1P = Graphics.FromImage(canvasNextBlock1P);
+
+            this.canvasHoldBlock1P = new Bitmap(this.pictureBoxHold1P.Width, this.pictureBoxHold1P.Height);
+            this.gHoldBlock1P = Graphics.FromImage(canvasHoldBlock1P);
+
+            this.canvasAttackLine1P = new Bitmap(this.pictureBoxAttackLine1P.Width, this.pictureBoxAttackLine1P.Height);
+            this.gAttackLine1P = Graphics.FromImage(canvasAttackLine1P);
+
+        }
+
+
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
@@ -619,9 +632,10 @@ namespace tetris
         Graphics gFiled1P;
         Bitmap canvasNextBlock1P;
         Graphics gNextBlock1P;
-
         Bitmap canvasHoldBlock1P;
         Graphics gHoldBlock1P;
+        Bitmap canvasAttackLine1P;
+        Graphics gAttackLine1P;
 
     }
 }

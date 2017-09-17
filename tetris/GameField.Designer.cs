@@ -50,12 +50,14 @@
             this.label3Line1P = new System.Windows.Forms.Label();
             this.label2Line1P = new System.Windows.Forms.Label();
             this.label1Line1P = new System.Windows.Forms.Label();
+            this.pictureBoxAttackLine1P = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNext1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNext2P)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAttackLine1P)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBoxField1P
@@ -79,7 +81,7 @@
             // pictureBoxHold1P
             // 
             this.pictureBoxHold1P.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.pictureBoxHold1P.Location = new System.Drawing.Point(31, 56);
+            this.pictureBoxHold1P.Location = new System.Drawing.Point(12, 56);
             this.pictureBoxHold1P.Name = "pictureBoxHold1P";
             this.pictureBoxHold1P.Size = new System.Drawing.Size(170, 111);
             this.pictureBoxHold1P.TabIndex = 2;
@@ -139,7 +141,7 @@
             this.labelHold1P.AutoSize = true;
             this.labelHold1P.BackColor = System.Drawing.SystemColors.Window;
             this.labelHold1P.Font = new System.Drawing.Font("メイリオ", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelHold1P.Location = new System.Drawing.Point(55, 17);
+            this.labelHold1P.Location = new System.Drawing.Point(43, 13);
             this.labelHold1P.Name = "labelHold1P";
             this.labelHold1P.Size = new System.Drawing.Size(82, 36);
             this.labelHold1P.TabIndex = 8;
@@ -286,12 +288,22 @@
             this.label1Line1P.TabIndex = 21;
             this.label1Line1P.Text = "1Line: 000";
             // 
+            // pictureBoxAttackLine1P
+            // 
+            this.pictureBoxAttackLine1P.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.pictureBoxAttackLine1P.Location = new System.Drawing.Point(199, 56);
+            this.pictureBoxAttackLine1P.Name = "pictureBoxAttackLine1P";
+            this.pictureBoxAttackLine1P.Size = new System.Drawing.Size(22, 600);
+            this.pictureBoxAttackLine1P.TabIndex = 22;
+            this.pictureBoxAttackLine1P.TabStop = false;
+            // 
             // GameField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1512, 750);
+            this.Controls.Add(this.pictureBoxAttackLine1P);
             this.Controls.Add(this.label1Line1P);
             this.Controls.Add(this.label2Line1P);
             this.Controls.Add(this.label3Line1P);
@@ -323,6 +335,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNext1P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNext2P)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAttackLine1P)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -352,5 +365,6 @@
         private System.Windows.Forms.Label label3Line1P;
         private System.Windows.Forms.Label label2Line1P;
         private System.Windows.Forms.Label label1Line1P;
+        private System.Windows.Forms.PictureBox pictureBoxAttackLine1P;
     }
 }
