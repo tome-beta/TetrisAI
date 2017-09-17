@@ -56,164 +56,182 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
-            //フィールドのクリア
-            gFiled1P.Clear(Color.White);
+            for(int i = 0;i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            {
+                //フィールドのクリア
+                gFiled[i].Clear(Color.White);
 
 #if DEBUG
-            //デバッグ用にフィールドに線を引いておく
-            using (Pen pen = new Pen(Color.Gray))
-            {
-                for (int x = 1; x < 11; x++)
+                //デバッグ用にフィールドに線を引いておく
+                using (Pen pen = new Pen(Color.Gray))
                 {
-                    gFiled1P.DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
-                        new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
-                }
-                for (int y = 1; y < 21; y++)
-                {
-                    gFiled1P.DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
-                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
-                }
-            }
-#endif
-            //壁と設置されているブロックを描く
-            for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
-            {
-                for (int x = 0; x < GameField.FIELD_WIDTH; x++)
-                {
-                    if (this.BlockField[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    for (int x = 1; x < 11; x++)
                     {
-                        DrawOneBlock(gFiled1P, (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
+                        gFiled[i].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
+                            new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
+                    }
+                    for (int y = 1; y < 21; y++)
+                    {
+                        gFiled[i].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                            new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
                     }
                 }
+#endif
+                //壁と設置されているブロックを描く
+                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                {
+                    for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                    {
+                        if (this.BlockField[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                        {
+                            DrawOneBlock(gFiled[i], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
+                        }
+                    }
+                }
+
             }
         }
 
         //操作中のブロックを描画
         private void DrawCurrentBlock(bool game_over)
         {
-            if (this.blockControle.CurrentBlock != null)
+            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                //名前おきかえ
-                Point Pos = this.blockControle.CurrentPos;
-                BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
-
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                if (this.blockControle.CurrentBlock != null)
                 {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    //名前おきかえ
+                    Point Pos = this.blockControle.CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+
+                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
-                        if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            int draw_type = (int)(CurrnetInfo.type);
-                            if( game_over)
+                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
                             {
-                                draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
+                                int draw_type = (int)(CurrnetInfo.type);
+                                if (game_over)
+                                {
+                                    draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
+                                }
+
+
+                                //ミノの種類により切り出す画像を選ぶ
+                                DrawOneBlock(gFiled[i],
+                                    (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                                    (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
+                                    draw_type);
                             }
-
-
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gFiled1P, 
-                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH, 
-                                (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
-                                draw_type);
                         }
                     }
-                }
 #if DEBUG
-                //デバッグ用にブロック領域の線を引いておく
-                using (Pen pen = new Pen(Color.Pink))
-                {
-                    for (int x = 0; x < 5; x++)
+                    //デバッグ用にブロック領域の線を引いておく
+                    using (Pen pen = new Pen(Color.Pink))
                     {
-                        gFiled1P.DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                        for (int x = 0; x < 5; x++)
+                        {
+                            gFiled[i].DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
+                                new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                        }
+                        for (int y = 0; y < 5; y++)
+                        {
+                            gFiled[i].DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
+                                new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
+                        }
                     }
-                    for (int y = 0; y < 5; y++)
-                    {
-                        gFiled1P.DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
-                    }
-                }
 #endif
+                }
+
             }
         }
 
         //落下位置ガイドブロックを描画
         private void DrawGuideBlock()
         {
-            if (this.blockControle.CurrentBlock != null)
+            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                int move_y = this.blockControle.HardDropCurrentBlock(this.BlockField);
-
-                //名前おきかえ
-                Point Pos = this.blockControle.CurrentPos;
-                BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
-
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                if (this.blockControle.CurrentBlock != null)
                 {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    int move_y = this.blockControle.HardDropCurrentBlock(this.BlockField);
+
+                    //名前おきかえ
+                    Point Pos = this.blockControle.CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+
+                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
-                        if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gFiled1P,
-                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
-                                (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(CurrnetInfo.type),
-                                true);
+                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                            {
+                                //ミノの種類により切り出す画像を選ぶ
+                                DrawOneBlock(gFiled[i],
+                                    (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                                    (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
+                                    (int)(CurrnetInfo.type),
+                                    true);
+                            }
                         }
                     }
                 }
             }
 
-            }
+        }
 
         //NEXTブロックの描画
         private void DrawNextBlock()
         {
-            //表示位置のクリア
-            gNextBlock1P.Clear(Color.White);
-
-            //ミノの種類により切り出す画像を選ぶ
-            for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
+            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(NextBlock[next_num]));
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                //表示位置のクリア
+                gNextBlock[i].Clear(Color.White);
+
+                //ミノの種類により切り出す画像を選ぶ
+                for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
                 {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(NextBlock[next_num]));
+                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
-                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
+                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gNextBlock1P,
-                                (x) * BlockInfo.BLOCK_WIDTH,
-                                (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(NextBlock[next_num]));
+                            if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
+                            {
+                                //ミノの種類により切り出す画像を選ぶ
+                                DrawOneBlock(gNextBlock[i],
+                                    (x) * BlockInfo.BLOCK_WIDTH,
+                                    (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
+                                    (int)(NextBlock[next_num]));
+                            }
                         }
                     }
                 }
+
             }
         }
 
         //HOLD中のブロックを描く
         private void DrawHoldBlock()
         {
-            //表示位置のクリア
-            gHoldBlock1P.Clear(Color.White);
-
-            if (BlockInfo.BlockType.MINO_I <= blockControle.HoldBlock && blockControle.HoldBlock <= BlockInfo.BlockType.MINO_O)
+            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle.HoldBlock));
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                //表示位置のクリア
+                gHoldBlock[i].Clear(Color.White);
+
+                if (BlockInfo.BlockType.MINO_I <= blockControle.HoldBlock && blockControle.HoldBlock <= BlockInfo.BlockType.MINO_O)
                 {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle.HoldBlock));
+                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
-                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
+                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gHoldBlock1P,
-                                (x) * BlockInfo.BLOCK_WIDTH,
-                                (y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(blockControle.HoldBlock));
+                            if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
+                            {
+                                //ミノの種類により切り出す画像を選ぶ
+                                DrawOneBlock(gHoldBlock[i],
+                                    (x) * BlockInfo.BLOCK_WIDTH,
+                                    (y) * BlockInfo.BLOCK_HEIGHT,
+                                    (int)(blockControle.HoldBlock));
+                            }
                         }
                     }
                 }
@@ -237,17 +255,21 @@ namespace tetris
         //攻撃ラインの表示
         private void DrawAttackLine()
         {
-            //TODO　実際は相手側の攻撃ライン数をチェックする
-            int attack_line = this.attackLineManage.AttackLineNum;
+            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            {
+                //TODO　実際は相手側の攻撃ライン数をチェックする
+                int attack_line = this.attackLineManage.AttackLineNum;
 
-            gAttackLine1P.Clear(Color.White);
+                gAttackLine[i].Clear(Color.White);
 
-            int h = canvasAttackLine1P.Height - BlockInfo.BLOCK_HEIGHT * attack_line;
-            gAttackLine1P.FillRectangle(Brushes.Red,
-                0,
-                h,
-                canvasAttackLine1P.Width,
-                canvasAttackLine1P.Height - h);
+                int h = canvasAttackLine[i].Height - BlockInfo.BLOCK_HEIGHT * attack_line;
+                gAttackLine[i].FillRectangle(Brushes.Red,
+                    0,
+                    h,
+                    canvasAttackLine[i].Width,
+                    canvasAttackLine[i].Height - h);
+
+            }
         }
     }
 }
