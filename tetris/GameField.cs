@@ -388,7 +388,8 @@ namespace tetris
             //パーフェクトチェック
             //床から見ていく
             int perfect_count = 0;
-            for (int h = GameField.FIELD_HEIGHT - 2; h > GameField.FIELD_HEIGHT - 2 - 4; h--)
+            const int PERFECT_LINE_CHECK = 5;
+            for (int h = GameField.FIELD_HEIGHT - 2; h > GameField.FIELD_HEIGHT - 2 - PERFECT_LINE_CHECK; h--)
             {
                 bool line_check = true;
                 //壁の所は見ない
@@ -414,7 +415,7 @@ namespace tetris
             }
 
             //消したライン数と床から探索して消す予定ライン数が一致していたらパーフェクト
-            if (perfect_count == 4)
+            if (perfect_count == PERFECT_LINE_CHECK)
             {
                 ok = true;
             }
