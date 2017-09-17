@@ -196,6 +196,9 @@ namespace tetris
                     {
                         ExecEraseLine();
 
+                        //ここで攻撃ラインの処理を行う
+                        this.attackLineManage.ClearAttackLine();
+
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
                     break;

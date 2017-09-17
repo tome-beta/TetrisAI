@@ -234,16 +234,11 @@ namespace tetris
         }
 
 
-        //フィールドに置かれたブロックを描く
+        //攻撃ラインの表示
         private void DrawAttackLine()
         {
+            //TODO　実際は相手側の攻撃ライン数をチェックする
             int attack_line = this.attackLineManage.AttackLineNum;
-
-            if( attack_line > 0)
-            {
-                int a = 0;
-                a++;
-            }
 
             gAttackLine1P.Clear(Color.White);
 
