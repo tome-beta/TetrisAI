@@ -56,7 +56,7 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
-            for(int i = 0;i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for(int i = 0;i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //フィールドのクリア
                 gFiled[i].Clear(Color.White);
@@ -95,7 +95,7 @@ namespace tetris
         //操作中のブロックを描画
         private void DrawCurrentBlock(bool game_over)
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 if (this.blockControle[i].CurrentBlock != null)
                 {
@@ -148,7 +148,7 @@ namespace tetris
         //落下位置ガイドブロックを描画
         private void DrawGuideBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 if (this.blockControle[i].CurrentBlock != null)
                 {
@@ -181,7 +181,7 @@ namespace tetris
         //NEXTブロックの描画
         private void DrawNextBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //表示位置のクリア
                 gNextBlock[i].Clear(Color.White);
@@ -212,7 +212,7 @@ namespace tetris
         //HOLD中のブロックを描く
         private void DrawHoldBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //表示位置のクリア
                 gHoldBlock[i].Clear(Color.White);
@@ -241,24 +241,37 @@ namespace tetris
         //スコアの表示
         private void DrawScore()
         {
-            this.label1Line1P.Text = @"1Line : " + this.scoreManage.EraseCount[0];
-            this.label2Line1P.Text = @"2Line : " + this.scoreManage.EraseCount[1];
-            this.label3Line1P.Text = @"3Line : " + this.scoreManage.EraseCount[2];
-            this.label4Line1P.Text = @"4Line : " + this.scoreManage.EraseCount[3];
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
 
-            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage.TspinEraseCount[0];
-            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage.TspinEraseCount[1];
-            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage.TspinEraseCount[2];
+            this.label1Line1P.Text = @"1Line : " + this.scoreManage[p1].EraseCount[0];
+            this.label2Line1P.Text = @"2Line : " + this.scoreManage[p1].EraseCount[1];
+            this.label3Line1P.Text = @"3Line : " + this.scoreManage[p1].EraseCount[2];
+            this.label4Line1P.Text = @"4Line : " + this.scoreManage[p1].EraseCount[3];
+
+            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage[p1].TspinEraseCount[0];
+            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage[p1].TspinEraseCount[1];
+            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage[p1].TspinEraseCount[2];
+
+
+            this.label1Line2P.Text = @"1Line : " + this.scoreManage[p2].EraseCount[0];
+            this.label2Line2P.Text = @"2Line : " + this.scoreManage[p2].EraseCount[1];
+            this.label3Line2P.Text = @"3Line : " + this.scoreManage[p2].EraseCount[2];
+            this.label4Line2P.Text = @"4Line : " + this.scoreManage[p2].EraseCount[3];
+
+            this.labelT1Count2P.Text = @"Tspin1 : " + this.scoreManage[p2].TspinEraseCount[0];
+            this.labelT2Count2P.Text = @"Tspin2 : " + this.scoreManage[p2].TspinEraseCount[1];
+            this.labelT3Count2P.Text = @"Tspin3 : " + this.scoreManage[p2].TspinEraseCount[2];
         }
 
 
         //攻撃ラインの表示
         private void DrawAttackLine()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //TODO　実際は相手側の攻撃ライン数をチェックする
-                int attack_line = this.attackLineManage.AttackLineNum;
+                int attack_line = this.attackLineManage[i].AttackLineNum;
 
                 gAttackLine[i].Clear(Color.White);
 

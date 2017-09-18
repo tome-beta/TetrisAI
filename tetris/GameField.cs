@@ -20,11 +20,11 @@ namespace tetris
         public const int NEXT_BLOCK_DISP_NUM = 5;   //表示は５個。
 
         //描画先のpictureBoxの切り替え
-        enum PICTURE_BOX_DEFINE
+        enum PLAYER_DEFINE
         {
-            PICTURE_BOX_1P = 0,
-            PICTURE_BOX_2P = 1,
-            PICTURE_BOX_NUM = 2,
+            PLAYER_1 = 0,
+            PLAYER_2 = 1,
+            PLAYER_NUM = 2,
         };
 
         enum GAME_MODE
@@ -91,9 +91,12 @@ namespace tetris
                             this.GameStart = false;
                             Mode = GAME_MODE.MODE_SET_BLOCK;
 
-                            this.messageControle[0].ClearMessage();
-                            this.scoreManage.ClearScore();
-                            this.attackLineManage.ClearAttackLine();
+                            for( int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM;i++)
+                            {
+                                this.messageControle[i].ClearMessage();
+                                this.scoreManage[i].ClearScore();
+                                this.attackLineManage[i].ClearAttackLine();
+                            }
                         }
                     }
                     break;
@@ -175,7 +178,7 @@ namespace tetris
                         int tspin_type = CheckTspin(this.blockControle[0].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
-                        this.attackLineManage.CalcAttackLine(
+                        this.attackLineManage[0].CalcAttackLine(
                             line_num, 
                             tspin_type,
                             perfect,
@@ -189,7 +192,7 @@ namespace tetris
                         if ( line_num > 0)
                         {
                             int tspin = CheckTspin(this.blockControle[0].status);
-                            this.scoreManage.SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
+                            this.scoreManage[0].SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
                         }
 
 
@@ -203,7 +206,6 @@ namespace tetris
                         ExecEraseLine();
 
                         //ここで攻撃ラインの処理を行う
-                        this.attackLineManage.ClearAttackLine();
 
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
@@ -254,8 +256,8 @@ namespace tetris
 
 
             {
-                int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
-                int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
+                int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+                int p2 = (int)PLAYER_DEFINE.PLAYER_2;
 
                 //メッセージの表示
                 this.messageControle[p1].DrawUpdate();
@@ -550,30 +552,37 @@ namespace tetris
         /// </summary>
         private void CreateManager()
         {
-            const int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
-            const int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
-            const int make_num = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM;
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
+            const int make_num = (int)PLAYER_DEFINE.PLAYER_NUM;
 
             blockControle = new BlockControle[make_num];
-            blockControle[p1] = new BlockControle();
-            blockControle[p2] = new BlockControle();
+            messageControle = new MessageControle[make_num];
+            scoreManage = new ScoreManage[make_num];
+            attackLineManage = new AttackLineManage[make_num];
+
+            for (int i = 0; i < make_num; i++)
+            {
+                blockControle[i] = new BlockControle();
+                messageControle[i] = new MessageControle();
+                scoreManage[i] = new ScoreManage();
+                attackLineManage[i] = new AttackLineManage();
+            }
 
             //メッセージ
-            messageControle = new MessageControle[make_num];
-            messageControle[p1] = new MessageControle();
-            messageControle[p2] = new MessageControle();
 
             messageControle[p1].Message = this.labelMessage1P;
             messageControle[p1].SetMessage(@"Press F1 key to start", false);
             messageControle[p2].Message = this.labelMessage2P;
             messageControle[p2].SetMessage(@"Press F1 key to start", false);
+
         }
 
         private void CreateImageObject()
         {
-            const int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
-            const int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
-            const int make_num = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM;
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
+            const int make_num = (int)PLAYER_DEFINE.PLAYER_NUM;
             canvasFiled = new Bitmap[make_num];
             gFiled = new Graphics[make_num];
             canvasNextBlock = new Bitmap[make_num];
@@ -683,8 +692,8 @@ namespace tetris
         private GAME_MODE Mode;
         BlockControle[] blockControle;
         MessageControle[] messageControle;
-        ScoreManage scoreManage = new ScoreManage();
-        AttackLineManage attackLineManage = new AttackLineManage();
+        ScoreManage[] scoreManage;
+        AttackLineManage[] attackLineManage;
         private bool GameOverFlag = false;
 
         //データ配列
