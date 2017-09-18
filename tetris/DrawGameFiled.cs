@@ -97,17 +97,17 @@ namespace tetris
         {
             for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                if (this.blockControle.CurrentBlock != null)
+                if (this.blockControle[i].CurrentBlock != null)
                 {
                     //名前おきかえ
-                    Point Pos = this.blockControle.CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+                    Point Pos = this.blockControle[i].CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
 
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
                             {
                                 int draw_type = (int)(CurrnetInfo.type);
                                 if (game_over)
@@ -150,19 +150,19 @@ namespace tetris
         {
             for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
             {
-                if (this.blockControle.CurrentBlock != null)
+                if (this.blockControle[i].CurrentBlock != null)
                 {
-                    int move_y = this.blockControle.HardDropCurrentBlock(this.BlockField);
+                    int move_y = this.blockControle[i].HardDropCurrentBlock(this.BlockField);
 
                     //名前おきかえ
-                    Point Pos = this.blockControle.CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+                    Point Pos = this.blockControle[i].CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
 
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
                             {
                                 //ミノの種類により切り出す画像を選ぶ
                                 DrawOneBlock(gFiled[i],
@@ -217,9 +217,9 @@ namespace tetris
                 //表示位置のクリア
                 gHoldBlock[i].Clear(Color.White);
 
-                if (BlockInfo.BlockType.MINO_I <= blockControle.HoldBlock && blockControle.HoldBlock <= BlockInfo.BlockType.MINO_O)
+                if (BlockInfo.BlockType.MINO_I <= blockControle[i].HoldBlock && blockControle[i].HoldBlock <= BlockInfo.BlockType.MINO_O)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle.HoldBlock));
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle[i].HoldBlock));
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
@@ -230,7 +230,7 @@ namespace tetris
                                 DrawOneBlock(gHoldBlock[i],
                                     (x) * BlockInfo.BLOCK_WIDTH,
                                     (y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(blockControle.HoldBlock));
+                                    (int)(blockControle[i].HoldBlock));
                             }
                         }
                     }
