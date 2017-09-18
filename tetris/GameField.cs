@@ -176,7 +176,7 @@ namespace tetris
                 case GAME_MODE.MODE_ERASE_CHECK:
                     {
                         //消えるラインのチェック
-                        int line_num = CheckEraseLine();
+                        int line_num = CheckEraseLine(0);
                         bool perfect = CheckPerfect(line_num);
                         int tspin_type = CheckTspin(this.blockControle[0].status);
 
@@ -206,7 +206,7 @@ namespace tetris
                 //ブロックを消す処理
                 case GAME_MODE.MODE_ERASE_BLOCK:
                     {
-                        ExecEraseLine();
+                        ExecEraseLine(0);
 
                         //ここで攻撃ラインの処理を行う
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
@@ -368,7 +368,7 @@ namespace tetris
 
 
         //消去するラインを調べる
-        private int  CheckEraseLine()
+        private int  CheckEraseLine(int player)
         {
             int line_num = 0;
             //床から見ていく
@@ -397,7 +397,7 @@ namespace tetris
                     }
                     //消す
                     line_num++;
-                    this.EraseLine.Add(h);
+                    this.EraseLine[player].Add(h);
                 }
             }
 
@@ -524,7 +524,7 @@ namespace tetris
         }
 
         //消去するラインを調べる
-        private void ExecEraseLine()
+        private void ExecEraseLine(int player)
         {
             //ブロックを実際に消す処理
             //アニメーションをそのうちつける
@@ -550,7 +550,7 @@ namespace tetris
                 this.BlockField[0, w] = 0;
             }
 
-            this.EraseLine.Clear();
+            this.EraseLine[player].Clear();
         }
 
         /// <summary>
@@ -568,6 +568,7 @@ namespace tetris
             attackLineManage = new AttackLineManage[make_num];
 
             NextBlock = new List<int>[make_num];
+            EraseLine = new List<int>[make_num];
 
             for (int i = 0; i < make_num; i++)
             {
@@ -576,6 +577,7 @@ namespace tetris
                 scoreManage[i] = new ScoreManage();
                 attackLineManage[i] = new AttackLineManage();
                 NextBlock[i] = new List<int>();
+                EraseLine[i] = new List<int>();
             }
 
             //メッセージ
@@ -707,9 +709,8 @@ namespace tetris
 
         //データ配列
         public int[,] BlockField { get; set; }
-///        private List<int> NextBlock = new List<int>();
         private List<int>[] NextBlock;
-        private List<int> EraseLine = new List<int>();
+        private List<int>[] EraseLine;
         System.Random MyRandom = new Random();
 
         //キー入力持ち
