@@ -66,8 +66,6 @@ namespace tetris
             //マネージャー系のクラスを初期化
             CreateManager();
 
-            this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
-
             //フィールド情報を初期化
             BlockFieldInit();
 
@@ -112,8 +110,10 @@ namespace tetris
 
                         blockControle[0].SetCurrentBlock((BlockInfo.BlockType)type);
 
+                        int[,] field = this.fieldManage[0].BlockField;
+
                         //ここでブロックを置くことができなければゲームオーバー
-                        if(this.blockControle[0].CheckGameOver(this.BlockField))
+                        if(this.blockControle[0].CheckGameOver(field))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
 
@@ -123,12 +123,12 @@ namespace tetris
                             {
                                 for (int x = 0; x < GameField.FIELD_WIDTH; x++)
                                 {
-                                    int field_block = this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                                    int field_block = field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD;
 
                                     if ((int)BlockInfo.BlockType.MINO_I <= field_block &&
                                         field_block <= (int)BlockInfo.BlockType.MINO_O)
                                     {
-                                        this.BlockField[y, x] = (int)BlockInfo.BlockType.MINO_ATTACK + (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                                        field[y, x] = (int)BlockInfo.BlockType.MINO_ATTACK + (int)BlockInfo.BlockType.MINO_IN_FIELD;
                                     }
                                 }
                             }
@@ -159,15 +159,17 @@ namespace tetris
                         }
                         else if (this.HardDrop)
                         {
+                            int[,] field = this.fieldManage[0].BlockField;
+
                             //ハードドロップ
-                            int y = this.blockControle[0].HardDropCurrentBlock(BlockField);
+                            int y = this.blockControle[0].HardDropCurrentBlock(field);
                             this.blockControle[0].CurrentPos.Y += y;   //TODO 関数化
 
                             this.blockControle[0].DoHold = false;
                             this.HardDrop = false;
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
-                            this.blockControle[0].SetBlockInField(this.BlockField);
+                            this.blockControle[0].SetBlockInField(field);
                         }
                     }
                     break;
@@ -177,7 +179,7 @@ namespace tetris
                     {
                         //消えるラインのチェック
                         int line_num = CheckEraseLine(0);
-                        bool perfect = CheckPerfect(line_num);
+                        bool perfect = CheckPerfect(line_num,0);
                         int tspin_type = CheckTspin(this.blockControle[0].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
@@ -235,21 +237,23 @@ namespace tetris
             Console.WriteLine(@"Disp");
             this.labelFPS.Text = @"FPS: " + this.fps.ToString();
 
-            //設置したブロックを描画
-            DrawGameField();
+            if(this.fieldManage[0] != null)
+            {
+                //設置したブロックを描画
+                DrawGameField();
 
-            //NEXTブロックの描画
-            DrawNextBlock();
+                //NEXTブロックの描画
+                DrawNextBlock();
 
-            //操作中のブロックを描画
-            DrawCurrentBlock(GameOverFlag);
+                //操作中のブロックを描画
+                DrawCurrentBlock(GameOverFlag);
 
-            //落下位置ブロックを描画
-            DrawGuideBlock();
+                //落下位置ブロックを描画
+                DrawGuideBlock();
 
-            //HOLDブロックを描画
-            DrawHoldBlock();
-
+                //HOLDブロックを描画
+                DrawHoldBlock();
+            }
             //スコア表示の描画
             DrawScore();
 
@@ -295,28 +299,6 @@ namespace tetris
 
         private void BlockFieldInit()
         {
-            //フィールドを作る
-            //フィールドは１０＊２０の両サイドに壁を表す９９を入れる。
-            //ブロックのスタート位置のために上に３行加える。
-            //床にも１行追加
-            //全体としては１２＊２4
-            //壁と床を設置
-            for (int w = 0; w < GameField.FIELD_WIDTH; w++)
-            {
-                for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
-                {
-                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
-                        h == GameField.FIELD_HEIGHT - 1)
-                    {
-                        this.BlockField[h, w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
-                    }
-                    else
-                    {
-                        this.BlockField[h, w] = 0;
-                    }
-                }
-            }
-
             GameOverFlag = false;
 
             //NEXTブロックを収める配列
@@ -371,6 +353,7 @@ namespace tetris
         private int  CheckEraseLine(int player)
         {
             int line_num = 0;
+            int[,] field = this.fieldManage[player].BlockField;
             //床から見ていく
             for (int h = GameField.FIELD_HEIGHT - 2; h >= 0; h--)
             {
@@ -379,7 +362,7 @@ namespace tetris
                 for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
                 {
                     //設置されていないか
-                    if (this.BlockField[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    if (field[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
                     {
                         //空きがあれば飛ばす
                         erase_line = false;
@@ -393,7 +376,7 @@ namespace tetris
                     //消す予定の情報を加える
                     for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
                     {
-                        this.BlockField[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
+                        field[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
                     }
                     //消す
                     line_num++;
@@ -409,9 +392,11 @@ namespace tetris
         /// </summary>
         /// <param name="erase_line_num"></param>
         /// <returns></returns>
-        private bool CheckPerfect(int erase_line_num)
+        private bool CheckPerfect(int erase_line_num,int player)
         {
             bool ok = false;
+
+            int[,] field = this.fieldManage[player].BlockField;
 
             //パーフェクトチェック
             //床から見ていく
@@ -424,7 +409,7 @@ namespace tetris
                 for (int w = 1; w < GameField.FIELD_WIDTH - 2; w++)
                 {
                     //消す予定になっているor何もない
-                    int block_data = this.BlockField[h, w];
+                    int block_data = field[h, w];
                     if( block_data >= (int)BlockInfo.BlockType.MINO_VANISH ||
                         block_data == 0)
                     {
@@ -526,6 +511,8 @@ namespace tetris
         //消去するラインを調べる
         private void ExecEraseLine(int player)
         {
+            int[,] field = this.fieldManage[player].BlockField;
+
             //ブロックを実際に消す処理
             //アニメーションをそのうちつける
             for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
@@ -533,12 +520,12 @@ namespace tetris
                 //壁の所は見ない
                 for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
                 {
-                    if (this.BlockField[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
+                    if (field[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
                     {
-                        this.BlockField[h, w] = 0;
+                        field[h, w] = 0;
                         for (int h2 = h; h2 > 0; h2--)
                         {
-                            this.BlockField[h2, w] = this.BlockField[h2 - 1, w];
+                            field[h2, w] = field[h2 - 1, w];
                         }
                     }
                 }
@@ -547,7 +534,7 @@ namespace tetris
             //一番上のラインを埋める
             for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
             {
-                this.BlockField[0, w] = 0;
+                field[0, w] = 0;
             }
 
             this.EraseLine[player].Clear();
@@ -566,6 +553,7 @@ namespace tetris
             messageControle = new MessageControle[make_num];
             scoreManage = new ScoreManage[make_num];
             attackLineManage = new AttackLineManage[make_num];
+            fieldManage = new FieldManage[make_num];
 
             NextBlock = new List<int>[make_num];
             EraseLine = new List<int>[make_num];
@@ -578,6 +566,7 @@ namespace tetris
                 attackLineManage[i] = new AttackLineManage();
                 NextBlock[i] = new List<int>();
                 EraseLine[i] = new List<int>();
+                fieldManage[i] = new FieldManage();
             }
 
             //メッセージ
@@ -632,6 +621,9 @@ namespace tetris
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
+            //TODO 
+            int[,] field = this.fieldManage[0].BlockField;
+
             //GameStart
             if (e.KeyData == Keys.F1)
             {
@@ -666,32 +658,29 @@ namespace tetris
                 if (e.KeyData == Keys.Down)
                 {
                     Console.WriteLine(@"DOWN");
-                    //                this.blockControle.CurrentPos.Y += 1;
-                    this.blockControle[0].MoveCurrentBlockDown(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockDown(field);
                 }
                 if (e.KeyData == Keys.Right)
                 {
                     Console.WriteLine(@"RIGHT");
-                    //                this.blockControle.CurrentPos.X += 1;
-                    this.blockControle[0].MoveCurrentBlockRight(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockRight(field);
                 }
                 if (e.KeyData == Keys.Left)
                 {
                     Console.WriteLine(@"LEFT");
-                    //                this.blockControle.CurrentPos.X -= 1;
-                    this.blockControle[0].MoveCurrentBlockLeft(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockLeft(field);
                 }
 
                 //回転
                 if (e.KeyData == Keys.X)
                 {
                     Console.WriteLine(@"ROTATE_R");
-                    this.blockControle[0].RotateCurrentBlock(true, this.BlockField);
+                    this.blockControle[0].RotateCurrentBlock(true, field);
                 }
                 else if (e.KeyData == Keys.Z)
                 {
                     Console.WriteLine(@"ROTATE_L");
-                    this.blockControle[0].RotateCurrentBlock(false, this.BlockField);
+                    this.blockControle[0].RotateCurrentBlock(false, field);
                 }
 
             }
@@ -705,10 +694,11 @@ namespace tetris
         MessageControle[] messageControle;
         ScoreManage[] scoreManage;
         AttackLineManage[] attackLineManage;
+        FieldManage[] fieldManage;
+
         private bool GameOverFlag = false;
 
         //データ配列
-        public int[,] BlockField { get; set; }
         private List<int>[] NextBlock;
         private List<int>[] EraseLine;
         System.Random MyRandom = new Random();

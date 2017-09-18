@@ -56,10 +56,10 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
-            for(int i = 0;i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
+            for(int player = 0;player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
             {
                 //フィールドのクリア
-                gFiled[i].Clear(Color.White);
+                gFiled[player].Clear(Color.White);
 
 #if DEBUG
                 //デバッグ用にフィールドに線を引いておく
@@ -67,28 +67,31 @@ namespace tetris
                 {
                     for (int x = 1; x < 11; x++)
                     {
-                        gFiled[i].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
+                        gFiled[player].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
                             new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
                     }
                     for (int y = 1; y < 21; y++)
                     {
-                        gFiled[i].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                        gFiled[player].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
                             new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
                     }
                 }
 #endif
-                //壁と設置されているブロックを描く
-                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                if(fieldManage[0] != null)
                 {
-                    for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                    int[,] field = fieldManage[player].BlockField;
+                    //壁と設置されているブロックを描く
+                    for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
                     {
-                        if (this.BlockField[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                        for (int x = 0; x < GameField.FIELD_WIDTH; x++)
                         {
-                            DrawOneBlock(gFiled[i], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (this.BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
+                            if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                            {
+                                DrawOneBlock(gFiled[player], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
+                            }
                         }
                     }
                 }
-
             }
         }
 
@@ -148,24 +151,26 @@ namespace tetris
         //落下位置ガイドブロックを描画
         private void DrawGuideBlock()
         {
-            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
+            for (int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
             {
-                if (this.blockControle[i].CurrentBlock != null)
+                int[,] field = this.fieldManage[player].BlockField;
+
+                if (this.blockControle[player].CurrentBlock != null)
                 {
-                    int move_y = this.blockControle[i].HardDropCurrentBlock(this.BlockField);
+                    int move_y = this.blockControle[player].HardDropCurrentBlock(field);
 
                     //名前おきかえ
-                    Point Pos = this.blockControle[i].CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
+                    Point Pos = this.blockControle[player].CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
 
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
+                            if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
                             {
                                 //ミノの種類により切り出す画像を選ぶ
-                                DrawOneBlock(gFiled[i],
+                                DrawOneBlock(gFiled[player],
                                     (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
                                     (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
                                     (int)(CurrnetInfo.type),
