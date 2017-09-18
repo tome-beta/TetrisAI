@@ -54,41 +54,38 @@ namespace tetris
         }
 
         //フィールドに置かれたブロックを描く
-        private void DrawGameField()
+        private void DrawGameField(int player)
         {
-            for(int player = 0;player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
-            {
-                //フィールドのクリア
-                gFiled[player].Clear(Color.White);
+            //フィールドのクリア
+            gFiled[player].Clear(Color.White);
 
 #if DEBUG
-                //デバッグ用にフィールドに線を引いておく
-                using (Pen pen = new Pen(Color.Gray))
+            //デバッグ用にフィールドに線を引いておく
+            using (Pen pen = new Pen(Color.Gray))
+            {
+                for (int x = 1; x < 11; x++)
                 {
-                    for (int x = 1; x < 11; x++)
-                    {
-                        gFiled[player].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
-                            new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
-                    }
-                    for (int y = 1; y < 21; y++)
-                    {
-                        gFiled[player].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
-                            new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
-                    }
+                    gFiled[player].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
+                        new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
                 }
-#endif
-                if(fieldManage[0] != null)
+                for (int y = 1; y < 21; y++)
                 {
-                    int[,] field = fieldManage[player].BlockField;
-                    //壁と設置されているブロックを描く
-                    for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                    gFiled[player].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
+                }
+            }
+#endif
+            if(fieldManage[0] != null)
+            {
+                int[,] field = fieldManage[player].BlockField;
+                //壁と設置されているブロックを描く
+                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                {
+                    for (int x = 0; x < GameField.FIELD_WIDTH; x++)
                     {
-                        for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                        if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
                         {
-                            if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
-                            {
-                                DrawOneBlock(gFiled[player], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
-                            }
+                            DrawOneBlock(gFiled[player], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
                         }
                     }
                 }
@@ -149,96 +146,85 @@ namespace tetris
         }
 
         //落下位置ガイドブロックを描画
-        private void DrawGuideBlock()
+        private void DrawGuideBlock(int player)
         {
-            for (int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
+            int[,] field = this.fieldManage[player].BlockField;
+
+            if (this.blockControle[player].CurrentBlock != null)
             {
-                int[,] field = this.fieldManage[player].BlockField;
+                int move_y = this.blockControle[player].HardDropCurrentBlock(field);
 
-                if (this.blockControle[player].CurrentBlock != null)
+                //名前おきかえ
+                Point Pos = this.blockControle[player].CurrentPos;
+                BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
+
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                 {
-                    int move_y = this.blockControle[player].HardDropCurrentBlock(field);
-
-                    //名前おきかえ
-                    Point Pos = this.blockControle[player].CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
-
-                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                        if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
-                            {
-                                //ミノの種類により切り出す画像を選ぶ
-                                DrawOneBlock(gFiled[player],
-                                    (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
-                                    (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(CurrnetInfo.type),
-                                    true);
-                            }
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gFiled[player],
+                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                                (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
+                                (int)(CurrnetInfo.type),
+                                true);
                         }
                     }
                 }
             }
-
         }
 
         //NEXTブロックの描画
-        private void DrawNextBlock()
+        private void DrawNextBlock(int player)
         {
-            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
+            //表示位置のクリア
+            gNextBlock[player].Clear(Color.White);
+
+            List<int> next = this.NextBlock[player];
+
+            //ミノの種類により切り出す画像を選ぶ
+            for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
             {
-                //表示位置のクリア
-                gNextBlock[i].Clear(Color.White);
-
-                List<int> next = this.NextBlock[i];
-
-                //ミノの種類により切り出す画像を選ぶ
-                for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
+                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
-                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
                         {
-                            if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
-                            {
-                                //ミノの種類により切り出す画像を選ぶ
-                                DrawOneBlock(gNextBlock[i],
-                                    (x) * BlockInfo.BLOCK_WIDTH,
-                                    (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(next[next_num]));
-                            }
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gNextBlock[player],
+                                (x) * BlockInfo.BLOCK_WIDTH,
+                                (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
+                                (int)(next[next_num]));
                         }
                     }
                 }
-
             }
         }
 
         //HOLD中のブロックを描く
-        private void DrawHoldBlock()
+        private void DrawHoldBlock(int player)
         {
-            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
-            {
-                //表示位置のクリア
-                gHoldBlock[i].Clear(Color.White);
+            //表示位置のクリア
+            gHoldBlock[player].Clear(Color.White);
 
-                if (BlockInfo.BlockType.MINO_I <= blockControle[i].HoldBlock && blockControle[i].HoldBlock <= BlockInfo.BlockType.MINO_O)
+            if (BlockInfo.BlockType.MINO_I <= blockControle[player].HoldBlock && blockControle[player].HoldBlock <= BlockInfo.BlockType.MINO_O)
+            {
+                BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle[player].HoldBlock));
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle[i].HoldBlock));
-                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
                         {
-                            if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
-                            {
-                                //ミノの種類により切り出す画像を選ぶ
-                                DrawOneBlock(gHoldBlock[i],
-                                    (x) * BlockInfo.BLOCK_WIDTH,
-                                    (y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(blockControle[i].HoldBlock));
-                            }
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gHoldBlock[player],
+                                (x) * BlockInfo.BLOCK_WIDTH,
+                                (y) * BlockInfo.BLOCK_HEIGHT,
+                                (int)(blockControle[player].HoldBlock));
                         }
                     }
                 }
@@ -246,50 +232,51 @@ namespace tetris
         }
 
         //スコアの表示
-        private void DrawScore()
+        private void DrawScore(int player)
         {
             const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
             const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
 
-            this.label1Line1P.Text = @"1Line : " + this.scoreManage[p1].EraseCount[0];
-            this.label2Line1P.Text = @"2Line : " + this.scoreManage[p1].EraseCount[1];
-            this.label3Line1P.Text = @"3Line : " + this.scoreManage[p1].EraseCount[2];
-            this.label4Line1P.Text = @"4Line : " + this.scoreManage[p1].EraseCount[3];
+            if(player == (int)PLAYER_DEFINE.PLAYER_1)
+            {
+                this.label1Line1P.Text = @"1Line : " + this.scoreManage[p1].EraseCount[0];
+                this.label2Line1P.Text = @"2Line : " + this.scoreManage[p1].EraseCount[1];
+                this.label3Line1P.Text = @"3Line : " + this.scoreManage[p1].EraseCount[2];
+                this.label4Line1P.Text = @"4Line : " + this.scoreManage[p1].EraseCount[3];
 
-            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage[p1].TspinEraseCount[0];
-            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage[p1].TspinEraseCount[1];
-            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage[p1].TspinEraseCount[2];
+                this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage[p1].TspinEraseCount[0];
+                this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage[p1].TspinEraseCount[1];
+                this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage[p1].TspinEraseCount[2];
+            }
+            else
+            {
+                this.label1Line2P.Text = @"1Line : " + this.scoreManage[p2].EraseCount[0];
+                this.label2Line2P.Text = @"2Line : " + this.scoreManage[p2].EraseCount[1];
+                this.label3Line2P.Text = @"3Line : " + this.scoreManage[p2].EraseCount[2];
+                this.label4Line2P.Text = @"4Line : " + this.scoreManage[p2].EraseCount[3];
 
+                this.labelT1Count2P.Text = @"Tspin1 : " + this.scoreManage[p2].TspinEraseCount[0];
+                this.labelT2Count2P.Text = @"Tspin2 : " + this.scoreManage[p2].TspinEraseCount[1];
+                this.labelT3Count2P.Text = @"Tspin3 : " + this.scoreManage[p2].TspinEraseCount[2];
+            }
 
-            this.label1Line2P.Text = @"1Line : " + this.scoreManage[p2].EraseCount[0];
-            this.label2Line2P.Text = @"2Line : " + this.scoreManage[p2].EraseCount[1];
-            this.label3Line2P.Text = @"3Line : " + this.scoreManage[p2].EraseCount[2];
-            this.label4Line2P.Text = @"4Line : " + this.scoreManage[p2].EraseCount[3];
-
-            this.labelT1Count2P.Text = @"Tspin1 : " + this.scoreManage[p2].TspinEraseCount[0];
-            this.labelT2Count2P.Text = @"Tspin2 : " + this.scoreManage[p2].TspinEraseCount[1];
-            this.labelT3Count2P.Text = @"Tspin3 : " + this.scoreManage[p2].TspinEraseCount[2];
         }
 
 
         //攻撃ラインの表示
-        private void DrawAttackLine()
+        private void DrawAttackLine(int player)
         {
-            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
-            {
-                //TODO　実際は相手側の攻撃ライン数をチェックする
-                int attack_line = this.attackLineManage[i].AttackLineNum;
+            //TODO　実際は相手側の攻撃ライン数をチェックする
+            int attack_line = this.attackLineManage[player].AttackLineNum;
 
-                gAttackLine[i].Clear(Color.White);
+            gAttackLine[player].Clear(Color.White);
 
-                int h = canvasAttackLine[i].Height - BlockInfo.BLOCK_HEIGHT * attack_line;
-                gAttackLine[i].FillRectangle(Brushes.Red,
-                    0,
-                    h,
-                    canvasAttackLine[i].Width,
-                    canvasAttackLine[i].Height - h);
-
-            }
+            int h = canvasAttackLine[player].Height - BlockInfo.BLOCK_HEIGHT * attack_line;
+            gAttackLine[player].FillRectangle(Brushes.Red,
+                0,
+                h,
+                canvasAttackLine[player].Width,
+                canvasAttackLine[player].Height - h);
         }
     }
 }

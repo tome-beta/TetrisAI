@@ -237,28 +237,32 @@ namespace tetris
             Console.WriteLine(@"Disp");
             this.labelFPS.Text = @"FPS: " + this.fps.ToString();
 
-            if(this.fieldManage[0] != null)
+            for(int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM;player++)
             {
                 //設置したブロックを描画
-                DrawGameField();
+                DrawGameField(player);
 
                 //NEXTブロックの描画
-                DrawNextBlock();
-
-                //操作中のブロックを描画
-                DrawCurrentBlock(GameOverFlag);
+                DrawNextBlock(player);
 
                 //落下位置ブロックを描画
-                DrawGuideBlock();
+                DrawGuideBlock(player);
 
                 //HOLDブロックを描画
-                DrawHoldBlock();
-            }
-            //スコア表示の描画
-            DrawScore();
+                DrawHoldBlock(player);
 
-            //攻撃ライン表示
-            DrawAttackLine();
+                //スコア表示の描画
+                DrawScore(player);
+
+                //攻撃ライン表示
+                DrawAttackLine(player);
+
+            }
+
+            //操作中のブロックを描画
+            DrawCurrentBlock(GameOverFlag);
+
+
 
 
             {
