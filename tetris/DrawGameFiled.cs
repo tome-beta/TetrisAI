@@ -56,7 +56,7 @@ namespace tetris
         //フィールドに置かれたブロックを描く
         private void DrawGameField()
         {
-            for(int i = 0;i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for(int i = 0;i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //フィールドのクリア
                 gFiled[i].Clear(Color.White);
@@ -95,19 +95,19 @@ namespace tetris
         //操作中のブロックを描画
         private void DrawCurrentBlock(bool game_over)
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
-                if (this.blockControle.CurrentBlock != null)
+                if (this.blockControle[i].CurrentBlock != null)
                 {
                     //名前おきかえ
-                    Point Pos = this.blockControle.CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+                    Point Pos = this.blockControle[i].CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
 
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
                             {
                                 int draw_type = (int)(CurrnetInfo.type);
                                 if (game_over)
@@ -148,21 +148,21 @@ namespace tetris
         //落下位置ガイドブロックを描画
         private void DrawGuideBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
-                if (this.blockControle.CurrentBlock != null)
+                if (this.blockControle[i].CurrentBlock != null)
                 {
-                    int move_y = this.blockControle.HardDropCurrentBlock(this.BlockField);
+                    int move_y = this.blockControle[i].HardDropCurrentBlock(this.BlockField);
 
                     //名前おきかえ
-                    Point Pos = this.blockControle.CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle.CurrentBlock;
+                    Point Pos = this.blockControle[i].CurrentPos;
+                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
 
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle.CurrentRot, y, x] != 0)
+                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
                             {
                                 //ミノの種類により切り出す画像を選ぶ
                                 DrawOneBlock(gFiled[i],
@@ -181,15 +181,17 @@ namespace tetris
         //NEXTブロックの描画
         private void DrawNextBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //表示位置のクリア
                 gNextBlock[i].Clear(Color.White);
 
+                List<int> next = this.NextBlock[i];
+
                 //ミノの種類により切り出す画像を選ぶ
                 for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(NextBlock[next_num]));
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
@@ -200,7 +202,7 @@ namespace tetris
                                 DrawOneBlock(gNextBlock[i],
                                     (x) * BlockInfo.BLOCK_WIDTH,
                                     (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(NextBlock[next_num]));
+                                    (int)(next[next_num]));
                             }
                         }
                     }
@@ -212,14 +214,14 @@ namespace tetris
         //HOLD中のブロックを描く
         private void DrawHoldBlock()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //表示位置のクリア
                 gHoldBlock[i].Clear(Color.White);
 
-                if (BlockInfo.BlockType.MINO_I <= blockControle.HoldBlock && blockControle.HoldBlock <= BlockInfo.BlockType.MINO_O)
+                if (BlockInfo.BlockType.MINO_I <= blockControle[i].HoldBlock && blockControle[i].HoldBlock <= BlockInfo.BlockType.MINO_O)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle.HoldBlock));
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle[i].HoldBlock));
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
@@ -230,7 +232,7 @@ namespace tetris
                                 DrawOneBlock(gHoldBlock[i],
                                     (x) * BlockInfo.BLOCK_WIDTH,
                                     (y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(blockControle.HoldBlock));
+                                    (int)(blockControle[i].HoldBlock));
                             }
                         }
                     }
@@ -241,24 +243,37 @@ namespace tetris
         //スコアの表示
         private void DrawScore()
         {
-            this.label1Line1P.Text = @"1Line : " + this.scoreManage.EraseCount[0];
-            this.label2Line1P.Text = @"2Line : " + this.scoreManage.EraseCount[1];
-            this.label3Line1P.Text = @"3Line : " + this.scoreManage.EraseCount[2];
-            this.label4Line1P.Text = @"4Line : " + this.scoreManage.EraseCount[3];
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
 
-            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage.TspinEraseCount[0];
-            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage.TspinEraseCount[1];
-            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage.TspinEraseCount[2];
+            this.label1Line1P.Text = @"1Line : " + this.scoreManage[p1].EraseCount[0];
+            this.label2Line1P.Text = @"2Line : " + this.scoreManage[p1].EraseCount[1];
+            this.label3Line1P.Text = @"3Line : " + this.scoreManage[p1].EraseCount[2];
+            this.label4Line1P.Text = @"4Line : " + this.scoreManage[p1].EraseCount[3];
+
+            this.labelT1Count1P.Text = @"Tspin1 : " + this.scoreManage[p1].TspinEraseCount[0];
+            this.labelT2Count1P.Text = @"Tspin2 : " + this.scoreManage[p1].TspinEraseCount[1];
+            this.labelT3Count1P.Text = @"Tspin3 : " + this.scoreManage[p1].TspinEraseCount[2];
+
+
+            this.label1Line2P.Text = @"1Line : " + this.scoreManage[p2].EraseCount[0];
+            this.label2Line2P.Text = @"2Line : " + this.scoreManage[p2].EraseCount[1];
+            this.label3Line2P.Text = @"3Line : " + this.scoreManage[p2].EraseCount[2];
+            this.label4Line2P.Text = @"4Line : " + this.scoreManage[p2].EraseCount[3];
+
+            this.labelT1Count2P.Text = @"Tspin1 : " + this.scoreManage[p2].TspinEraseCount[0];
+            this.labelT2Count2P.Text = @"Tspin2 : " + this.scoreManage[p2].TspinEraseCount[1];
+            this.labelT3Count2P.Text = @"Tspin3 : " + this.scoreManage[p2].TspinEraseCount[2];
         }
 
 
         //攻撃ラインの表示
         private void DrawAttackLine()
         {
-            for (int i = 0; i < (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM; i++)
+            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
             {
                 //TODO　実際は相手側の攻撃ライン数をチェックする
-                int attack_line = this.attackLineManage.AttackLineNum;
+                int attack_line = this.attackLineManage[i].AttackLineNum;
 
                 gAttackLine[i].Clear(Color.White);
 

@@ -20,11 +20,11 @@ namespace tetris
         public const int NEXT_BLOCK_DISP_NUM = 5;   //表示は５個。
 
         //描画先のpictureBoxの切り替え
-        enum PICTURE_BOX_DEFINE
+        enum PLAYER_DEFINE
         {
-            PICTURE_BOX_1P = 0,
-            PICTURE_BOX_2P = 1,
-            PICTURE_BOX_NUM = 2,
+            PLAYER_1 = 0,
+            PLAYER_2 = 1,
+            PLAYER_NUM = 2,
         };
 
         enum GAME_MODE
@@ -63,6 +63,9 @@ namespace tetris
                 BlockSourceImage = Image.FromFile(BlockImageFile);
             }
 
+            //マネージャー系のクラスを初期化
+            CreateManager();
+
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
 
             //フィールド情報を初期化
@@ -73,10 +76,7 @@ namespace tetris
 
             Mode = GAME_MODE.MODE_WAIT;
 
-            //メッセージ
-            messageControle.Message1P = this.labelMessage1P;
 
-            messageControle.SetMessage(@"Press F1 key to start", false);
         }
         public void Exec()
         {
@@ -93,9 +93,12 @@ namespace tetris
                             this.GameStart = false;
                             Mode = GAME_MODE.MODE_SET_BLOCK;
 
-                            this.messageControle.ClearMessage();
-                            this.scoreManage.ClearScore();
-                            this.attackLineManage.ClearAttackLine();
+                            for( int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM;i++)
+                            {
+                                this.messageControle[i].ClearMessage();
+                                this.scoreManage[i].ClearScore();
+                                this.attackLineManage[i].ClearAttackLine();
+                            }
                         }
                     }
                     break;
@@ -104,12 +107,13 @@ namespace tetris
                     {
                         //次のブロックを取り出す
                         UpdateNextBlock();
-                        int type = GetNextBlock();
 
-                        blockControle.SetCurrentBlock((BlockInfo.BlockType)type);
+                        int type = GetNextBlock(0);
+
+                        blockControle[0].SetCurrentBlock((BlockInfo.BlockType)type);
 
                         //ここでブロックを置くことができなければゲームオーバー
-                        if(this.blockControle.CheckGameOver(this.BlockField))
+                        if(this.blockControle[0].CheckGameOver(this.BlockField))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
 
@@ -143,9 +147,9 @@ namespace tetris
                         if (this.InputHold)
                         {
                             //HOLD
-                            if (!this.blockControle.DoHold)
+                            if (!this.blockControle[0].DoHold)
                             {
-                                if (!this.blockControle.UpdateHold())
+                                if (!this.blockControle[0].UpdateHold())
                                 {
                                     //HOLDブロックが無かったとき
                                     Mode = GAME_MODE.MODE_SET_BLOCK;
@@ -156,14 +160,14 @@ namespace tetris
                         else if (this.HardDrop)
                         {
                             //ハードドロップ
-                            int y = this.blockControle.HardDropCurrentBlock(BlockField);
-                            this.blockControle.CurrentPos.Y += y;   //TODO 関数化
+                            int y = this.blockControle[0].HardDropCurrentBlock(BlockField);
+                            this.blockControle[0].CurrentPos.Y += y;   //TODO 関数化
 
-                            this.blockControle.DoHold = false;
+                            this.blockControle[0].DoHold = false;
                             this.HardDrop = false;
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
-                            this.blockControle.SetBlockInField(this.BlockField);
+                            this.blockControle[0].SetBlockInField(this.BlockField);
                         }
                     }
                     break;
@@ -172,26 +176,26 @@ namespace tetris
                 case GAME_MODE.MODE_ERASE_CHECK:
                     {
                         //消えるラインのチェック
-                        int line_num = CheckEraseLine();
+                        int line_num = CheckEraseLine(0);
                         bool perfect = CheckPerfect(line_num);
-                        int tspin_type = CheckTspin(this.blockControle.status);
+                        int tspin_type = CheckTspin(this.blockControle[0].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
-                        this.attackLineManage.CalcAttackLine(
+                        this.attackLineManage[0].CalcAttackLine(
                             line_num, 
                             tspin_type,
                             perfect,
-                            ref this.blockControle.BtoB,
+                            ref this.blockControle[0].BtoB,
                             ref result);
 
                         //メッセージを作る
-                        MakeEraseLineMessage(result);
+                        MakeEraseLineMessage(result,0);
 
                         //スコアを記録
                         if ( line_num > 0)
                         {
-                            int tspin = CheckTspin(this.blockControle.status);
-                            this.scoreManage.SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
+                            int tspin = CheckTspin(this.blockControle[0].status);
+                            this.scoreManage[0].SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
                         }
 
 
@@ -202,11 +206,9 @@ namespace tetris
                 //ブロックを消す処理
                 case GAME_MODE.MODE_ERASE_BLOCK:
                     {
-                        ExecEraseLine();
+                        ExecEraseLine(0);
 
                         //ここで攻撃ラインの処理を行う
-                        this.attackLineManage.ClearAttackLine();
-
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
                     break;
@@ -214,7 +216,7 @@ namespace tetris
                 //ゲームオーバー
                 case GAME_MODE.MODE_GAME_OVER:
                     {
-                        messageControle.SetMessage(@"Press F1 key to start", false);
+                        messageControle[0].SetMessage(@"Press F1 key to start", false);
                         this.Mode = GAME_MODE.MODE_WAIT;
                         GameOverFlag = true;
                     }
@@ -254,13 +256,16 @@ namespace tetris
             //攻撃ライン表示
             DrawAttackLine();
 
-            //メッセージの表示
-            this.messageControle.DrawUpdate();
 
-            //PictureBoxを更新
             {
-                int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
-                int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
+                int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+                int p2 = (int)PLAYER_DEFINE.PLAYER_2;
+
+                //メッセージの表示
+                this.messageControle[p1].DrawUpdate();
+                this.messageControle[p2].DrawUpdate();
+
+                //PictureBoxを更新
                 this.pictureBoxField1P.Image = canvasFiled[p1];
                 this.pictureBoxField2P.Image = canvasFiled[p2];
 
@@ -276,8 +281,8 @@ namespace tetris
 
 
             //デバッグ用、操作ブロックの位置を表示
-            int pos_x = blockControle.CurrentPos.X;
-            int pos_y = blockControle.CurrentPos.Y;
+            int pos_x = blockControle[0].CurrentPos.X;
+            int pos_y = blockControle[0].CurrentPos.Y;
             this.labelCurrentPos.Text = @"CurrectPos :(" + pos_x.ToString() + "," + pos_y.ToString() + @")";
 
             //フォームの書き換え
@@ -320,46 +325,50 @@ namespace tetris
 
 
         //NEXTブロックを取得
-        private int GetNextBlock()
+        private int GetNextBlock(int player)
         {
             //一つ取り出す
-            int type = this.NextBlock[0];
-            this.NextBlock.RemoveAt(0);
+            List<int> next = this.NextBlock[player];
+            int type = next[0];
+            next.RemoveAt(0);
             return type;
         }
 
         //NEXTブロックを更新
         private void UpdateNextBlock()
         {
-            //NEXTブロックの数をカウントする
-            int count = this.NextBlock.Count();
-
-            if( count <= NEXT_BLOCK_MAX)
+            for(int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
             {
-                //追加で７つのブロックを選び出す。
-                //１から７の入った配列をランダムでシャッフルして追加する
-                int[] array = { 1, 2, 3, 4, 5, 6, 7 };
+                //NEXTブロックの数をカウントする
+                int count = this.NextBlock[player].Count();
 
-                //Fisher–Yatesアルゴリズム
-                for(int i = array.Length - 1; i > 0; i-- )
+                if (count <= NEXT_BLOCK_MAX)
                 {
-                    int a = i - 1;
-                    int b = MyRandom.Next(array.Length) % i;
-                    var tmp = array[a];
-                    array[a] = array[b];
-                    array[b] = tmp;
-                }
+                    //追加で７つのブロックを選び出す。
+                    //１から７の入った配列をランダムでシャッフルして追加する
+                    int[] array = { 1, 2, 3, 4, 5, 6, 7 };
 
-                foreach( int a  in array)
-                {
-                    this.NextBlock.Add(a);
+                    //Fisher–Yatesアルゴリズム
+                    for (int i = array.Length - 1; i > 0; i--)
+                    {
+                        int a = i - 1;
+                        int b = MyRandom.Next(array.Length) % i;
+                        var tmp = array[a];
+                        array[a] = array[b];
+                        array[b] = tmp;
+                    }
+
+                    foreach (int a in array)
+                    {
+                        this.NextBlock[player].Add(a);
+                    }
                 }
             }
         }
 
 
         //消去するラインを調べる
-        private int  CheckEraseLine()
+        private int  CheckEraseLine(int player)
         {
             int line_num = 0;
             //床から見ていく
@@ -388,7 +397,7 @@ namespace tetris
                     }
                     //消す
                     line_num++;
-                    this.EraseLine.Add(h);
+                    this.EraseLine[player].Add(h);
                 }
             }
 
@@ -466,7 +475,8 @@ namespace tetris
         /// 消去したラインによってメッセージを作る
         /// </summary>
         /// <param name="result"></param>
-        private void MakeEraseLineMessage(AttackLineManage.EraseLineResult result)
+        /// <param name="player">0 = 1P 1 = 2P</param>
+        private void MakeEraseLineMessage(AttackLineManage.EraseLineResult result,int player)
         {
             if (result.Line <= 0)
             {
@@ -476,45 +486,45 @@ namespace tetris
             if (result.perfect)
             {
                 //パーフェクトは他にメッセージを出さない
-                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.PERFECT);
-                this.messageControle.MakeMessage();
+                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.PERFECT);
+                this.messageControle[player].MakeMessage();
                 return;
             }
 
             if (result.BtoB)
             {
-                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
+                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
             }
             if (result.Tspin == BlockControle.TSPIN)
             {
-                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
+                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
             }
             else if (result.Tspin == BlockControle.TSPIN_MINI)
             {
-                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN_MINI);
+                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN_MINI);
             }
 
             switch(result.Line)
             {
-                case 1: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);  break;
-                case 2: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
-                case 3: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
-                case 4: this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
+                case 1: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);  break;
+                case 2: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
+                case 3: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
+                case 4: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
                 default: break;
             }
 
             //REN
             if( result.Ren >= 3)
             {
-                this.messageControle.ren_num = result.Ren;
-                this.messageControle.message_list.Add(MessageControle.MESSAGE_TYPE.REN);
+                this.messageControle[player].ren_num = result.Ren;
+                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.REN);
             }
 
-            this.messageControle.MakeMessage();
+            this.messageControle[player].MakeMessage();
         }
 
         //消去するラインを調べる
-        private void ExecEraseLine()
+        private void ExecEraseLine(int player)
         {
             //ブロックを実際に消す処理
             //アニメーションをそのうちつける
@@ -540,14 +550,50 @@ namespace tetris
                 this.BlockField[0, w] = 0;
             }
 
-            this.EraseLine.Clear();
+            this.EraseLine[player].Clear();
+        }
+
+        /// <summary>
+        /// 管理クラスの初期化
+        /// </summary>
+        private void CreateManager()
+        {
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
+            const int make_num = (int)PLAYER_DEFINE.PLAYER_NUM;
+
+            blockControle = new BlockControle[make_num];
+            messageControle = new MessageControle[make_num];
+            scoreManage = new ScoreManage[make_num];
+            attackLineManage = new AttackLineManage[make_num];
+
+            NextBlock = new List<int>[make_num];
+            EraseLine = new List<int>[make_num];
+
+            for (int i = 0; i < make_num; i++)
+            {
+                blockControle[i] = new BlockControle();
+                messageControle[i] = new MessageControle();
+                scoreManage[i] = new ScoreManage();
+                attackLineManage[i] = new AttackLineManage();
+                NextBlock[i] = new List<int>();
+                EraseLine[i] = new List<int>();
+            }
+
+            //メッセージ
+
+            messageControle[p1].Message = this.labelMessage1P;
+            messageControle[p1].SetMessage(@"Press F1 key to start", false);
+            messageControle[p2].Message = this.labelMessage2P;
+            messageControle[p2].SetMessage(@"Press F1 key to start", false);
+
         }
 
         private void CreateImageObject()
         {
-            const int p1 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_1P;
-            const int p2 = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_2P;
-            const int make_num = (int)PICTURE_BOX_DEFINE.PICTURE_BOX_NUM;
+            const int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            const int p2 = (int)PLAYER_DEFINE.PLAYER_2;
+            const int make_num = (int)PLAYER_DEFINE.PLAYER_NUM;
             canvasFiled = new Bitmap[make_num];
             gFiled = new Graphics[make_num];
             canvasNextBlock = new Bitmap[make_num];
@@ -615,37 +661,37 @@ namespace tetris
                 if (e.KeyData == Keys.Up)
                 {
                     Console.WriteLine(@"UP");
-                    this.blockControle.CurrentPos.Y -= 1;
+                    this.blockControle[0].CurrentPos.Y -= 1;
                 }
                 if (e.KeyData == Keys.Down)
                 {
                     Console.WriteLine(@"DOWN");
                     //                this.blockControle.CurrentPos.Y += 1;
-                    this.blockControle.MoveCurrentBlockDown(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockDown(this.BlockField);
                 }
                 if (e.KeyData == Keys.Right)
                 {
                     Console.WriteLine(@"RIGHT");
                     //                this.blockControle.CurrentPos.X += 1;
-                    this.blockControle.MoveCurrentBlockRight(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockRight(this.BlockField);
                 }
                 if (e.KeyData == Keys.Left)
                 {
                     Console.WriteLine(@"LEFT");
                     //                this.blockControle.CurrentPos.X -= 1;
-                    this.blockControle.MoveCurrentBlockLeft(this.BlockField);
+                    this.blockControle[0].MoveCurrentBlockLeft(this.BlockField);
                 }
 
                 //回転
                 if (e.KeyData == Keys.X)
                 {
                     Console.WriteLine(@"ROTATE_R");
-                    this.blockControle.RotateCurrentBlock(true, this.BlockField);
+                    this.blockControle[0].RotateCurrentBlock(true, this.BlockField);
                 }
                 else if (e.KeyData == Keys.Z)
                 {
                     Console.WriteLine(@"ROTATE_L");
-                    this.blockControle.RotateCurrentBlock(false, this.BlockField);
+                    this.blockControle[0].RotateCurrentBlock(false, this.BlockField);
                 }
 
             }
@@ -655,16 +701,16 @@ namespace tetris
 
         //ゲーム管理
         private GAME_MODE Mode;
-        BlockControle blockControle = new BlockControle();
-        MessageControle messageControle = new MessageControle();
-        ScoreManage scoreManage = new ScoreManage();
-        AttackLineManage attackLineManage = new AttackLineManage();
+        BlockControle[] blockControle;
+        MessageControle[] messageControle;
+        ScoreManage[] scoreManage;
+        AttackLineManage[] attackLineManage;
         private bool GameOverFlag = false;
 
         //データ配列
         public int[,] BlockField { get; set; }
-        private List<int> NextBlock = new List<int>();
-        private List<int> EraseLine = new List<int>();
+        private List<int>[] NextBlock;
+        private List<int>[] EraseLine;
         System.Random MyRandom = new Random();
 
         //キー入力持ち

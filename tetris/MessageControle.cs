@@ -70,7 +70,7 @@ namespace tetris
 
             this.eraseFlag = true;
             this.DispCouint = DISP_FRAME;
-            this.Message1P.Text = message;
+            this.Message.Text = message;
         }
 
 
@@ -85,7 +85,7 @@ namespace tetris
                 }
                 else
                 {
-                    this.Message1P.Text = @"";
+                    this.Message.Text = @"";
                 }
             }
         }
@@ -93,17 +93,17 @@ namespace tetris
         {
             this.eraseFlag = false;
             this.DispCouint = 0;
-            this.Message1P.Text = @"";
+            this.Message.Text = @"";
         }
 
         public void SetMessage(string message,bool erase)
         {
             this.eraseFlag = erase;
             this.DispCouint = DISP_FRAME;
-            this.Message1P.Text = message;
+            this.Message.Text = message;
         }
 
-        public Label Message1P { set; get; }
+        public Label Message { set; get; }
 
         private int DispCouint;     //表示フレーム
         private bool eraseFlag;     //時間で消すか
