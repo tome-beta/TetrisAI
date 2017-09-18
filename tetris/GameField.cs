@@ -63,6 +63,9 @@ namespace tetris
                 BlockSourceImage = Image.FromFile(BlockImageFile);
             }
 
+            //マネージャー系のクラスを初期化
+            CreateManager();
+
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
 
             //フィールド情報を初期化
@@ -73,8 +76,7 @@ namespace tetris
 
             Mode = GAME_MODE.MODE_WAIT;
 
-            //マネージャー系のクラスを初期化
-            CreateManager();
+
         }
         public void Exec()
         {
@@ -105,7 +107,8 @@ namespace tetris
                     {
                         //次のブロックを取り出す
                         UpdateNextBlock();
-                        int type = GetNextBlock();
+
+                        int type = GetNextBlock(0);
 
                         blockControle[0].SetCurrentBlock((BlockInfo.BlockType)type);
 
@@ -206,7 +209,6 @@ namespace tetris
                         ExecEraseLine();
 
                         //ここで攻撃ラインの処理を行う
-
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
                     break;
@@ -323,39 +325,43 @@ namespace tetris
 
 
         //NEXTブロックを取得
-        private int GetNextBlock()
+        private int GetNextBlock(int player)
         {
             //一つ取り出す
-            int type = this.NextBlock[0];
-            this.NextBlock.RemoveAt(0);
+            List<int> next = this.NextBlock[player];
+            int type = next[0];
+            next.RemoveAt(0);
             return type;
         }
 
         //NEXTブロックを更新
         private void UpdateNextBlock()
         {
-            //NEXTブロックの数をカウントする
-            int count = this.NextBlock.Count();
-
-            if( count <= NEXT_BLOCK_MAX)
+            for(int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
             {
-                //追加で７つのブロックを選び出す。
-                //１から７の入った配列をランダムでシャッフルして追加する
-                int[] array = { 1, 2, 3, 4, 5, 6, 7 };
+                //NEXTブロックの数をカウントする
+                int count = this.NextBlock[player].Count();
 
-                //Fisher–Yatesアルゴリズム
-                for(int i = array.Length - 1; i > 0; i-- )
+                if (count <= NEXT_BLOCK_MAX)
                 {
-                    int a = i - 1;
-                    int b = MyRandom.Next(array.Length) % i;
-                    var tmp = array[a];
-                    array[a] = array[b];
-                    array[b] = tmp;
-                }
+                    //追加で７つのブロックを選び出す。
+                    //１から７の入った配列をランダムでシャッフルして追加する
+                    int[] array = { 1, 2, 3, 4, 5, 6, 7 };
 
-                foreach( int a  in array)
-                {
-                    this.NextBlock.Add(a);
+                    //Fisher–Yatesアルゴリズム
+                    for (int i = array.Length - 1; i > 0; i--)
+                    {
+                        int a = i - 1;
+                        int b = MyRandom.Next(array.Length) % i;
+                        var tmp = array[a];
+                        array[a] = array[b];
+                        array[b] = tmp;
+                    }
+
+                    foreach (int a in array)
+                    {
+                        this.NextBlock[player].Add(a);
+                    }
                 }
             }
         }
@@ -561,12 +567,15 @@ namespace tetris
             scoreManage = new ScoreManage[make_num];
             attackLineManage = new AttackLineManage[make_num];
 
+            NextBlock = new List<int>[make_num];
+
             for (int i = 0; i < make_num; i++)
             {
                 blockControle[i] = new BlockControle();
                 messageControle[i] = new MessageControle();
                 scoreManage[i] = new ScoreManage();
                 attackLineManage[i] = new AttackLineManage();
+                NextBlock[i] = new List<int>();
             }
 
             //メッセージ
@@ -698,7 +707,8 @@ namespace tetris
 
         //データ配列
         public int[,] BlockField { get; set; }
-        private List<int> NextBlock = new List<int>();
+///        private List<int> NextBlock = new List<int>();
+        private List<int>[] NextBlock;
         private List<int> EraseLine = new List<int>();
         System.Random MyRandom = new Random();
 

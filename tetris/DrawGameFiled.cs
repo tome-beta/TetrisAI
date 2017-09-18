@@ -186,10 +186,12 @@ namespace tetris
                 //表示位置のクリア
                 gNextBlock[i].Clear(Color.White);
 
+                List<int> next = this.NextBlock[i];
+
                 //ミノの種類により切り出す画像を選ぶ
                 for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
                 {
-                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(NextBlock[next_num]));
+                    BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
                     for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                     {
                         for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
@@ -200,7 +202,7 @@ namespace tetris
                                 DrawOneBlock(gNextBlock[i],
                                     (x) * BlockInfo.BLOCK_WIDTH,
                                     (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
-                                    (int)(NextBlock[next_num]));
+                                    (int)(next[next_num]));
                             }
                         }
                     }
