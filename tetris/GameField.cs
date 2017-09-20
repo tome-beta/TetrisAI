@@ -305,6 +305,9 @@ namespace tetris
         {
             GameOverFlag = false;
 
+            this.fieldManage[0].ClearField();
+            this.fieldManage[1].ClearField();
+
             //NEXTブロックを収める配列
             UpdateNextBlock();
         }
@@ -621,6 +624,12 @@ namespace tetris
 
         }
 
+        //リセットする
+        private void ResetGame()
+        {
+            this.GameStart = true;
+            this.Mode = GAME_MODE.MODE_WAIT;
+        }
 
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
@@ -635,8 +644,14 @@ namespace tetris
                 this.GameStart = true;
                 return;
             }
-
-            if( this.Mode == GAME_MODE.MODE_MOVE_BLOCK)
+            //Reset
+            if (e.KeyData == Keys.F2)
+            {
+                Console.WriteLine(@"RESET");
+                ResetGame();
+                return;
+            }
+            if ( this.Mode == GAME_MODE.MODE_MOVE_BLOCK)
             {
                 //HOLD
                 if (e.KeyData == Keys.C)
