@@ -13,7 +13,14 @@ namespace tetris
         public FieldManage()
         {
             this.BlockField = new int[GameField.FIELD_HEIGHT, GameField.FIELD_WIDTH];
+            ClearField();
+        }
 
+        /// <summary>
+        /// フィールドの初期化
+        /// </summary>
+        public void ClearField()
+        {
             //フィールドを作る
             //フィールドは１０＊２０の両サイドに壁を表す９９を入れる。
             //ブロックのスタート位置のために上に３行加える。
@@ -35,7 +42,9 @@ namespace tetris
                     }
                 }
             }
+
         }
+
 
 
         public int[,] BlockField { get; set; }
