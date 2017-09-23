@@ -34,6 +34,7 @@ namespace tetris
             MODE_MOVE_BLOCK,    //ブロックを設置させるまでの操作
             MODE_ERASE_CHECK,   //ブロックが消えるかチェック
             MODE_ERASE_BLOCK,   //ブロックを消す処理
+            MODE_TURN_CHANGE,   //プレイヤーのターンを切り替える
             MODE_GAME_OVER,   //ゲームオーバー
         };
 
@@ -73,9 +74,9 @@ namespace tetris
             CreateImageObject();
 
             Mode = GAME_MODE.MODE_WAIT;
-
-
         }
+
+
         public void Exec()
         {
             Console.WriteLine(@"EXEC");
@@ -97,6 +98,8 @@ namespace tetris
                                 this.scoreManage[i].ClearScore();
                                 this.attackLineManage[i].ClearAttackLine();
                             }
+
+                            playerTurn = PLAYER_DEFINE.PLAYER_1;
                         }
                     }
                     break;
@@ -106,14 +109,16 @@ namespace tetris
                         //次のブロックを取り出す
                         UpdateNextBlock();
 
-                        int type = GetNextBlock(0);
+                        int player = (int)playerTurn;
 
-                        blockControle[0].SetCurrentBlock((BlockInfo.BlockType)type);
+                        int type = GetNextBlock(player);
 
-                        int[,] field = this.fieldManage[0].BlockField;
+                        blockControle[player].SetCurrentBlock((BlockInfo.BlockType)type);
+
+                        int[,] field = this.fieldManage[player].BlockField;
 
                         //ここでブロックを置くことができなければゲームオーバー
-                        if(this.blockControle[0].CheckGameOver(field))
+                        if(this.blockControle[player].CheckGameOver(field))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
 
@@ -144,12 +149,14 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GAME_MODE.MODE_MOVE_BLOCK:
                     {
+                        int player = (int)playerTurn;
+
                         if (this.InputHold)
                         {
                             //HOLD
-                            if (!this.blockControle[0].DoHold)
+                            if (!this.blockControle[player].DoHold)
                             {
-                                if (!this.blockControle[0].UpdateHold())
+                                if (!this.blockControle[player].UpdateHold())
                                 {
                                     //HOLDブロックが無かったとき
                                     Mode = GAME_MODE.MODE_SET_BLOCK;
@@ -159,17 +166,17 @@ namespace tetris
                         }
                         else if (this.HardDrop)
                         {
-                            int[,] field = this.fieldManage[0].BlockField;
+                            int[,] field = this.fieldManage[player].BlockField;
 
                             //ハードドロップ
-                            int y = this.blockControle[0].HardDropCurrentBlock(field);
-                            this.blockControle[0].CurrentPos.Y += y;   //TODO 関数化
+                            int y = this.blockControle[player].HardDropCurrentBlock(field);
+                            this.blockControle[player].CurrentPos.Y += y;   //TODO 関数化
 
-                            this.blockControle[0].DoHold = false;
+                            this.blockControle[player].DoHold = false;
                             this.HardDrop = false;
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
-                            this.blockControle[0].SetBlockInField(field);
+                            this.blockControle[player].SetBlockInField(field);
                         }
                     }
                     break;
@@ -177,27 +184,29 @@ namespace tetris
                 //ブロックが消えるかチェック
                 case GAME_MODE.MODE_ERASE_CHECK:
                     {
+                        int player = (int)playerTurn;
+
                         //消えるラインのチェック
-                        int line_num = CheckEraseLine(0);
-                        bool perfect = CheckPerfect(line_num,0);
-                        int tspin_type = CheckTspin(this.blockControle[0].status);
+                        int line_num = CheckEraseLine(player);
+                        bool perfect = CheckPerfect(line_num, player);
+                        int tspin_type = CheckTspin(this.blockControle[player].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
-                        this.attackLineManage[0].CalcAttackLine(
+                        this.attackLineManage[player].CalcAttackLine(
                             line_num, 
                             tspin_type,
                             perfect,
-                            ref this.blockControle[0].BtoB,
+                            ref this.blockControle[player].BtoB,
                             ref result);
 
                         //メッセージを作る
-                        MakeEraseLineMessage(result,0);
+                        MakeEraseLineMessage(result, player);
 
                         //スコアを記録
                         if ( line_num > 0)
                         {
-                            int tspin = CheckTspin(this.blockControle[0].status);
-                            this.scoreManage[0].SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
+                            int tspin = CheckTspin(this.blockControle[player].status);
+                            this.scoreManage[player].SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
                         }
 
 
@@ -208,13 +217,21 @@ namespace tetris
                 //ブロックを消す処理
                 case GAME_MODE.MODE_ERASE_BLOCK:
                     {
-                        ExecEraseLine(0);
+                        int player = (int)playerTurn;
+                        ExecEraseLine(player);
 
                         //ここで攻撃ラインの処理を行う
-                        this.Mode = GAME_MODE.MODE_SET_BLOCK;
+                        this.Mode = GAME_MODE.MODE_TURN_CHANGE;
                     }
                     break;
 
+                case GAME_MODE.MODE_TURN_CHANGE:
+                    {
+                        //プレイヤー交代
+                        playerTurn = playerTurn == PLAYER_DEFINE.PLAYER_1 ? PLAYER_DEFINE.PLAYER_2 : PLAYER_DEFINE.PLAYER_1;
+                        this.Mode = GAME_MODE.MODE_SET_BLOCK;
+                    }
+                    break;
                 //ゲームオーバー
                 case GAME_MODE.MODE_GAME_OVER:
                     {
@@ -245,8 +262,13 @@ namespace tetris
                 //NEXTブロックの描画
                 DrawNextBlock(player);
 
-                //落下位置ブロックを描画
-                DrawGuideBlock(player);
+                if(player == (int)this.playerTurn)
+                {
+                    //操作中のブロックを描画
+                    DrawCurrentBlock(GameOverFlag);
+                    //落下位置ブロックを描画
+                    DrawGuideBlock(player);
+                }
 
                 //HOLDブロックを描画
                 DrawHoldBlock(player);
@@ -259,8 +281,6 @@ namespace tetris
 
             }
 
-            //操作中のブロックを描画
-            DrawCurrentBlock(GameOverFlag);
 
 
 
@@ -634,8 +654,12 @@ namespace tetris
         //キー入力
         private void GameField_KeyDown(object sender, KeyEventArgs e)
         {
+            int player = (int)playerTurn;
+
             //TODO 
-            int[,] field = this.fieldManage[0].BlockField;
+            int[,] field = this.fieldManage[player].BlockField;
+
+
 
             //GameStart
             if (e.KeyData == Keys.F1)
@@ -672,34 +696,34 @@ namespace tetris
                 if (e.KeyData == Keys.Up)
                 {
                     Console.WriteLine(@"UP");
-                    this.blockControle[0].CurrentPos.Y -= 1;
+                    this.blockControle[player].CurrentPos.Y -= 1;
                 }
                 if (e.KeyData == Keys.Down)
                 {
                     Console.WriteLine(@"DOWN");
-                    this.blockControle[0].MoveCurrentBlockDown(field);
+                    this.blockControle[player].MoveCurrentBlockDown(field);
                 }
                 if (e.KeyData == Keys.Right)
                 {
                     Console.WriteLine(@"RIGHT");
-                    this.blockControle[0].MoveCurrentBlockRight(field);
+                    this.blockControle[player].MoveCurrentBlockRight(field);
                 }
                 if (e.KeyData == Keys.Left)
                 {
                     Console.WriteLine(@"LEFT");
-                    this.blockControle[0].MoveCurrentBlockLeft(field);
+                    this.blockControle[player].MoveCurrentBlockLeft(field);
                 }
 
                 //回転
                 if (e.KeyData == Keys.X)
                 {
                     Console.WriteLine(@"ROTATE_R");
-                    this.blockControle[0].RotateCurrentBlock(true, field);
+                    this.blockControle[player].RotateCurrentBlock(true, field);
                 }
                 else if (e.KeyData == Keys.Z)
                 {
                     Console.WriteLine(@"ROTATE_L");
-                    this.blockControle[0].RotateCurrentBlock(false, field);
+                    this.blockControle[player].RotateCurrentBlock(false, field);
                 }
 
             }
@@ -714,6 +738,7 @@ namespace tetris
         ScoreManage[] scoreManage;
         AttackLineManage[] attackLineManage;
         FieldManage[] fieldManage;
+        PLAYER_DEFINE playerTurn;
 
         private bool GameOverFlag = false;
 
