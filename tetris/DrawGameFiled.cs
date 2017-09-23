@@ -92,56 +92,57 @@ namespace tetris
             }
         }
 
-        //操作中のブロックを描画
-        private void DrawCurrentBlock(bool game_over)
+
+        /// <summary>
+        /// 操作中のブロックを描画 
+        /// </summary>
+        /// <param name="player">プレイヤーターン</param>
+        /// <param name="game_over"></param>
+        private void DrawCurrentBlock(int player,bool game_over)
         {
-            for (int i = 0; i < (int)PLAYER_DEFINE.PLAYER_NUM; i++)
+            if (this.blockControle[player].CurrentBlock != null)
             {
-                if (this.blockControle[i].CurrentBlock != null)
+                //名前おきかえ
+                Point Pos = this.blockControle[player].CurrentPos;
+                BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
+
+                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
                 {
-                    //名前おきかえ
-                    Point Pos = this.blockControle[i].CurrentPos;
-                    BlockInfo CurrnetInfo = this.blockControle[i].CurrentBlock;
-
-                    for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                     {
-                        for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                        if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
                         {
-                            if (CurrnetInfo.shape[(int)this.blockControle[i].CurrentRot, y, x] != 0)
+                            int draw_type = (int)(CurrnetInfo.type);
+                            if (game_over)
                             {
-                                int draw_type = (int)(CurrnetInfo.type);
-                                if (game_over)
-                                {
-                                    draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
-                                }
-
-
-                                //ミノの種類により切り出す画像を選ぶ
-                                DrawOneBlock(gFiled[i],
-                                    (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
-                                    (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
-                                    draw_type);
+                                draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
                             }
-                        }
-                    }
-#if DEBUG
-                    //デバッグ用にブロック領域の線を引いておく
-                    using (Pen pen = new Pen(Color.Pink))
-                    {
-                        for (int x = 0; x < 5; x++)
-                        {
-                            gFiled[i].DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
-                                new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
-                        }
-                        for (int y = 0; y < 5; y++)
-                        {
-                            gFiled[i].DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
-                                new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
-                        }
-                    }
-#endif
-                }
 
+
+                            //ミノの種類により切り出す画像を選ぶ
+                            DrawOneBlock(gFiled[player],
+                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                                (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
+                                draw_type);
+                        }
+                    }
+                }
+#if DEBUG
+                //デバッグ用にブロック領域の線を引いておく
+                using (Pen pen = new Pen(Color.Pink))
+                {
+                    for (int x = 0; x < 5; x++)
+                    {
+                        gFiled[player].DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                    for (int y = 0; y < 5; y++)
+                    {
+                        gFiled[player].DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
+                    }
+                }
+#endif
             }
         }
 
@@ -266,8 +267,10 @@ namespace tetris
         //攻撃ラインの表示
         private void DrawAttackLine(int player)
         {
-            //TODO　実際は相手側の攻撃ライン数をチェックする
-            int attack_line = this.attackLineManage[player].AttackLineNum;
+            //実際は相手側の攻撃ライン数をチェックする
+            int aite = player == (int)PLAYER_DEFINE.PLAYER_1 ? (int)PLAYER_DEFINE.PLAYER_2 : (int)PLAYER_DEFINE.PLAYER_1;
+
+            int attack_line = this.attackLineManage[aite].AttackLineNum;
 
             gAttackLine[player].Clear(Color.White);
 

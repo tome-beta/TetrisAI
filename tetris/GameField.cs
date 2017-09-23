@@ -265,7 +265,7 @@ namespace tetris
                 if(player == (int)this.playerTurn)
                 {
                     //操作中のブロックを描画
-                    DrawCurrentBlock(GameOverFlag);
+                    DrawCurrentBlock(player,GameOverFlag);
                     //落下位置ブロックを描画
                     DrawGuideBlock(player);
                 }
