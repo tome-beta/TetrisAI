@@ -20,9 +20,14 @@ namespace tetris
         /// <param name="alpha">true で半透明</param>
         private void DrawOneBlock(Graphics g,int x,int y,int type,bool alpha = false)
         {
+            //画面上部にセル３つ分隠れている部分があるので描く場所を全体的にずらす
+            y -= (BlockInfo.BLOCK_HEIGHT * 3);
+
             int y_pos = type * BlockInfo.BLOCK_HEIGHT;
             Rectangle srcRect = new Rectangle(0, y_pos, BlockInfo.BLOCK_WIDTH, BlockInfo.BLOCK_HEIGHT);
             Rectangle desRect = new Rectangle(0, 0, srcRect.Width, srcRect.Height);
+
+
 
             desRect.X = x;
             desRect.Y = y;
@@ -63,15 +68,16 @@ namespace tetris
             //デバッグ用にフィールドに線を引いておく
             using (Pen pen = new Pen(Color.Gray))
             {
-                for (int x = 1; x < 11; x++)
+                for (int x = 1; x <= FIELD_WIDTH + 1; x++)
                 {
                     gFiled[player].DrawLine(pen, new Point(x * BlockInfo.BLOCK_WIDTH, 0 * BlockInfo.BLOCK_HEIGHT),
                         new Point(x * BlockInfo.BLOCK_WIDTH, 20 * BlockInfo.BLOCK_HEIGHT));
                 }
-                for (int y = 1; y < 21; y++)
+                for (int y = 0; y < FIELD_HEIGHT; y++)
                 {
-                    gFiled[player].DrawLine(pen, new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
-                        new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
+                    gFiled[player].DrawLine(pen, 
+                        new Point(0 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT),
+                        new Point(20 * BlockInfo.BLOCK_WIDTH,y * BlockInfo.BLOCK_HEIGHT));
                 }
             }
 #endif
@@ -79,13 +85,16 @@ namespace tetris
             {
                 int[,] field = fieldManage[player].BlockField;
                 //壁と設置されているブロックを描く
-                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                for (int y = FILED_NON_DRAW; y < GameField.FIELD_HEIGHT; y++)
                 {
                     for (int x = 0; x < GameField.FIELD_WIDTH; x++)
                     {
                         if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
                         {
-                            DrawOneBlock(gFiled[player], (x) * BlockInfo.BLOCK_WIDTH, (y) * BlockInfo.BLOCK_HEIGHT, (field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
+                            DrawOneBlock(gFiled[player], 
+                                (x) * BlockInfo.BLOCK_WIDTH,
+                                (y) * BlockInfo.BLOCK_HEIGHT,
+                                (field[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD));
                         }
                     }
                 }
@@ -117,8 +126,6 @@ namespace tetris
                             {
                                 draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
                             }
-
-
                             //ミノの種類により切り出す画像を選ぶ
                             DrawOneBlock(gFiled[player],
                                 (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
@@ -133,13 +140,19 @@ namespace tetris
                 {
                     for (int x = 0; x < 5; x++)
                     {
-                        gFiled[player].DrawLine(pen, new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 0) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH, (Pos.Y + 4) * BlockInfo.BLOCK_HEIGHT));
+                        gFiled[player].DrawLine(pen, 
+                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                            (Pos.Y + 0 - FILED_NON_DRAW) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + x) * BlockInfo.BLOCK_WIDTH,
+                            (Pos.Y + 4 - FILED_NON_DRAW) * BlockInfo.BLOCK_HEIGHT));
                     }
                     for (int y = 0; y < 5; y++)
                     {
-                        gFiled[player].DrawLine(pen, new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT),
-                            new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH, (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT));
+                        gFiled[player].DrawLine(pen, 
+                            new Point((Pos.X + 0) * BlockInfo.BLOCK_WIDTH,
+                            (Pos.Y + y - FILED_NON_DRAW) * BlockInfo.BLOCK_HEIGHT),
+                            new Point((Pos.X + 4) * BlockInfo.BLOCK_WIDTH,
+                            (Pos.Y + y - FILED_NON_DRAW) * BlockInfo.BLOCK_HEIGHT));
                     }
                 }
 #endif

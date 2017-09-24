@@ -29,7 +29,7 @@ namespace tetris
             MINO_Z,
             MINO_S,
             MINO_O,
-            MINO_FENCE,
+//            MINO_FENCE,
             MINO_ATTACK,
 
             MINO_IN_FIELD = 10, //設置したブロックを表す

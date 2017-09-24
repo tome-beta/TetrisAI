@@ -12,8 +12,9 @@ namespace tetris
 {
     public partial class GameField : Form
     {
-        public const int FIELD_HEIGHT = 20 + 1;     // + 3; //ミノ領域＋床＋出現位置
-        public const int FIELD_WIDTH = 10 + 2;      //ミノ領域 + 壁＊２
+        public const int FILED_NON_DRAW = 3;    //見えない所
+        public const int FIELD_HEIGHT = 20 + 3;     // + 3; //ミノ領域＋床＋出現位置
+        public const int FIELD_WIDTH = 10;      //ミノ領域
 
         public const int NEXT_BLOCK_MAX = 14;       //７種類＊２で表示は５個。
         public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類

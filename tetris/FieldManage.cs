@@ -31,13 +31,13 @@ namespace tetris
             {
                 for (int h = 0; h < GameField.FIELD_HEIGHT; h++)
                 {
-                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
+/*                    if (w == 0 || w == GameField.FIELD_WIDTH - 1 ||
                         h == GameField.FIELD_HEIGHT - 1)
                     {
                         this.BlockField[h, w] = (int)BlockInfo.BlockType.MINO_FENCE + (int)BlockInfo.BlockType.MINO_IN_FIELD;
                     }
                     else
-                    {
+*/                    {
                         this.BlockField[h, w] = 0;
                     }
                 }

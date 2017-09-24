@@ -16,7 +16,7 @@ namespace tetris
         public BlockControle()
         {
             MINO_TYPE_MAX = 8;
-            MINO_START_POS = new Point(3,0);
+            MINO_START_POS = new Point(3, GameField.FILED_NON_DRAW);
 
             this.blockInfo = new BlockInfo[MINO_TYPE_MAX];
             //ミノ情報を作る
@@ -171,7 +171,7 @@ namespace tetris
                 y++;
             }
             //設置できるY位置
-            y -= 1;
+///            y -= 1;
             return y;
         }
 
@@ -302,14 +302,7 @@ namespace tetris
                     else
                     {
                         //TODO 画面上の見えないけれど回転はできる場所の事を考える
-                        if (base_y + y < 0)
-                        {
-
-                        }
-                        else
-                        {
-                            //                            return true;
-                        }
+                        return false;
                     }
 
                 }
@@ -320,7 +313,7 @@ namespace tetris
         //ゲームフィールドの有効な場所であるか
         private bool ValidFieldPos(int x, int y)
         {
-            //TODO 壁はとりあえず考えない
+            //壁はとりあえず考えない
             if (0 <= x && x < GameField.FIELD_WIDTH)
             {
                 if (0 <= y && y < GameField.FIELD_HEIGHT) //出現位置の分までいれたら
