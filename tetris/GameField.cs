@@ -188,12 +188,18 @@ namespace tetris
                         int tspin_type = CheckTspin(this.blockControle[player].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
+
+                        int enemy = player == (int)PLAYER_DEFINE.PLAYER_1 ? (int)PLAYER_DEFINE.PLAYER_2 : (int)PLAYER_DEFINE.PLAYER_1;
+                        int enemy_attack = this.attackLineManage[enemy].AttackLineNum;
+
                         this.attackLineManage[player].CalcAttackLine(
                             line_num, 
                             tspin_type,
                             perfect,
                             ref this.blockControle[player].BtoB,
-                            ref result);
+                            ref result,
+                            ref enemy_attack
+                            );
 
                         //メッセージを作る
                         MakeEraseLineMessage(result, player);

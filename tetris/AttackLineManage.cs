@@ -87,7 +87,8 @@ namespace tetris
             int tspin_type,
             bool perfect,
             ref bool ref_BtoB,
-            ref EraseLineResult out_result)
+            ref EraseLineResult out_result,
+            ref int enemy_attack_line)
         {
             //REN数のチェック
             if (erase_line == 0)
@@ -208,6 +209,25 @@ namespace tetris
             }
             //攻撃ライン数を確定
             attack_line = tmp_attack_line;
+
+            //相手側の攻撃ラインすうを減らす処理
+            if( enemy_attack_line > 0 )
+            {
+                //相手の攻撃ラインが多かった時
+                if(enemy_attack_line > attack_line)
+                {
+                    int reduce = enemy_attack_line - attack_line;
+                    enemy_attack_line -= reduce;
+                    attack_line = 0;
+                }
+                else
+                {
+                    int reduce = attack_line - enemy_attack_line;
+                    enemy_attack_line = 0;
+                    attack_line = reduce;
+                }
+
+            }
 
             //トータルの攻撃ライン数
             this.AttackLineNum += attack_line;
