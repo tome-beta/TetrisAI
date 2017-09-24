@@ -34,8 +34,9 @@ namespace tetris
             MODE_MOVE_BLOCK,    //ブロックを設置させるまでの操作
             MODE_ERASE_CHECK,   //ブロックが消えるかチェック
             MODE_ERASE_BLOCK,   //ブロックを消す処理
+            MODE_ATTACK_BLOCK,  //攻撃ブロックの処理
             MODE_TURN_CHANGE,   //プレイヤーのターンを切り替える
-            MODE_GAME_OVER,   //ゲームオーバー
+            MODE_GAME_OVER,     //ゲームオーバー
         };
 
         public GameField()
@@ -80,6 +81,7 @@ namespace tetris
         public void Exec()
         {
             Console.WriteLine(@"EXEC");
+            int player = (int)playerTurn;
 
             switch (Mode)
             {
@@ -108,8 +110,6 @@ namespace tetris
                     {
                         //次のブロックを取り出す
                         UpdateNextBlock();
-
-                        int player = (int)playerTurn;
 
                         int type = GetNextBlock(player);
 
@@ -149,8 +149,6 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GAME_MODE.MODE_MOVE_BLOCK:
                     {
-                        int player = (int)playerTurn;
-
                         if (this.InputHold)
                         {
                             //HOLD
@@ -184,8 +182,6 @@ namespace tetris
                 //ブロックが消えるかチェック
                 case GAME_MODE.MODE_ERASE_CHECK:
                     {
-                        int player = (int)playerTurn;
-
                         //消えるラインのチェック
                         int line_num = CheckEraseLine(player);
                         bool perfect = CheckPerfect(line_num, player);
@@ -217,17 +213,28 @@ namespace tetris
                 //ブロックを消す処理
                 case GAME_MODE.MODE_ERASE_BLOCK:
                     {
-                        int player = (int)playerTurn;
                         ExecEraseLine(player);
 
                         //ここで攻撃ラインの処理を行う
+                        this.Mode = GAME_MODE.MODE_ATTACK_BLOCK;
+                    }
+                    break;
+
+                case GAME_MODE.MODE_ATTACK_BLOCK:
+                    {
+                        //ここで攻撃ラインの処理を行う
+                        int enemy = player == (int)PLAYER_DEFINE.PLAYER_1 ? (int)PLAYER_DEFINE.PLAYER_2 : (int)PLAYER_DEFINE.PLAYER_1;
+
+                        int[,] field = this.fieldManage[player].BlockField;
+                        this.attackLineManage[enemy].ExecAttacLine(ref field);
+
                         this.Mode = GAME_MODE.MODE_TURN_CHANGE;
                     }
                     break;
 
+                //プレイヤー交代
                 case GAME_MODE.MODE_TURN_CHANGE:
                     {
-                        //プレイヤー交代
                         playerTurn = playerTurn == PLAYER_DEFINE.PLAYER_1 ? PLAYER_DEFINE.PLAYER_2 : PLAYER_DEFINE.PLAYER_1;
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }

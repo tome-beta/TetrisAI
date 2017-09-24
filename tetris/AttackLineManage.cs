@@ -31,6 +31,51 @@ namespace tetris
         }
 
         /// <summary>
+        /// 攻撃ライン実行処理
+        /// </summary>
+        /// <param name="field">反映させるゲームフィールド配列</param>
+        public void ExecAttacLine(ref int [,] field)
+        {
+            if(this.AttackLineNum != 0)
+            {
+                //TODO　穴をあける位置を攻撃単位で決めておく
+
+                //穴の位置をランダム設定
+                int hole = MyRandom.Next(1,(int)GameField.FIELD_WIDTH - 2);
+
+                //床から攻撃ラインの数だけ増やす
+                while( this.AttackLineNum != 0)
+                {
+                    for (int h = 0; h <= GameField.FIELD_HEIGHT - 2; h++)
+                    {
+                        for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                        {
+                            if( h != GameField.FIELD_HEIGHT - 2)
+                            {
+                                //一段ずつずらしていく
+                                field[h, w] = field[h + 1, w];
+                            }
+                            else
+                            {
+                                //一番したに攻撃ラインを追加
+                                if (w != hole)
+                                {
+                                    field[h, w] = (int)BlockInfo.BlockType.MINO_ATTACK;
+                                    field[h, w] += (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                                }
+                                else
+                                {
+                                    field[h, w] = 0;
+                                }
+                            }
+                        }
+                    }
+                    this.AttackLineNum--;
+                }
+            }
+        }
+
+        /// <summary>
         /// 攻撃ラインの計算
         /// </summary>
         /// <param name="erase_line">消したライン数</param>
@@ -170,6 +215,6 @@ namespace tetris
 
         public int AttackLineNum = 0;
         public int RenCount = 0;
-
+        System.Random MyRandom = new Random();
     }
 }
