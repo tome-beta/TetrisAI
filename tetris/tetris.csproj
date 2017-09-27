@@ -80,6 +80,7 @@
       <DependentUpon>GameField.cs</DependentUpon>
     </Compile>
     <Compile Include="MessageControle.cs" />
+    <Compile Include="NextBlockManage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreManage.cs" />

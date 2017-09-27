@@ -79,9 +79,9 @@ namespace tetris
             {
                 int[,] field = fieldManage[player].BlockField;
                 //壁と設置されているブロックを描く
-                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                for (int y = 0; y < FieldManage.FIELD_HEIGHT; y++)
                 {
-                    for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                    for (int x = 0; x < FieldManage.FIELD_WIDTH; x++)
                     {
                         if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
                         {
@@ -183,10 +183,10 @@ namespace tetris
             //表示位置のクリア
             gNextBlock[player].Clear(Color.White);
 
-            List<int> next = this.NextBlock[player];
+            List<int> next = this.nextManage[player].NextBlock;
 
             //ミノの種類により切り出す画像を選ぶ
-            for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
+            for (int next_num = 0; next_num < NextBlockManage.NEXT_BLOCK_DISP_NUM; next_num++)
             {
                 BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
                 for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)

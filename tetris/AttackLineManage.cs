@@ -41,16 +41,16 @@ namespace tetris
                 //TODO　穴をあける位置を攻撃単位で決めておく
 
                 //穴の位置をランダム設定
-                int hole = MyRandom.Next(1,(int)GameField.FIELD_WIDTH - 2);
+                int hole = MyRandom.Next(1,(int)FieldManage.FIELD_WIDTH - 2);
 
                 //床から攻撃ラインの数だけ増やす
                 while( this.AttackLineNum != 0)
                 {
-                    for (int h = 0; h <= GameField.FIELD_HEIGHT - 2; h++)
+                    for (int h = 0; h <= FieldManage.FIELD_HEIGHT - 2; h++)
                     {
-                        for (int w = 1; w < GameField.FIELD_WIDTH - 1; w++)
+                        for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
                         {
-                            if( h != GameField.FIELD_HEIGHT - 2)
+                            if( h != FieldManage.FIELD_HEIGHT - 2)
                             {
                                 //一段ずつずらしていく
                                 field[h, w] = field[h + 1, w];

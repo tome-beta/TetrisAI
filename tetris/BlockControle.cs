@@ -30,8 +30,8 @@ namespace tetris
         //指定した場所はフィールド配列の有効な位置か
         public bool IsFieldPos(int y, int x)
         {
-            if( 0 <= x && x < GameField.FIELD_WIDTH &&
-                0 <= y && y < GameField.FIELD_HEIGHT
+            if( 0 <= x && x < FieldManage.FIELD_WIDTH &&
+                0 <= y && y < FieldManage.FIELD_HEIGHT
                 )
             {
                 return true;
@@ -321,9 +321,9 @@ namespace tetris
         private bool ValidFieldPos(int x, int y)
         {
             //TODO 壁はとりあえず考えない
-            if (0 <= x && x < GameField.FIELD_WIDTH)
+            if (0 <= x && x < FieldManage.FIELD_WIDTH)
             {
-                if (0 <= y && y < GameField.FIELD_HEIGHT) //出現位置の分までいれたら
+                if (0 <= y && y < FieldManage.FIELD_HEIGHT) //出現位置の分までいれたら
                 {
                     return true;
                 }
