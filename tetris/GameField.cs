@@ -573,9 +573,6 @@ namespace tetris
 
         private bool GameOverFlag = false;
 
-        //データ配列
-        System.Random MyRandom = new Random();
-
         //キー入力持ち
         private bool HardDrop = false;
         private bool InputHold = false;
