@@ -30,8 +30,8 @@ namespace tetris
         //指定した場所はフィールド配列の有効な位置か
         public bool IsFieldPos(int y, int x)
         {
-            if( 0 <= x && x < GameField.FIELD_WIDTH &&
-                0 <= y && y < GameField.FIELD_HEIGHT
+            if( 0 <= x && x < FieldManage.FIELD_WIDTH &&
+                0 <= y && y < FieldManage.FIELD_HEIGHT
                 )
             {
                 return true;
@@ -81,7 +81,7 @@ namespace tetris
                     tmp_rot = BlockInfo.BlockRot.ROT_0;
                 }
 
-                //TODO SRSの判定が追加される
+                //SRSの判定が追加される
                 for (int i = 0; i < BlockInfo.SRS_ROT_NUM;i++)
                 {
                     delta_pos = CheckSRS(i, rot_r, this.CurrentRot);
@@ -157,11 +157,21 @@ namespace tetris
         }
 
         /// <summary>
-        ///ハードドロップさせる 
+        /// ハードドロップ実行
+        /// </summary>
+        /// <param name="field"></param>
+        public void HardDropCurrentBlock(int[,] field)
+        {
+            int y = CheckHardDropCurrentBlock(field);
+            CurrentPos.Y += y;   //TODO 関数化
+        }
+
+        /// <summary>
+        ///ハードドロップして移動するY座標を取得
         /// </summary>
         /// <param name="field"></param>
         /// <returns>移動させるY位置を返す</returns>
-        public int HardDropCurrentBlock(int[,] field)
+        public int CheckHardDropCurrentBlock(int[,] field)
         {
             //ハードドロップさせるとどこまで落とせるかの座標を探す
             int y = 0;
@@ -321,9 +331,9 @@ namespace tetris
         private bool ValidFieldPos(int x, int y)
         {
             //TODO 壁はとりあえず考えない
-            if (0 <= x && x < GameField.FIELD_WIDTH)
+            if (0 <= x && x < FieldManage.FIELD_WIDTH)
             {
-                if (0 <= y && y < GameField.FIELD_HEIGHT) //出現位置の分までいれたら
+                if (0 <= y && y < FieldManage.FIELD_HEIGHT) //出現位置の分までいれたら
                 {
                     return true;
                 }

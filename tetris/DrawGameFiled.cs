@@ -53,6 +53,42 @@ namespace tetris
             }
         }
 
+
+        /// <summary>
+        /// ミノを描く
+        /// </summary>
+        /// <param name="player">プレイヤー番号</param>
+        /// <param name="g">描画対象</param>
+        /// <param name="x">基準のXセル位置</param>
+        /// <param name="y">基準のYセル位置</param>
+        /// <param name="type">ミノの種類</param>
+        /// <param name="alpha">alphaを掛けるか</param>
+        private void DrawOneMino(int player, Graphics g,BlockInfo info,int base_x,int base_y, int type,bool alpha = false,bool game_over = false)
+        {
+            for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+            {
+                for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                {
+                    if (info.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
+                    {
+                        if (game_over)
+                        {
+                            type = (int)BlockInfo.BlockType.MINO_ATTACK;
+                        }
+                        //ミノの種類により切り出す画像を選ぶ
+                        DrawOneBlock(g,
+                            (base_x + x) * BlockInfo.BLOCK_WIDTH,
+                            (base_y + y) * BlockInfo.BLOCK_HEIGHT,
+                            type,
+                            alpha);
+                    }
+                }
+            }
+
+
+        }
+
+
         //フィールドに置かれたブロックを描く
         private void DrawGameField(int player)
         {
@@ -79,9 +115,9 @@ namespace tetris
             {
                 int[,] field = fieldManage[player].BlockField;
                 //壁と設置されているブロックを描く
-                for (int y = 0; y < GameField.FIELD_HEIGHT; y++)
+                for (int y = 0; y < FieldManage.FIELD_HEIGHT; y++)
                 {
-                    for (int x = 0; x < GameField.FIELD_WIDTH; x++)
+                    for (int x = 0; x < FieldManage.FIELD_WIDTH; x++)
                     {
                         if (field[y, x] >= (int)BlockInfo.BlockType.MINO_IN_FIELD)
                         {
@@ -106,27 +142,17 @@ namespace tetris
                 Point Pos = this.blockControle[player].CurrentPos;
                 BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
 
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
-                {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
-                    {
-                        if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
-                        {
-                            int draw_type = (int)(CurrnetInfo.type);
-                            if (game_over)
-                            {
-                                draw_type = (int)BlockInfo.BlockType.MINO_ATTACK;
-                            }
+                //ミノの描画
+                DrawOneMino(player,
+                    gFiled[player],
+                    CurrnetInfo,
+                    Pos.X,
+                    Pos.Y,
+                    (int)(CurrnetInfo.type), 
+                    false,
+                    game_over
+                    );
 
-
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gFiled[player],
-                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
-                                (Pos.Y + y) * BlockInfo.BLOCK_HEIGHT,
-                                draw_type);
-                        }
-                    }
-                }
 #if DEBUG
                 //デバッグ用にブロック領域の線を引いておく
                 using (Pen pen = new Pen(Color.Pink))
@@ -153,27 +179,19 @@ namespace tetris
 
             if (this.blockControle[player].CurrentBlock != null)
             {
-                int move_y = this.blockControle[player].HardDropCurrentBlock(field);
+                int move_y = this.blockControle[player].CheckHardDropCurrentBlock(field);
 
                 //名前おきかえ
                 Point Pos = this.blockControle[player].CurrentPos;
                 BlockInfo CurrnetInfo = this.blockControle[player].CurrentBlock;
 
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
-                {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
-                    {
-                        if (CurrnetInfo.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
-                        {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gFiled[player],
-                                (Pos.X + x) * BlockInfo.BLOCK_WIDTH,
-                                (Pos.Y + move_y + y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(CurrnetInfo.type),
-                                true);
-                        }
-                    }
-                }
+                //ミノの描画
+                DrawOneMino(player,
+                    gFiled[player],
+                    CurrnetInfo,
+                    Pos.X,
+                    Pos.Y + move_y,
+                    (int)(CurrnetInfo.type), true);
             }
         }
 
@@ -183,26 +201,20 @@ namespace tetris
             //表示位置のクリア
             gNextBlock[player].Clear(Color.White);
 
-            List<int> next = this.NextBlock[player];
+            List<int> next = this.nextManage[player].NextBlock;
 
             //ミノの種類により切り出す画像を選ぶ
-            for (int next_num = 0; next_num < NEXT_BLOCK_DISP_NUM; next_num++)
+            for (int next_num = 0; next_num < NextBlockManage.NEXT_BLOCK_DISP_NUM; next_num++)
             {
                 BlockInfo info = new BlockInfo((BlockInfo.BlockType)(next[next_num]));
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
-                {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
-                    {
-                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
-                        {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gNextBlock[player],
-                                (x) * BlockInfo.BLOCK_WIDTH,
-                                (next_num * 3 + y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(next[next_num]));
-                        }
-                    }
-                }
+
+                DrawOneMino(player, 
+                    gNextBlock[player],
+                    info,
+                    0,
+                    next_num * 3, 
+                    (int)(next[next_num]),
+                    false);
             }
         }
 
@@ -215,20 +227,14 @@ namespace tetris
             if (BlockInfo.BlockType.MINO_I <= blockControle[player].HoldBlock && blockControle[player].HoldBlock <= BlockInfo.BlockType.MINO_O)
             {
                 BlockInfo info = new BlockInfo((BlockInfo.BlockType)(blockControle[player].HoldBlock));
-                for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
-                {
-                    for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
-                    {
-                        if (info.shape[(int)BlockInfo.BlockRot.ROT_0, y, x] != 0)
-                        {
-                            //ミノの種類により切り出す画像を選ぶ
-                            DrawOneBlock(gHoldBlock[player],
-                                (x) * BlockInfo.BLOCK_WIDTH,
-                                (y) * BlockInfo.BLOCK_HEIGHT,
-                                (int)(blockControle[player].HoldBlock));
-                        }
-                    }
-                }
+
+                DrawOneMino(player,
+                    gHoldBlock[player],
+                    info,
+                    0,
+                    0, 
+                    (int)(blockControle[player].HoldBlock),
+                    false);
             }
         }
 
