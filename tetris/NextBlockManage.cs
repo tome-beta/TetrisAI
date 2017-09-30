@@ -16,6 +16,13 @@ namespace tetris
             NextBlock = new List<int>();
         }
 
+        //NEXTブロックを初期化する
+        public void InitNextBlock()
+        {
+            this.NextBlock.Clear();
+            UpdateNextBlock();
+
+        }
 
         //NEXTブロックを取得
         public int GetNextBlock()
