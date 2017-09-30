@@ -180,7 +180,7 @@ namespace tetris
                     {
                         //消えるラインのチェック
                         int line_num = CheckEraseLine(player);
-                        bool perfect = CheckPerfect(line_num, player);
+                        bool perfect = this.fieldManage[player].CheckPerfect(line_num);
                         int tspin_type = CheckTspin(this.blockControle[player].status);
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
@@ -215,7 +215,7 @@ namespace tetris
                 //ブロックを消す処理
                 case GAME_MODE.MODE_ERASE_BLOCK:
                     {
-                        ExecEraseLine(player);
+                        this.fieldManage[player].ExecEraseLine();
 
                         //ここで攻撃ラインの処理を行う
                         this.Mode = GAME_MODE.MODE_ATTACK_BLOCK;
@@ -384,54 +384,6 @@ namespace tetris
             return line_num;
         }
 
-        /// <summary>
-        /// パーフェクトチェック
-        /// </summary>
-        /// <param name="erase_line_num"></param>
-        /// <returns></returns>
-        private bool CheckPerfect(int erase_line_num,int player)
-        {
-            bool ok = false;
-
-            int[,] field = this.fieldManage[player].BlockField;
-
-            //パーフェクトチェック
-            //床から見ていく
-            int perfect_count = 0;
-            const int PERFECT_LINE_CHECK = 5;
-            for (int h = FieldManage.FIELD_HEIGHT - 2; h > FieldManage.FIELD_HEIGHT - 2 - PERFECT_LINE_CHECK; h--)
-            {
-                bool line_check = true;
-                //壁の所は見ない
-                for (int w = 1; w < FieldManage.FIELD_WIDTH - 2; w++)
-                {
-                    //消す予定になっているor何もない
-                    int block_data = field[h, w];
-                    if( block_data >= (int)BlockInfo.BlockType.MINO_VANISH ||
-                        block_data == 0)
-                    {
-
-                    }
-                    else
-                    {
-                        line_check = false;
-                        break;
-                    }
-                }
-                if (line_check)
-                {
-                    perfect_count++;
-                }
-            }
-
-            //消したライン数と床から探索して消す予定ライン数が一致していたらパーフェクト
-            if (perfect_count == PERFECT_LINE_CHECK)
-            {
-                ok = true;
-            }
-
-            return ok;
-        }
 
         /// <summary>
         /// Tspinで有るかをチェック
@@ -503,38 +455,6 @@ namespace tetris
             }
 
             this.messageControle[player].MakeMessage();
-        }
-
-        //消去するラインを調べる
-        private void ExecEraseLine(int player)
-        {
-            int[,] field = this.fieldManage[player].BlockField;
-
-            //ブロックを実際に消す処理
-            //アニメーションをそのうちつける
-            for (int h = 0; h < FieldManage.FIELD_HEIGHT; h++)
-            {
-                //壁の所は見ない
-                for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
-                {
-                    if (field[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
-                    {
-                        field[h, w] = 0;
-                        for (int h2 = h; h2 > 0; h2--)
-                        {
-                            field[h2, w] = field[h2 - 1, w];
-                        }
-                    }
-                }
-            }
-
-            //一番上のラインを埋める
-            for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
-            {
-                field[0, w] = 0;
-            }
-
-            this.EraseLine[player].Clear();
         }
 
         /// <summary>
