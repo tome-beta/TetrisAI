@@ -12,6 +12,8 @@ namespace tetris
         public const int TSPIN_MINI = 0x0004;      //Tスピンミニの成功
         public const int BACK_TO_BACK = 0x0008;      //バック・トゥ・バック
 
+
+
         //コンストラクタ   
         public BlockControle()
         {
@@ -25,6 +27,10 @@ namespace tetris
                 BlockInfo.BlockType type = (BlockInfo.BlockType)i;
                 this.blockInfo[i] = new BlockInfo(type);
             }
+
+            //最後に操作したブロックの記録用
+            LastBlockInfo = new EvaluateManage.LAST_BLOCK_INFO();
+            LastBlockInfo.pos = new Point();
         }
 
         //指定した場所はフィールド配列の有効な位置か
@@ -163,7 +169,13 @@ namespace tetris
         public void HardDropCurrentBlock(int[,] field)
         {
             int y = CheckHardDropCurrentBlock(field);
-            CurrentPos.Y += y;   //TODO 関数化
+            CurrentPos.Y += y;
+
+            //ハードドロップした後の操作ブロック位置を記録しておく
+            LastBlockInfo.pos.X = CurrentPos.X;
+            LastBlockInfo.pos.Y = CurrentPos.Y;
+            LastBlockInfo.rot = CurrentRot;
+            LastBlockInfo.type = CurrentBlock.type;
         }
 
         /// <summary>
@@ -500,6 +512,8 @@ namespace tetris
         public int status { get; set; }
         public bool DoHold = false;        //HOLDを実行したかどうか
         public bool BtoB = false;
+
+        public EvaluateManage.LAST_BLOCK_INFO LastBlockInfo;
 
         private BlockInfo[] blockInfo;
     }

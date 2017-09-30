@@ -113,8 +113,11 @@ namespace tetris
 
                         int[,] field = this.fieldManage[player].BlockField;
 
+                        //フィールドの評価を行う
+                        EvaluateField();
+
                         //ここでブロックを置くことができなければゲームオーバー
-                        if(this.blockControle[player].CheckGameOver(field))
+                        if (this.blockControle[player].CheckGameOver(field))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
                             this.fieldManage[player].GameOverField();
@@ -312,7 +315,6 @@ namespace tetris
         //===========================================
         //  private
         //===========================================
-
         private void BlockFieldInit()
         {
             GameOverFlag = false;
@@ -558,6 +560,20 @@ namespace tetris
             }
         }
 
+        /// <summary>
+        /// フィールドの評価
+        /// </summary>
+        private void EvaluateField()
+        {
+            int player = (int)playerTurn;
+            EvaluateManage.EvaluateInputData input_data = new EvaluateManage.EvaluateInputData();
+            input_data.field = this.fieldManage[player].BlockField;
+            input_data.nextBlock = nextManage[player].NextBlock.ToArray();
+            input_data.last_info = blockControle[player].LastBlockInfo;
+
+
+        }
+
         public int fps {get;set;}
 
         //ゲーム管理
@@ -568,8 +584,12 @@ namespace tetris
         AttackLineManage[] attackLineManage;
         FieldManage[] fieldManage;
         NextBlockManage[] nextManage;
+        EvaluateManage evaluateManage = new EvaluateManage();
+            
 
         PLAYER_DEFINE playerTurn;
+
+        
 
         private bool GameOverFlag = false;
 
