@@ -1,0 +1,61 @@
+﻿using System;
+using System.Drawing;
+
+namespace tetris
+{
+    //  フィールドの評価を行うクラス
+    class EvaluateManage
+    {
+        //最後に操作したブロック
+        public struct LAST_BLOCK_INFO
+        {
+            public Point pos;
+            public BlockInfo.BlockRot rot;
+            public BlockInfo.BlockType type;
+        };
+
+        /// <summary>
+        /// 評価のための入力
+        /// </summary>
+        public struct EvaluateInputData
+        {
+            public int[,] field;       //フィールドのデータ
+            public int[] nextBlock;   //NEXTブロック
+            public LAST_BLOCK_INFO last_info;
+        };
+
+        //フィールドの特徴量
+        public struct FeatureData
+        {
+            int last_block_height;      //１．直前に置いたミノの高さ
+            int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
+            int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
+            int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
+            int hole;                   //５．穴の数
+            int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
+            int hole_on_block_total;    //７．穴の上のブロックの数の和
+            int hole_row;               //８．穴のある行数
+            //９．各列の高さの平均値
+            //１０．各列の高さの標準偏差
+        };
+
+
+        //フィールドを評価して点数をつける関数
+        public int EvaluateField(EvaluateInputData data)
+        {
+            int score = 0;
+
+            return score;
+            
+        }
+
+        //特徴量を計算する
+        private FeatureData CalcFeature(int[,] field)
+        {
+            FeatureData data = new FeatureData();
+
+            return data;
+        }
+
+    }
+}

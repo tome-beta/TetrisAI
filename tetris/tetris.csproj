@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AIManage.cs" />
     <Compile Include="AttackLineManage.cs" />
     <Compile Include="BlockControle.cs" />
     <Compile Include="BlockInfo.cs" />
