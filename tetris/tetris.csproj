@@ -72,6 +72,7 @@
     <Compile Include="AttackLineManage.cs" />
     <Compile Include="BlockControle.cs" />
     <Compile Include="BlockInfo.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="DrawGameFiled.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -321,8 +321,8 @@ namespace tetris
             this.fieldManage[1].ClearField();
 
             //NEXTブロックを収める配列
-            nextManage[0].UpdateNextBlock();
-            nextManage[1].UpdateNextBlock();
+            nextManage[0].InitNextBlock();
+            nextManage[1].InitNextBlock();
 
         }
 
@@ -572,9 +572,6 @@ namespace tetris
         PLAYER_DEFINE playerTurn;
 
         private bool GameOverFlag = false;
-
-        //データ配列
-        System.Random MyRandom = new Random();
 
         //キー入力持ち
         private bool HardDrop = false;

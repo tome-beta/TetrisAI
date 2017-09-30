@@ -16,6 +16,13 @@ namespace tetris
             NextBlock = new List<int>();
         }
 
+        //NEXTブロックを初期化する
+        public void InitNextBlock()
+        {
+            this.NextBlock.Clear();
+            UpdateNextBlock();
+
+        }
 
         //NEXTブロックを取得
         public int GetNextBlock()
@@ -44,7 +51,7 @@ namespace tetris
                 for (int i = array.Length - 1; i > 0; i--)
                 {
                     int a = i - 1;
-                    int b = random.Next(array.Length) % i;
+                    int b = Common.MyRandom.Next(array.Length) % i;
                     var tmp = array[a];
                     array[a] = array[b];
                     array[b] = tmp;
@@ -58,6 +65,5 @@ namespace tetris
         }
 
         public List<int> NextBlock;
-        System.Random random = new Random();
     }
 }
