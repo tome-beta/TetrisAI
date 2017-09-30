@@ -61,17 +61,27 @@ namespace tetris
         /// <param name="g">描画対象</param>
         /// <param name="x">基準のXセル位置</param>
         /// <param name="y">基準のYセル位置</param>
+        /// 
         /// <param name="type">ミノの種類</param>
         /// <param name="alpha">alphaを掛けるか</param>
-        private void DrawOneMino(int player, Graphics g,BlockInfo info,int base_x,int base_y, int type,bool alpha = false,bool game_over = false)
+        private void DrawOneMino(int player, 
+            Graphics g,
+            BlockInfo info,
+            int base_x,
+            int base_y,
+            int rot,
+            int type,
+            bool alpha = false,
+            bool game_over = false)
         {
             for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
             {
                 for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                 {
-                    if (info.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
-                    {
-                        if (game_over)
+//                    if (info.shape[(int)this.blockControle[player].CurrentRot, y, x] != 0)
+                   if (info.shape[rot, y, x] != 0)
+                   {
+                            if (game_over)
                         {
                             type = (int)BlockInfo.BlockType.MINO_ATTACK;
                         }
@@ -148,7 +158,8 @@ namespace tetris
                     CurrnetInfo,
                     Pos.X,
                     Pos.Y,
-                    (int)(CurrnetInfo.type), 
+                    (int)this.blockControle[player].CurrentRot,
+                    (int)(CurrnetInfo.type),
                     false,
                     game_over
                     );
@@ -191,7 +202,9 @@ namespace tetris
                     CurrnetInfo,
                     Pos.X,
                     Pos.Y + move_y,
-                    (int)(CurrnetInfo.type), true);
+                    (int)this.blockControle[player].CurrentRot,
+                    (int)(CurrnetInfo.type),
+                    true);
             }
         }
 
@@ -212,7 +225,8 @@ namespace tetris
                     gNextBlock[player],
                     info,
                     0,
-                    next_num * 3, 
+                    next_num * 3,
+                    0,
                     (int)(next[next_num]),
                     false);
             }
@@ -232,7 +246,8 @@ namespace tetris
                     gHoldBlock[player],
                     info,
                     0,
-                    0, 
+                    0,
+                    0,
                     (int)(blockControle[player].HoldBlock),
                     false);
             }
