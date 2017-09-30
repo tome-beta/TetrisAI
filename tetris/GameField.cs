@@ -223,7 +223,11 @@ namespace tetris
                 //プレイヤー交代
                 case GAME_MODE.MODE_TURN_CHANGE:
                     {
-                        playerTurn = playerTurn == PLAYER_DEFINE.PLAYER_1 ? PLAYER_DEFINE.PLAYER_2 : PLAYER_DEFINE.PLAYER_1;
+                        if (player_select != 0)
+                        {
+                            playerTurn = playerTurn == PLAYER_DEFINE.PLAYER_1 ? PLAYER_DEFINE.PLAYER_2 : PLAYER_DEFINE.PLAYER_1;
+                        }
+                        
                         this.Mode = GAME_MODE.MODE_SET_BLOCK;
                     }
                     break;
@@ -560,6 +564,16 @@ namespace tetris
             }
         }
 
+        private void MenuItem1Ponly_Click(object sender, EventArgs e)
+        {
+            player_select = 0;
+        }
+
+        private void MenuItemVS_Click(object sender, EventArgs e)
+        {
+            player_select = 1;
+        }
+
         /// <summary>
         /// フィールドの評価
         /// </summary>
@@ -570,8 +584,6 @@ namespace tetris
             input_data.field = this.fieldManage[player].BlockField;
             input_data.nextBlock = nextManage[player].NextBlock.ToArray();
             input_data.last_info = blockControle[player].LastBlockInfo;
-
-
         }
 
         public int fps {get;set;}
@@ -589,7 +601,7 @@ namespace tetris
 
         PLAYER_DEFINE playerTurn;
 
-        
+        private int player_select = 0;
 
         private bool GameOverFlag = false;
 

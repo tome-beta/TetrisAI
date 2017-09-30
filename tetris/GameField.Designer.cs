@@ -61,9 +61,9 @@
             this.labelT3Count2P = new System.Windows.Forms.Label();
             this.labelMessage2P = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.pOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pOnlyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.vSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuPlayMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem1Ponly = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItemVS = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
@@ -412,33 +412,35 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pOnlyToolStripMenuItem});
+            this.MenuPlayMode});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1620, 32);
             this.menuStrip1.TabIndex = 33;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // pOnlyToolStripMenuItem
+            // MenuPlayMode
             // 
-            this.pOnlyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pOnlyToolStripMenuItem1,
-            this.vSToolStripMenuItem});
-            this.pOnlyToolStripMenuItem.Name = "pOnlyToolStripMenuItem";
-            this.pOnlyToolStripMenuItem.Size = new System.Drawing.Size(103, 28);
-            this.pOnlyToolStripMenuItem.Text = "play mode";
+            this.MenuPlayMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem1Ponly,
+            this.MenuItemVS});
+            this.MenuPlayMode.Name = "MenuPlayMode";
+            this.MenuPlayMode.Size = new System.Drawing.Size(103, 28);
+            this.MenuPlayMode.Text = "play mode";
             // 
-            // pOnlyToolStripMenuItem1
+            // MenuItem1Ponly
             // 
-            this.pOnlyToolStripMenuItem1.Name = "pOnlyToolStripMenuItem1";
-            this.pOnlyToolStripMenuItem1.Size = new System.Drawing.Size(152, 28);
-            this.pOnlyToolStripMenuItem1.Text = "1P only";
+            this.MenuItem1Ponly.Name = "MenuItem1Ponly";
+            this.MenuItem1Ponly.Size = new System.Drawing.Size(152, 28);
+            this.MenuItem1Ponly.Text = "1P only";
+            this.MenuItem1Ponly.Click += new System.EventHandler(this.MenuItem1Ponly_Click);
             // 
-            // vSToolStripMenuItem
+            // MenuItemVS
             // 
-            this.vSToolStripMenuItem.Name = "vSToolStripMenuItem";
-            this.vSToolStripMenuItem.Size = new System.Drawing.Size(152, 28);
-            this.vSToolStripMenuItem.Text = "VS ";
+            this.MenuItemVS.Name = "MenuItemVS";
+            this.MenuItemVS.Size = new System.Drawing.Size(152, 28);
+            this.MenuItemVS.Text = "VS ";
+            this.MenuItemVS.Click += new System.EventHandler(this.MenuItemVS_Click);
             // 
             // GameField
             // 
@@ -533,8 +535,8 @@
         private System.Windows.Forms.Label labelT3Count2P;
         private System.Windows.Forms.Label labelMessage2P;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem pOnlyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pOnlyToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem vSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MenuPlayMode;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem1Ponly;
+        private System.Windows.Forms.ToolStripMenuItem MenuItemVS;
     }
 }
