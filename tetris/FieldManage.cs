@@ -94,6 +94,43 @@ namespace tetris
             return ok;
         }
 
+        public int CheckEraseLine()
+        {
+            int line_num = 0;
+            //床から見ていく
+            for (int h = FieldManage.FIELD_HEIGHT - 2; h >= 0; h--)
+            {
+                bool erase_line = true;
+                //壁の所は見ない
+                for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
+                {
+                    //設置されていないか
+                    if (BlockField[h, w] < (int)BlockInfo.BlockType.MINO_IN_FIELD)
+                    {
+                        //空きがあれば飛ばす
+                        erase_line = false;
+                        break;
+                    }
+                }
+
+                //消すラインを予約する
+                if (erase_line)
+                {
+                    //消す予定の情報を加える
+                    for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
+                    {
+                        BlockField[h, w] += (int)(BlockInfo.BlockType.MINO_VANISH);
+                    }
+                    //消す
+                    line_num++;
+                    this.EraseLine.Add(h);
+                }
+            }
+
+            return line_num;
+
+        }
+
         //消去するラインを調べる
         public void ExecEraseLine()
         {
@@ -122,11 +159,32 @@ namespace tetris
             }
 
             this.EraseLine.Clear();
-
         }
 
-        public int[,] BlockField { get; set; }
+        /// <summary>
+        /// フィールドをゲームオーバーの状態にする
+        /// </summary>
+        public void GameOverField()
+        {
+            //置いているブロックをすべて灰色にする
+            //壁と設置されているブロックを描く
+            for (int y = 0; y < FieldManage.FIELD_HEIGHT; y++)
+            {
+                for (int x = 0; x < FieldManage.FIELD_WIDTH; x++)
+                {
+                    int field_block = BlockField[y, x] % (int)BlockInfo.BlockType.MINO_IN_FIELD;
 
+                    if ((int)BlockInfo.BlockType.MINO_I <= field_block &&
+                        field_block <= (int)BlockInfo.BlockType.MINO_O)
+                    {
+                        BlockField[y, x] = (int)BlockInfo.BlockType.MINO_ATTACK + (int)BlockInfo.BlockType.MINO_IN_FIELD;
+                    }
+                }
+            }
+        }
+
+
+        public int[,] BlockField { get; set; }
         private List<int> EraseLine;
     }
 }
