@@ -40,22 +40,49 @@ namespace tetris
         };
 
 
+        /// <summary>
         //フィールドを評価して点数をつける関数
-        public int EvaluateField(EvaluateInputData data)
+        /// </summary>
+        /// <param name="field">フィールド配列</param>
+        /// <param name="nextBlock">NEXTブロック情報</param>
+        /// <returns></returns>
+        public int EvaluateField(int[,] field,int[] nextBlock)
         {
             int score = 0;
+
+            //ここで次のブロックを作る。
+
+            //置く場所を決める
+
+            //仮に置いた時のフィールドを評価する
+
+            //フィールドから特徴量を作る
+
+            //計算した特徴量からフィールドのスコアを求める
+
 
             return score;
             
         }
 
         //特徴量を計算する
-        private FeatureData CalcFeature(int[,] field)
+        private FeatureData CalcFeature(EvaluateInputData input_data)
         {
-            FeatureData data = new FeatureData();
+            FeatureData feature_data = new FeatureData();
 
-            return data;
+            return feature_data;
         }
 
+        /// <summary>
+        /// 特徴量５　穴の数をカウント
+        /// 穴・・四方を囲まれているセル
+        /// </summary>
+        /// <param name="data"></param>
+        private void CalcHole(int[,] field,ref FeatureData data)
+        {
+
+        }
+
+        BlockInfo block_info = new BlockInfo(); //先読み用
     }
 }
