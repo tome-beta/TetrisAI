@@ -584,6 +584,10 @@ namespace tetris
             input_data.field = this.fieldManage[player].BlockField;
             input_data.nextBlock = nextManage[player].NextBlock.ToArray();
             input_data.last_info = blockControle[player].LastBlockInfo;
+
+            evaluateManage.EvaluateField(this.fieldManage[player].BlockField,
+               nextManage[player].NextBlock.ToArray());
+
         }
 
         public int fps {get;set;}
