@@ -45,10 +45,13 @@ namespace tetris
         /// </summary>
         /// <param name="field">フィールド配列</param>
         /// <param name="nextBlock">NEXTブロック情報</param>
+        /// <param name="block_ctrl">Nブロック操作</param>
         /// <returns></returns>
-        public int EvaluateField(int[,] field,int[] nextBlock)
+        public int EvaluateField(int[,] field,int[] nextBlock,BlockControle block_ctrl)
         {
             int score = 0;
+            //ブロックの操作をする必要がある
+
 
             //ここで次のブロックを作る。
 

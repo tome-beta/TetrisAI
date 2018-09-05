@@ -23,6 +23,14 @@ namespace tetris
             PLAYER_NUM = 2,
         };
 
+        enum PLAY_MODE
+        {
+            ONLY_1P = 0,    //１P
+            VS_AI = 1,      //AIとの対戦
+            AI_ONLY = 2,    //AIだけで動かす時　仮
+
+        };
+
         enum GAME_MODE
         {
             MODE_WAIT,          //開始待ち
@@ -71,6 +79,10 @@ namespace tetris
             CreateImageObject();
 
             Mode = GAME_MODE.MODE_WAIT;
+
+            //TODO ２プレイヤーをAIプレイヤーにしておく
+            this.PlayerAI[0] = false;
+            this.PlayerAI[1] = true;
         }
 
 
@@ -113,8 +125,11 @@ namespace tetris
 
                         int[,] field = this.fieldManage[player].BlockField;
 
-                        //フィールドの評価を行う
-                        EvaluateField();
+                        //AIの番ならフィールドの評価を行う
+                        if(this.PlayerAI[player])
+                        {
+                            EvaluateField();
+                        }
 
                         //ここでブロックを置くことができなければゲームオーバー
                         if (this.blockControle[player].CheckGameOver(field))
@@ -133,21 +148,10 @@ namespace tetris
                 //ブロックを設置させるまでの操作
                 case GAME_MODE.MODE_MOVE_BLOCK:
                     {
-                        if (this.InputHold)
+                        //AIの番なら自動操作
+                        if (this.PlayerAI[player])
                         {
-                            //HOLD
-                            if (!this.blockControle[player].DoHold)
-                            {
-                                if (!this.blockControle[player].UpdateHold())
-                                {
-                                    //HOLDブロックが無かったとき
-                                    Mode = GAME_MODE.MODE_SET_BLOCK;
-                                }
-                            }
-                            this.InputHold = false;
-                        }
-                        else if (this.HardDrop)
-                        {
+                            //擬似的にハードドロップさせる
                             int[,] field = this.fieldManage[player].BlockField;
 
                             //ハードドロップ
@@ -158,6 +162,36 @@ namespace tetris
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                             this.blockControle[player].SetBlockInField(field);
+
+                        }
+                        else
+                        {
+                            if (this.InputHold)
+                            {
+                                //HOLD
+                                if (!this.blockControle[player].DoHold)
+                                {
+                                    if (!this.blockControle[player].UpdateHold())
+                                    {
+                                        //HOLDブロックが無かったとき
+                                        Mode = GAME_MODE.MODE_SET_BLOCK;
+                                    }
+                                }
+                                this.InputHold = false;
+                            }
+                            else if (this.HardDrop)
+                            {
+                                int[,] field = this.fieldManage[player].BlockField;
+
+                                //ハードドロップ
+                                this.blockControle[player].HardDropCurrentBlock(field);
+
+                                this.blockControle[player].DoHold = false;
+                                this.HardDrop = false;
+
+                                this.Mode = GAME_MODE.MODE_ERASE_CHECK;
+                                this.blockControle[player].SetBlockInField(field);
+                            }
                         }
                     }
                     break;
@@ -566,16 +600,16 @@ namespace tetris
 
         private void MenuItem1Ponly_Click(object sender, EventArgs e)
         {
-            player_select = 0;
+            player_select = (int)PLAY_MODE.ONLY_1P;
         }
 
         private void MenuItemVS_Click(object sender, EventArgs e)
         {
-            player_select = 1;
+            player_select = (int)PLAY_MODE.VS_AI;
         }
 
         /// <summary>
-        /// フィールドの評価
+        /// AIによるフィールドの評価
         /// </summary>
         private void EvaluateField()
         {
@@ -586,7 +620,7 @@ namespace tetris
             input_data.last_info = blockControle[player].LastBlockInfo;
 
             evaluateManage.EvaluateField(this.fieldManage[player].BlockField,
-               nextManage[player].NextBlock.ToArray());
+               nextManage[player].NextBlock.ToArray(),this.blockControle[player]);
 
         }
 
@@ -605,9 +639,12 @@ namespace tetris
 
         PLAYER_DEFINE playerTurn;
 
+        //一人プレイかどうか
         private int player_select = 0;
 
         private bool GameOverFlag = false;
+        private bool[] PlayerAI = new bool[(int)PLAYER_DEFINE.PLAYER_NUM];
+
 
         //キー入力持ち
         private bool HardDrop = false;
