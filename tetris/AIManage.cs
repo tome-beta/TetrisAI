@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace tetris
 {
@@ -47,13 +48,26 @@ namespace tetris
         /// <param name="nextBlock">NEXTブロック情報</param>
         /// <param name="block_ctrl">Nブロック操作</param>
         /// <returns></returns>
-        public int EvaluateField(int[,] field,int[] nextBlock,BlockControle block_ctrl)
+        public int EvaluateField(int[,] field, NextBlockManage nextManage,BlockControle block_ctrl)
         {
             int score = 0;
-            //ブロックの操作をする必要がある
+            
+
+            //ここでは全て擬似的にフィールドの操作を行う
 
 
-            //ここで次のブロックを作る。
+
+
+            //擬似的に次のブロックを取り出す
+
+            List<int> tmp = new List<int>(nextManage.NextBlock);
+            AINextBlockManage.NextBlock = tmp;
+
+            AINextBlockManage.UpdateNextBlock();
+            int type = AINextBlockManage.GetNextBlock();
+
+//            block_ctrl.SetCurrentBlock((BlockInfo.BlockType)type);
+
 
             //置く場所を決める
 
@@ -87,5 +101,8 @@ namespace tetris
         }
 
         BlockInfo block_info = new BlockInfo(); //先読み用
+
+        //AI用に擬似的にフィールドを操作できるようにコピー先を用意する
+        NextBlockManage AINextBlockManage = new NextBlockManage();
     }
 }
