@@ -67,7 +67,7 @@ namespace tetris
             AIField = (int[,])field.Clone();
 
             //４つの回転毎に左右に移動できる限界点を探す
-            List<SearchPos> searchList = MakeSerachPos(AIBlockControle,AIField);
+            List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle,AIField);
 
 
             //置く場所を決める
@@ -84,9 +84,9 @@ namespace tetris
         }
 
         //AIが探索するブロックの移動範囲を探す
-        private List<SearchPos> MakeSerachPos(BlockControle ctrl , int[,] field)
+        private List<SearchPosInfo> MakeSerachPos(BlockControle ctrl , int[,] field)
         {
-            List<SearchPos> SearchList = new List<SearchPos>();
+            List<SearchPosInfo> SearchList = new List<SearchPosInfo>();
 
             /*
               ROT_0,
@@ -96,14 +96,34 @@ namespace tetris
             */
             for (int i = 0; i < 4;i++)
             {
+                SearchPosInfo info = new SearchPosInfo();
                 ctrl.CurrentRot = (BlockInfo.BlockRot)i;
 
+                info.rot = i;
+                info.y = 0;
+
                 //左端を求める
+                while(true)
+                {
+                    if(!ctrl.MoveCurrentBlockLeft(field) )
+                    {
+                        info.min_x = ctrl.CurrentPos.X;
+                        break;
+                    }
+                }
+
 
                 //右端を求める
-
+                while (true)
+                {
+                    if (!ctrl.MoveCurrentBlockRight(field))
+                    {
+                        info.max_x = ctrl.CurrentPos.X;
+                        break;
+                    }
+                }
                 //Listに追加
-
+                SearchList.Add(info);
             }
 
 
@@ -134,11 +154,12 @@ namespace tetris
         }
 
         //AIのブロック位置探索用
-        private struct SearchPos
+        private struct SearchPosInfo
         {
-            int rot;
-            int x;
-            int y;
+            public int rot;
+            public int min_x;  //左端座標
+            public int max_x;  //右端座標
+            public int y;
         };
 
         BlockInfo block_info = new BlockInfo(); //先読み用
