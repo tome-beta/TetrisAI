@@ -130,11 +130,7 @@ namespace tetris
                         {
                             EvaluateField();
                         }
-                        else
-                        {
 
-
-                        }
 
                         //ここでブロックを置くことができなければゲームオーバー
                         if (this.blockControle[player].CheckGameOver(field))

@@ -51,22 +51,23 @@ namespace tetris
         public int EvaluateField(int[,] field, NextBlockManage nextManage,BlockControle block_ctrl)
         {
             int score = 0;
-            
 
-            //ここでは全て擬似的にフィールドの操作を行う
-
-
-
+            //TOD 整頓必須
 
             //擬似的に次のブロックを取り出す
-
             List<int> tmp = new List<int>(nextManage.NextBlock);
             AINextBlockManage.NextBlock = tmp;
-
             AINextBlockManage.UpdateNextBlock();
             int type = AINextBlockManage.GetNextBlock();
 
-//            block_ctrl.SetCurrentBlock((BlockInfo.BlockType)type);
+            //ブロック操作クラスにわたす
+            AIBlockControle.SetValue(block_ctrl);
+
+            //フィールドをコピー
+            AIField = (int[,])field.Clone();
+
+            //４つの回転毎に左右に移動できる限界点を探す
+            List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle,AIField);
 
 
             //置く場所を決める
@@ -81,6 +82,58 @@ namespace tetris
             return score;
             
         }
+
+        //AIが探索するブロックの移動範囲を探す
+        private List<SearchPosInfo> MakeSerachPos(BlockControle ctrl , int[,] field)
+        {
+            List<SearchPosInfo> SearchList = new List<SearchPosInfo>();
+
+            /*
+              ROT_0,
+              ROT_90,
+              ROT_180,
+              ROT_270,
+            */
+            for (int i = 0; i < 4;i++)
+            {
+                SearchPosInfo info = new SearchPosInfo();
+                ctrl.CurrentRot = (BlockInfo.BlockRot)i;
+
+                info.rot = i;
+                info.y = 0;
+
+                //左端を求める
+                while(true)
+                {
+                    if(!ctrl.MoveCurrentBlockLeft(field) )
+                    {
+                        info.min_x = ctrl.CurrentPos.X;
+                        break;
+                    }
+                }
+
+
+                //右端を求める
+                while (true)
+                {
+                    if (!ctrl.MoveCurrentBlockRight(field))
+                    {
+                        info.max_x = ctrl.CurrentPos.X;
+                        break;
+                    }
+                }
+                //Listに追加
+                SearchList.Add(info);
+            }
+
+
+
+
+
+            return SearchList;
+
+        }
+
 
         //特徴量を計算する
         private FeatureData CalcFeature(EvaluateInputData input_data)
@@ -100,9 +153,20 @@ namespace tetris
 
         }
 
+        //AIのブロック位置探索用
+        private struct SearchPosInfo
+        {
+            public int rot;
+            public int min_x;  //左端座標
+            public int max_x;  //右端座標
+            public int y;
+        };
+
         BlockInfo block_info = new BlockInfo(); //先読み用
 
         //AI用に擬似的にフィールドを操作できるようにコピー先を用意する
         NextBlockManage AINextBlockManage = new NextBlockManage();
+        BlockControle AIBlockControle = new BlockControle();
+        int[,] AIField;
     }
 }

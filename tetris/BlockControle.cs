@@ -135,31 +135,37 @@ namespace tetris
         }
 
         //ブロックの右移動
-        public void MoveCurrentBlockRight(int[,] field)
+        public bool MoveCurrentBlockRight(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
         //ブロックの左移動
-        public void MoveCurrentBlockLeft(int[,] field)
+        public bool MoveCurrentBlockLeft(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
         //ブロックの下移動
-        public void MoveCurrentBlockDown(int[,] field)
+        public bool MoveCurrentBlockDown(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
 
         /// <summary>
@@ -499,6 +505,14 @@ namespace tetris
             };
         }
 
+        //外部からパラメータを設定するため
+        public void  SetValue(BlockControle ctrl)
+        {
+            this.CurrentBlock = ctrl.CurrentBlock;
+            this.HoldBlock = ctrl.HoldBlock;
+            this.CurrentRot = ctrl.CurrentRot;
+        }
+
 
         public readonly int MINO_TYPE_MAX;      //ミノとしての種類
         public readonly Point MINO_START_POS;   //ミノを出現させる位置
@@ -509,7 +523,7 @@ namespace tetris
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
-        public int status { get; set; }
+        public int status { get; set; } //回転させているか。T-SPIN状態
         public bool DoHold = false;        //HOLDを実行したかどうか
         public bool BtoB = false;
 
