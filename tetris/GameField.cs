@@ -130,6 +130,11 @@ namespace tetris
                         {
                             EvaluateField();
                         }
+                        else
+                        {
+
+
+                        }
 
                         //ここでブロックを置くことができなければゲームオーバー
                         if (this.blockControle[player].CheckGameOver(field))
@@ -598,14 +603,20 @@ namespace tetris
             }
         }
 
+        //メニューから１Pを選択
         private void MenuItem1Ponly_Click(object sender, EventArgs e)
         {
             player_select = (int)PLAY_MODE.ONLY_1P;
+            this.MenuItem1Ponly.Checked = true;
+            this.MenuItemVS.Checked = false;
         }
 
+        //メニューからVSを選択
         private void MenuItemVS_Click(object sender, EventArgs e)
         {
             player_select = (int)PLAY_MODE.VS_AI;
+            this.MenuItem1Ponly.Checked = false;
+            this.MenuItemVS.Checked = true;
         }
 
         /// <summary>
@@ -620,7 +631,7 @@ namespace tetris
             input_data.last_info = blockControle[player].LastBlockInfo;
 
             evaluateManage.EvaluateField(this.fieldManage[player].BlockField,
-               nextManage[player].NextBlock.ToArray(),this.blockControle[player]);
+               nextManage[player],this.blockControle[player]);
 
         }
 

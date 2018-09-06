@@ -415,7 +415,7 @@
             this.MenuPlayMode});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1620, 32);
+            this.menuStrip1.Size = new System.Drawing.Size(1620, 31);
             this.menuStrip1.TabIndex = 33;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -425,20 +425,22 @@
             this.MenuItem1Ponly,
             this.MenuItemVS});
             this.MenuPlayMode.Name = "MenuPlayMode";
-            this.MenuPlayMode.Size = new System.Drawing.Size(103, 28);
+            this.MenuPlayMode.Size = new System.Drawing.Size(98, 27);
             this.MenuPlayMode.Text = "play mode";
             // 
             // MenuItem1Ponly
             // 
+            this.MenuItem1Ponly.Checked = true;
+            this.MenuItem1Ponly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem1Ponly.Name = "MenuItem1Ponly";
-            this.MenuItem1Ponly.Size = new System.Drawing.Size(152, 28);
+            this.MenuItem1Ponly.Size = new System.Drawing.Size(180, 28);
             this.MenuItem1Ponly.Text = "1P only";
             this.MenuItem1Ponly.Click += new System.EventHandler(this.MenuItem1Ponly_Click);
             // 
             // MenuItemVS
             // 
             this.MenuItemVS.Name = "MenuItemVS";
-            this.MenuItemVS.Size = new System.Drawing.Size(152, 28);
+            this.MenuItemVS.Size = new System.Drawing.Size(180, 28);
             this.MenuItemVS.Text = "VS ";
             this.MenuItemVS.Click += new System.EventHandler(this.MenuItemVS_Click);
             // 
