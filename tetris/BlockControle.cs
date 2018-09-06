@@ -135,31 +135,37 @@ namespace tetris
         }
 
         //ブロックの右移動
-        public void MoveCurrentBlockRight(int[,] field)
+        public bool MoveCurrentBlockRight(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X + 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X++;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
         //ブロックの左移動
-        public void MoveCurrentBlockLeft(int[,] field)
+        public bool MoveCurrentBlockLeft(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X - 1, CurrentPos.Y, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.X--;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
         //ブロックの下移動
-        public void MoveCurrentBlockDown(int[,] field)
+        public bool MoveCurrentBlockDown(int[,] field)
         {
             if (CheckPlaceBlock(CurrentPos.X, CurrentPos.Y + 1, this.CurrentRot, this.CurrentBlock.type, field))
             {
                 CurrentPos.Y++;
                 this.status &= ~ROTATE_ACTION;
+                return true;
             }
+            return false;
         }
 
         /// <summary>
