@@ -499,6 +499,14 @@ namespace tetris
             };
         }
 
+        //外部からパラメータを設定するため
+        public void  SetValue(BlockControle ctrl)
+        {
+            this.CurrentBlock = ctrl.CurrentBlock;
+            this.HoldBlock = ctrl.HoldBlock;
+            this.CurrentRot = ctrl.CurrentRot;
+        }
+
 
         public readonly int MINO_TYPE_MAX;      //ミノとしての種類
         public readonly Point MINO_START_POS;   //ミノを出現させる位置
@@ -509,7 +517,7 @@ namespace tetris
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
         public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
-        public int status { get; set; }
+        public int status { get; set; } //回転させているか。T-SPIN状態
         public bool DoHold = false;        //HOLDを実行したかどうか
         public bool BtoB = false;
 
