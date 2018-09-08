@@ -18,7 +18,7 @@ namespace tetris
         public BlockControle()
         {
             MINO_TYPE_MAX = 8;
-            MINO_START_POS = new Point(3,0);
+            MINO_START_POS = new Point(4,0);
 
             this.blockInfo = new BlockInfo[MINO_TYPE_MAX];
             //ミノ情報を作る
@@ -521,7 +521,7 @@ namespace tetris
         //操作中のブロック
         public BlockInfo CurrentBlock = new BlockInfo(BlockInfo.BlockType.MINO_I);
         public BlockInfo.BlockType HoldBlock = BlockInfo.BlockType.MINO_VANISH;
-        public Point CurrentPos = new Point(3,0);   //操作中のブロックの基準点
+        public Point CurrentPos = new Point(4,0);   //操作中のブロックの基準点
         public BlockInfo.BlockRot CurrentRot { get; set; }
         public int status { get; set; } //回転させているか。T-SPIN状態
         public bool DoHold = false;        //HOLDを実行したかどうか
