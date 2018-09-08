@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace tetris
 {
+    [Serializable()]
     class NextBlockManage
     {
         public const int NEXT_BLOCK_MAX = 14;       //７種類＊２で表示は５個。

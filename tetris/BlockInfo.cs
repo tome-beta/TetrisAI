@@ -7,6 +7,7 @@ using System.Drawing;
 namespace tetris
 {
     //テトリミノの個体としての情報
+    [Serializable()]
     class BlockInfo
     {
         public const int BLOCK_WIDTH = 30;     //ブロック画像の幅

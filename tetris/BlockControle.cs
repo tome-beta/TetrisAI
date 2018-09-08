@@ -4,6 +4,7 @@ using System;
 
 namespace tetris
 {
+    [Serializable()]
     class BlockControle
     {
         public const int NUN = 0x0000;     //
