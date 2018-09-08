@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace tetris
 {
     //ゲームフィールドを管理します。
+    [Serializable]
     class FieldManage
     {
         public const int FIELD_HEIGHT = 20 + 1;     //ミノ領域＋床

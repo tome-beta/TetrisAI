@@ -8,21 +8,12 @@ namespace tetris
     class EvaluateManage
     {
         //最後に操作したブロック
+        [Serializable]
         public struct LAST_BLOCK_INFO
         {
             public Point pos;
             public BlockInfo.BlockRot rot;
             public BlockInfo.BlockType type;
-        };
-
-        /// <summary>
-        /// 評価のための入力
-        /// </summary>
-        public struct EvaluateInputData
-        {
-            public int[,] field;       //フィールドのデータ
-            public int[] nextBlock;   //NEXTブロック
-            public LAST_BLOCK_INFO last_info;
         };
 
         //フィールドの特徴量
@@ -47,24 +38,29 @@ namespace tetris
         /// <param name="field">フィールド配列</param>
         /// <param name="nextBlock">NEXTブロック情報</param>
         /// <param name="block_ctrl">Nブロック操作</param>
+        /// <param name="field_manage">フィールド操作</param>
         /// <returns></returns>
-        public int EvaluateField(int[,] field, NextBlockManage nextManage,BlockControle block_ctrl)
+        public int EvaluateField(int[,] field, 
+                                NextBlockManage next_manage,
+                                BlockControle block_ctrl,
+                                FieldManage field_manage)
         {
             int score = 0;
 
             //TOD 整頓必須
 
-            //擬似的に次のブロックを取り出す
-            List<int> tmp = new List<int>(nextManage.NextBlock);
-            AINextBlockManage.NextBlock = tmp;
-            AINextBlockManage.UpdateNextBlock();
-            int type = AINextBlockManage.GetNextBlock();
-
-            //ブロック操作クラスにわたす
-            AIBlockControle.SetValue(block_ctrl);
+            //インスタンスをコピー
+            AINextBlockManage = Common.DeepCopyHelper.DeepCopy<NextBlockManage>(next_manage);
+            AIBlockControle = Common.DeepCopyHelper.DeepCopy<BlockControle>(block_ctrl);
+            AIFieldManage = Common.DeepCopyHelper.DeepCopy<FieldManage>(field_manage);
 
             //フィールドをコピー
             AIField = (int[,])field.Clone();
+
+
+            //擬似的に次のブロックを取り出す
+            int type = AINextBlockManage.GetNextBlock();
+
 
             //４つの回転毎に左右に移動できる限界点を探す
             List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle,AIField);
@@ -174,7 +170,7 @@ namespace tetris
 
 
         //特徴量を計算する
-        private FeatureData CalcFeature(EvaluateInputData input_data)
+        private FeatureData CalcFeature()
         {
             FeatureData feature_data = new FeatureData();
 
@@ -206,6 +202,7 @@ namespace tetris
         //AI用に擬似的にフィールドを操作できるようにコピー先を用意する
         NextBlockManage AINextBlockManage = new NextBlockManage();
         BlockControle AIBlockControle = new BlockControle();
+        FieldManage AIFieldManage = new FieldManage();
         int[,] AIField;
     }
 }
