@@ -70,13 +70,44 @@ namespace tetris
             List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle,AIField);
 
 
-            //置く場所を決める
 
-            //仮に置いた時のフィールドを評価する
+            //for文で全ての置く場所を検索
+            foreach(var info in searchList)
+            {
+                //一回ごとにフィールドを元にもどす
+                AIField = (int[,])field.Clone();
 
-            //フィールドから特徴量を作る
+                //置く場所を決める
+                AIBlockControle.CurrentRot = (BlockInfo.BlockRot)info.rot;
+                AIBlockControle.CurrentPos.X = info.x;
+                AIBlockControle.CurrentPos.Y = info.y;
 
-            //計算した特徴量からフィールドのスコアを求める
+                //ハードドロップ
+                AIBlockControle.HardDropCurrentBlock(AIField);
+                //ゲームオーバーの判定がいる
+                if( AIBlockControle.CheckGameOver(AIField))
+                {
+                    return 0;
+                }
+                AIBlockControle.SetBlockInField(AIField);
+
+
+                //TODO ランダムで場所をきめるため
+                block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
+                block_ctrl.CurrentPos.X = info.x;
+                block_ctrl.CurrentPos.Y = info.y;
+
+                if (Common.MyRandom.Next(10) == 0)
+                {
+                    break;
+                }
+                //フィールドから特徴量を作る
+
+                //計算した特徴量からフィールドのスコアを求める
+
+            }
+
+
 
 
             return score;
@@ -94,7 +125,7 @@ namespace tetris
               ROT_180,
               ROT_270,
             */
-            for (int i = 0; i < 4;i++)
+            for (int i = 0; i < (int)BlockInfo.BlockRot.ROT_TYPE_NUM; i++)
             {
                 SearchPosInfo info = new SearchPosInfo();
                 ctrl.CurrentRot = (BlockInfo.BlockRot)i;
@@ -122,8 +153,15 @@ namespace tetris
                         break;
                     }
                 }
-                //Listに追加
-                SearchList.Add(info);
+
+                //左端から右端までの位置を作成
+                for(int x = info.min_x + 1; x < info.max_x;x++ )
+                {
+                    info.x = x;
+                    //Listに追加
+                    SearchList.Add(info);
+
+                }
             }
 
 
@@ -159,6 +197,7 @@ namespace tetris
             public int rot;
             public int min_x;  //左端座標
             public int max_x;  //右端座標
+            public int x;
             public int y;
         };
 

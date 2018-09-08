@@ -42,6 +42,8 @@ namespace tetris
             ROT_90,
             ROT_180,
             ROT_270,
+
+            ROT_TYPE_NUM,//計算用
         };
 
         //ここにずらずらとミノの情報を取得する関数を書いていくのか
