@@ -87,6 +87,9 @@ namespace tetris
                 }
                 AIBlockControle.SetBlockInField(AIField);
 
+                //消えるラインのチェック
+                int erase_line_num = this.AIFieldManage.CheckEraseLine();
+
 
                 //TODO ランダムで場所をきめるため
                 block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
