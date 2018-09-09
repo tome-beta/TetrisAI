@@ -174,6 +174,7 @@ namespace tetris
             feature_data.last_block_height =  CalcLastBlockHeight(ai_controle, ai_field_manage.BlockField);
             feature_data.eraseline_and_block = CalcEraseAndBlock(ai_controle, ai_field_manage);
             feature_data.horizon_change =  CalcHorizonChange(ai_field_manage);
+            feature_data.veritical_change = CalcVerticalChange(ai_field_manage);
 
             return feature_data;
         }
@@ -224,7 +225,7 @@ namespace tetris
             LAST_BLOCK_INFO last_block = ai_controle.LastBlockInfo; //TODO これが更新されてない
 
             int erase_and_block = 0;
-
+/*
             //デバッグ用 置いたところの隙間を埋める感じ
             for(int x = 1; x < 11; x++)
             {
@@ -233,7 +234,7 @@ namespace tetris
                     ai_field_manage.BlockField[last_block.pos.Y,x] = (int)(last_block.type)+1 + 10;
                 }
             }
-
+*/
             //消えるライン数をチェック
             int erase_line_num = ai_field_manage.CheckEraseLine();
 
@@ -288,15 +289,41 @@ namespace tetris
                     }
                 }
             }
-
-         return horizeon_change;
+            return horizeon_change;
         }
-            /// <summary>
-            /// 特徴量５　穴の数をカウント
-            /// 穴・・四方を囲まれているセル
-            /// </summary>
-            /// <param name="data"></param>
-            private void CalcHole(int[,] field,ref FeatureData data)
+        //特徴量３：横方向にスキャンした時にセルの内容が変化する回数
+        private int CalcVerticalChange(FieldManage ai_field_manage)
+        {
+            int vertical_change = 0;
+
+            //壁の所は見ない
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                int chk_block = ai_field_manage.BlockField[0, x];
+
+                for (int y = 0; y < FieldManage.FIELD_HEIGHT-1; y++)
+                {
+                    int now = ai_field_manage.BlockField[y, x];
+
+                    //変化があったら
+                    if ((chk_block == 0 && now != 0) ||
+                       (chk_block != 0 && now == 0)
+                    )
+                    {
+                        vertical_change++;
+                        chk_block = now;
+                    }
+                }
+            }
+            return vertical_change;
+        }
+
+        /// <summary>
+        /// 特徴量５　穴の数をカウント
+        /// 穴・・四方を囲まれているセル
+        /// </summary>
+        /// <param name="data"></param>
+        private void CalcHole(int[,] field,ref FeatureData data)
         {
 
         }
