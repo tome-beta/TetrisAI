@@ -621,10 +621,9 @@ namespace tetris
         private void EvaluateField()
         {
             int player = (int)playerTurn;
-            evaluateManage.EvaluateField(this.fieldManage[player].BlockField,
-               nextManage[player],
-               this.blockControle[player],
-               this.fieldManage[player]);
+            evaluateManage.EvaluateField(this.nextManage[player],
+                                         this.blockControle[player],
+                                         this.fieldManage[player]);
 
         }
 

@@ -95,6 +95,7 @@ namespace tetris
             return ok;
         }
 
+        //消えるライン数をチェック
         public int CheckEraseLine()
         {
             int line_num = 0;
@@ -186,6 +187,6 @@ namespace tetris
 
 
         public int[,] BlockField { get; set; }
-        private List<int> EraseLine;
+        public List<int> EraseLine { get; set; }
     }
 }
