@@ -35,13 +35,11 @@ namespace tetris
         /// <summary>
         //フィールドを評価して点数をつける関数
         /// </summary>
-        /// <param name="field">フィールド配列</param>
         /// <param name="nextBlock">NEXTブロック情報</param>
         /// <param name="block_ctrl">Nブロック操作</param>
         /// <param name="field_manage">フィールド操作</param>
         /// <returns></returns>
-        public int EvaluateField(int[,] field, 
-                                NextBlockManage next_manage,
+        public int EvaluateField(NextBlockManage next_manage,
                                 BlockControle block_ctrl,
                                 FieldManage field_manage)
         {
@@ -54,16 +52,12 @@ namespace tetris
             AIBlockControle = Common.DeepCopyHelper.DeepCopy<BlockControle>(block_ctrl);
             AIFieldManage = Common.DeepCopyHelper.DeepCopy<FieldManage>(field_manage);
 
-            //フィールドをコピー
-            AIField = (int[,])field.Clone();
-
-
             //擬似的に次のブロックを取り出す
             int type = AINextBlockManage.GetNextBlock();
 
 
             //４つの回転毎に左右に移動できる限界点を探す
-            List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle,AIField);
+            List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle, AIFieldManage.BlockField);
 
 
 
@@ -71,7 +65,7 @@ namespace tetris
             foreach(var info in searchList)
             {
                 //一回ごとにフィールドを元にもどす
-                AIField = (int[,])field.Clone();
+                AIFieldManage = Common.DeepCopyHelper.DeepCopy<FieldManage>(field_manage);
 
                 //置く場所を決める
                 AIBlockControle.CurrentRot = (BlockInfo.BlockRot)info.rot;
@@ -79,16 +73,16 @@ namespace tetris
                 AIBlockControle.CurrentPos.Y = info.y;
 
                 //ハードドロップ
-                AIBlockControle.HardDropCurrentBlock(AIField);
+                AIBlockControle.HardDropCurrentBlock(AIFieldManage.BlockField);
                 //ゲームオーバーの判定がいる
-                if( AIBlockControle.CheckGameOver(AIField))
+                if( AIBlockControle.CheckGameOver(AIFieldManage.BlockField))
                 {
                     return 0;
                 }
-                 AIBlockControle.SetBlockInField(AIField);
+                 AIBlockControle.SetBlockInField(AIFieldManage.BlockField);
 
                 //フィールドから特徴量を作る
-                CalcFeature(AIBlockControle, AIFieldManage,AIField);
+                CalcFeature(AIBlockControle, AIFieldManage);
 
                 //計算した特徴量からフィールドのスコアを求める
 
@@ -172,12 +166,13 @@ namespace tetris
 
 
         //特徴量を計算する
-        private FeatureData CalcFeature(BlockControle ai_controle,FieldManage ai_field_manage,int[,] ai_field)
+        private FeatureData CalcFeature(BlockControle ai_controle,FieldManage ai_field_manage)
         {
             FeatureData feature_data = new FeatureData();
 
-            //特徴量１
-            feature_data.last_block_height =  CalcLastBlockHeight(ai_controle,ai_field);
+            //特徴量の作成
+            feature_data.last_block_height =  CalcLastBlockHeight(ai_controle, ai_field_manage.BlockField);
+            feature_data.eraseline_and_block = CalcEraseAndBlock(ai_controle, ai_field_manage);
 
             return feature_data;
         }
@@ -194,8 +189,8 @@ namespace tetris
             {
                 for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
                 {
-                        //フィールドチェック
-                        int chk_x = last_block.pos.X + x;
+                    //フィールドチェック
+                    int chk_x = last_block.pos.X + x;
                     int chk_y = last_block.pos.Y + y;
 
                     int fence = (int)(BlockInfo.BlockType.MINO_FENCE | BlockInfo.BlockType.MINO_IN_FIELD);
@@ -221,6 +216,53 @@ namespace tetris
             return height;
         }
 
+        //特徴量２：消えたラインの数×ミノの中で消えたブロックの数
+        private int CalcEraseAndBlock(BlockControle ai_controle,FieldManage ai_field_manage)
+        {
+            //最後に置いたブロックの範囲で消えるライン数を調べる
+            LAST_BLOCK_INFO last_block = ai_controle.LastBlockInfo; //TODO これが更新されてない
+
+            int erase_and_block = 0;
+
+            //デバッグ用 置いたところの隙間を埋める感じ
+            for(int x = 1; x < 11; x++)
+            {
+                if(ai_field_manage.BlockField[last_block.pos.Y,x] == 0)
+                {
+                    ai_field_manage.BlockField[last_block.pos.Y,x] = (int)(last_block.type)+1 + 10;
+                }
+            }
+
+            //消えるライン数をチェック
+            int erase_line_num = ai_field_manage.CheckEraseLine();
+
+            //最後に置いたブロックがいくつ消えたか
+            int currennt_block_erase = 0;
+            int current_block_type = (int)(last_block.type) + (int)(BlockInfo.BlockType.MINO_IN_FIELD);
+
+            //位置を基準に4*4を検索して空きが無いところ
+            List<int> erase_list = ai_field_manage.EraseLine;
+
+           //消えたラインの中から最後に落としたブロックがいくつあるかを数える
+            foreach(int erase_y_pos in erase_list)
+            {
+                //壁の所は見ない
+                for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+                {
+                    //最後に設置したブロックの探索する
+                    int type = ai_field_manage.BlockField[erase_y_pos, x] % (int)(BlockInfo.BlockType.MINO_VANISH);
+                    if (type == current_block_type)
+                    {
+                        currennt_block_erase++;
+                    }
+                }
+            }
+
+            //最終的な値
+            erase_and_block = erase_line_num * currennt_block_erase;
+            return erase_and_block;
+        }
+
         /// <summary>
         /// 特徴量５　穴の数をカウント
         /// 穴・・四方を囲まれているセル
@@ -244,9 +286,8 @@ namespace tetris
         BlockInfo block_info = new BlockInfo(); //先読み用
 
         //AI用に擬似的にフィールドを操作できるようにコピー先を用意する
-        NextBlockManage AINextBlockManage = new NextBlockManage();
-        BlockControle AIBlockControle = new BlockControle();
-        FieldManage AIFieldManage = new FieldManage();
-        int[,] AIField;
+        private NextBlockManage AINextBlockManage = new NextBlockManage();
+        private BlockControle AIBlockControle = new BlockControle();
+        private FieldManage AIFieldManage = new FieldManage();
     }
 }
