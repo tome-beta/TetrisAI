@@ -19,14 +19,14 @@ namespace tetris
         //フィールドの特徴量
         public struct FeatureData
         {
-            int last_block_height;      //１．直前に置いたミノの高さ
-            int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
-            int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
-            int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
-            int hole;                   //５．穴の数
-            int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
-            int hole_on_block_total;    //７．穴の上のブロックの数の和
-            int hole_row;               //８．穴のある行数
+            public int last_block_height;      //１．直前に置いたミノの高さ
+            public int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
+            public int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
+            public int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
+            public int hole;                   //５．穴の数
+            public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
+            public int hole_on_block_total;    //７．穴の上のブロックの数の和
+            public int hole_row;               //８．穴のある行数
             //９．各列の高さの平均値
             //１０．各列の高さの標準偏差
         };
@@ -85,7 +85,12 @@ namespace tetris
                 {
                     return 0;
                 }
-                AIBlockControle.SetBlockInField(AIField);
+                 AIBlockControle.SetBlockInField(AIField);
+
+                //フィールドから特徴量を作る
+                CalcFeature(AIBlockControle, AIFieldManage,AIField);
+
+                //計算した特徴量からフィールドのスコアを求める
 
 
                 //TODO ランダムで場所をきめるため
@@ -97,9 +102,6 @@ namespace tetris
                 {
                     break;
                 }
-                //フィールドから特徴量を作る
-
-                //計算した特徴量からフィールドのスコアを求める
 
             }
 
@@ -170,11 +172,53 @@ namespace tetris
 
 
         //特徴量を計算する
-        private FeatureData CalcFeature()
+        private FeatureData CalcFeature(BlockControle ai_controle,FieldManage ai_field_manage,int[,] ai_field)
         {
             FeatureData feature_data = new FeatureData();
 
+            //特徴量１
+            feature_data.last_block_height =  CalcLastBlockHeight(ai_controle,ai_field);
+
             return feature_data;
+        }
+
+        //特徴量１：最後に置いたブロックの高さを計算
+        private int CalcLastBlockHeight(BlockControle ai_controle, int[,] ai_field)
+        {
+            int height = 0;
+
+            LAST_BLOCK_INFO last_block = ai_controle.LastBlockInfo;
+
+            //位置を基準に4*4を検索して最初に空きじゃ無いところ
+            for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
+            {
+                for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
+                {
+                        //フィールドチェック
+                        int chk_x = last_block.pos.X + x;
+                    int chk_y = last_block.pos.Y + y;
+
+                    int fence = (int)(BlockInfo.BlockType.MINO_FENCE | BlockInfo.BlockType.MINO_IN_FIELD);
+
+                    if (ai_field[chk_y,chk_x] != 0 &&
+                        ai_field[chk_y, chk_x] != fence)
+                    {
+                        //ブロック発見
+                        height = chk_y;
+                        break;
+                    }
+
+                }
+
+                if(height != 0)
+                {
+                    break;
+                }
+
+            }
+
+
+            return height;
         }
 
         /// <summary>
