@@ -173,6 +173,7 @@ namespace tetris
             //特徴量の作成
             feature_data.last_block_height =  CalcLastBlockHeight(ai_controle, ai_field_manage.BlockField);
             feature_data.eraseline_and_block = CalcEraseAndBlock(ai_controle, ai_field_manage);
+            feature_data.horizon_change =  CalcHorizonChange(ai_field_manage);
 
             return feature_data;
         }
@@ -263,12 +264,39 @@ namespace tetris
             return erase_and_block;
         }
 
-        /// <summary>
-        /// 特徴量５　穴の数をカウント
-        /// 穴・・四方を囲まれているセル
-        /// </summary>
-        /// <param name="data"></param>
-        private void CalcHole(int[,] field,ref FeatureData data)
+        //特徴量３：横方向にスキャンした時にセルの内容が変化する回数
+        private int CalcHorizonChange(FieldManage ai_field_manage)
+        {
+            int horizeon_change = 0;
+
+            for (int y = 0; y < FieldManage.FIELD_HEIGHT; y++)
+            {
+                int chk_block = ai_field_manage.BlockField[y,1];
+
+                //壁の所は見ない
+                for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+                {
+                    int now = ai_field_manage.BlockField[y, x];
+
+                    //変化があったら
+                    if((chk_block == 0 && now != 0) ||
+                       (chk_block != 0 && now == 0)
+                    )
+                    {
+                        horizeon_change++;
+                        chk_block = now;
+                    }
+                }
+            }
+
+         return horizeon_change;
+        }
+            /// <summary>
+            /// 特徴量５　穴の数をカウント
+            /// 穴・・四方を囲まれているセル
+            /// </summary>
+            /// <param name="data"></param>
+            private void CalcHole(int[,] field,ref FeatureData data)
         {
 
         }
