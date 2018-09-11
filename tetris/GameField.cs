@@ -637,7 +637,7 @@ namespace tetris
         AttackLineManage[] attackLineManage;
         FieldManage[] fieldManage;
         NextBlockManage[] nextManage;
-        EvaluateManage evaluateManage = new EvaluateManage();
+        AIManage evaluateManage = new AIManage();
             
 
         PLAYER_DEFINE playerTurn;
