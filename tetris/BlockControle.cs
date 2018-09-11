@@ -30,7 +30,7 @@ namespace tetris
             }
 
             //最後に操作したブロックの記録用
-            LastBlockInfo = new EvaluateManage.LAST_BLOCK_INFO();
+            LastBlockInfo = new EvaluateMaange.LAST_BLOCK_INFO();
             LastBlockInfo.pos = new Point();
         }
 
@@ -528,7 +528,7 @@ namespace tetris
         public bool DoHold = false;        //HOLDを実行したかどうか
         public bool BtoB = false;
 
-        public EvaluateManage.LAST_BLOCK_INFO LastBlockInfo;
+        public EvaluateMaange.LAST_BLOCK_INFO LastBlockInfo;
 
         private BlockInfo[] blockInfo;
     }
