@@ -18,25 +18,44 @@ namespace tetris
             InitializeComponent();
         }
 
-        public  void SetFeatureData(FeatureData input)
+        public  void SetFeatureData(FeatureData input,int player)
         {
-            this.feature = input;
+            if( player == 0)
+            {
+                this.feature1P = input;
+            }
+            else
+            {
+                this.feature2P = input;
+            }
         }
 
         public void UpdateDisp()
         {
-            this.textBoxFeature1.Text = this.feature.last_block_height.ToString();
-            this.textBoxFeature2.Text = this.feature.eraseline_and_block.ToString();
-            this.textBoxFeature3.Text = this.feature.horizon_change.ToString();
-            this.textBoxFeature4.Text = this.feature.veritical_change.ToString();
-            this.textBoxFeature5.Text = this.feature.hole.ToString();
-            this.textBoxFeature6.Text = this.feature.well_total.ToString();
-            this.textBoxFeature7.Text = this.feature.hole_on_block_total.ToString();
-            this.textBoxFeature8.Text = this.feature.hole_row.ToString();
+            //1P側の表示
+            this.textBox1PFeature1.Text = this.feature1P.last_block_height.ToString();
+            this.textBox1PFeature2.Text = this.feature1P.eraseline_and_block.ToString();
+            this.textBox1PFeature3.Text = this.feature1P.horizon_change.ToString();
+            this.textBox1PFeature4.Text = this.feature1P.veritical_change.ToString();
+            this.textBox1PFeature5.Text = this.feature1P.hole.ToString();
+            this.textBox1PFeature6.Text = this.feature1P.well_total.ToString();
+            this.textBox1PFeature7.Text = this.feature1P.hole_on_block_total.ToString();
+            this.textBox1PFeature8.Text = this.feature1P.hole_row.ToString();
+
+            //2P側の表示
+            this.textBox2PFeature1.Text = this.feature2P.last_block_height.ToString();
+            this.textBox2PFeature2.Text = this.feature2P.eraseline_and_block.ToString();
+            this.textBox2PFeature3.Text = this.feature2P.horizon_change.ToString();
+            this.textBox2PFeature4.Text = this.feature2P.veritical_change.ToString();
+            this.textBox2PFeature5.Text = this.feature2P.hole.ToString();
+            this.textBox2PFeature6.Text = this.feature2P.well_total.ToString();
+            this.textBox2PFeature7.Text = this.feature2P.hole_on_block_total.ToString();
+            this.textBox2PFeature8.Text = this.feature2P.hole_row.ToString();
 
         }
 
         //特徴量を受け取るため
-        FeatureData feature;
+        FeatureData feature1P;
+        FeatureData feature2P;
     }
 }
