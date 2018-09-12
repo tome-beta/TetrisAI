@@ -4,24 +4,25 @@ using System.Drawing;
 
 namespace tetris
 {
-    //特徴量の算出と盤面の評価点を出す
-    class EvaluateMaange
+    //フィールドの特徴量　外部でも扱えるように外に出しておく　微妙？
+    [Serializable]
+    public struct FeatureData
     {
-        //フィールドの特徴量
-        public struct FeatureData
-        {
-            public int last_block_height;      //１．直前に置いたミノの高さ
-            public int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
-            public int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
-            public int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
-            public int hole;                   //５．穴の数
-            public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
-            public int hole_on_block_total;    //７．穴の上のブロックの数の和
-            public int hole_row;               //８．穴のある行数
-            //９．各列の高さの平均値
-            //１０．各列の高さの標準偏差
-        };
+        public int last_block_height;      //１．直前に置いたミノの高さ
+        public int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
+        public int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
+        public int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
+        public int hole;                   //５．穴の数
+        public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
+        public int hole_on_block_total;    //７．穴の上のブロックの数の和
+        public int hole_row;               //８．穴のある行数
+                                           //９．各列の高さの平均値
+                                           //１０．各列の高さの標準偏差
+    };
 
+    //特徴量の算出と盤面の評価点を出す
+    class EvaluateManage
+    {
         //最後に操作したブロック
         [Serializable]
         public struct LAST_BLOCK_INFO
@@ -32,7 +33,7 @@ namespace tetris
         };
 
         //コンストラクタ
-        public EvaluateMaange()
+        public EvaluateManage()
         {
             LastBlockInfo = new LAST_BLOCK_INFO();
             LastBlockInfo.pos = new Point();
@@ -43,9 +44,11 @@ namespace tetris
         /// </summary>
         /// <param name="block_controle"></param>
         /// <param name="field_manage"></param>
-        public void Exec(BlockControle block_controle, FieldManage field_manage)
+        public FeatureData Exec(BlockControle block_controle, FieldManage field_manage)
         {
             FeatureData feature = CalcFeature(block_controle, field_manage);
+
+            return feature;
         }
 
         //特徴量を計算する

@@ -192,6 +192,9 @@ namespace tetris
 
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
+
+                                FeatureData data =  this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
+                                this.evaluateDispForm.SetFeatureData(data);
                             }
                         }
                     }
@@ -314,6 +317,9 @@ namespace tetris
                 DrawAttackLine(player);
 
             }
+
+            //盤面評価ウインドウの表示更新
+            evaluateDispForm.UpdateDisp();
 
 
 
@@ -621,7 +627,7 @@ namespace tetris
         private void EvaluateField()
         {
             int player = (int)playerTurn;
-            evaluateManage.EvaluateField(this.nextManage[player],
+            aiManage.EvaluateField(this.nextManage[player],
                                          this.blockControle[player],
                                          this.fieldManage[player]);
 
@@ -637,8 +643,8 @@ namespace tetris
         AttackLineManage[] attackLineManage;
         FieldManage[] fieldManage;
         NextBlockManage[] nextManage;
-        AIManage evaluateManage = new AIManage();
-            
+        AIManage aiManage = new AIManage();
+        EvaluateManage evaluateManage = new EvaluateManage();
 
         PLAYER_DEFINE playerTurn;
 
@@ -667,5 +673,12 @@ namespace tetris
         Graphics[] gAttackLine;
 
 
+        //追加ウインドウ
+        EvaluateDispForm evaluateDispForm = new EvaluateDispForm();
+
+        private void 盤面評価ウインドウToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            evaluateDispForm.Show();
+        }
     }
 }

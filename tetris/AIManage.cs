@@ -144,6 +144,6 @@ namespace tetris
         private BlockControle AIBlockControle = new BlockControle();
         private FieldManage AIFieldManage = new FieldManage();
 
-        private EvaluateMaange AIEvaluateManage = new EvaluateMaange();
+        private EvaluateManage AIEvaluateManage = new EvaluateManage();
     }
 }
