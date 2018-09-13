@@ -195,8 +195,7 @@ namespace tetris
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
 
-                                FeatureData data =  this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
-                                this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+
                             }
                         }
                     }
@@ -245,6 +244,9 @@ namespace tetris
                         this.fieldManage[player].ExecEraseLine();
 
                         this.Mode = GAME_MODE.MODE_ATTACK_BLOCK;
+
+                        FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
+                        this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
                     }
                     break;
 

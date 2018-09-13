@@ -61,6 +61,7 @@ namespace tetris
             feature_data.eraseline_and_block = CalcEraseAndBlock(block_controle, field_manage);
             feature_data.horizon_change = CalcHorizonChange(field_manage);
             feature_data.veritical_change = CalcVerticalChange(field_manage);
+            feature_data.hole = CalcHole(field_manage);
 
             return feature_data;
         }
@@ -177,7 +178,8 @@ namespace tetris
             }
             return horizeon_change;
         }
-        //特徴量３：横方向にスキャンした時にセルの内容が変化する回数
+
+        //特徴量４：横方向にスキャンした時にセルの内容が変化する回数
         private int CalcVerticalChange(FieldManage ai_field_manage)
         {
             int vertical_change = 0;
@@ -209,9 +211,39 @@ namespace tetris
         /// 穴・・四方を囲まれているセル
         /// </summary>
         /// <param name="data"></param>
-        private void CalcHole(int[,] field, ref FeatureData data)
+        private int CalcHole(FieldManage ai_field_manage)
         {
+            int hole_num = 0;
 
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                for (int y = 1; y < FieldManage.FIELD_HEIGHT - 1; y++)
+                {
+                    int now = ai_field_manage.BlockField[y, x];
+
+                    //空き空間があれば
+                    if( now == 0)
+                    {
+                        //四方が壁か置かれたブロックであるかを調べる
+                        bool chk = false;
+
+                        if( ai_field_manage.BlockField[y,x+1] >= 10 &&
+                            ai_field_manage.BlockField[y, x - 1] >= 10 &&
+                            ai_field_manage.BlockField[y - 1, x] >= 10 &&
+                            ai_field_manage.BlockField[y + 1, x] >= 10 
+                            )
+                        {
+                            chk = true;
+                        }
+                        if (chk )
+                        {
+                            hole_num++;
+                        }
+                    }
+
+                }
+            }
+                    return hole_num;
         }
 
         public LAST_BLOCK_INFO LastBlockInfo;
