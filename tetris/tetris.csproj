@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="EvaluateMaange.cs" />
     <Compile Include="FieldManage.cs" />
+    <Compile Include="GA.cs" />
     <Compile Include="GameField.cs">
       <SubType>Form</SubType>
     </Compile>
