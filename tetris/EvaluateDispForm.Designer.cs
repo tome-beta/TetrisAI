@@ -317,6 +317,7 @@
             this.Controls.Add(this.labelFeature1);
             this.Name = "EvaluateDispForm";
             this.Text = "EvaluateDispForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EvaluateDispForm_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
