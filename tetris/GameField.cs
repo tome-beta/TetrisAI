@@ -323,7 +323,10 @@ namespace tetris
             }
 
             //盤面評価ウインドウの表示更新
-            evaluateDispForm.UpdateDisp();
+            if( this.evaluateDispForm != null)
+            {
+                evaluateDispForm.UpdateDisp();
+            }
 
 
 
@@ -678,11 +681,15 @@ namespace tetris
 
 
         //追加ウインドウ
-        EvaluateDispForm evaluateDispForm = new EvaluateDispForm();
+        EvaluateDispForm evaluateDispForm;
 
         private void 盤面評価ウインドウToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            evaluateDispForm.Show();
+            if(this.evaluateDispForm == null || this.evaluateDispForm.IsDisposed)
+            {
+                evaluateDispForm = new EvaluateDispForm();
+                evaluateDispForm.Show();
+            }
         }
     }
 }

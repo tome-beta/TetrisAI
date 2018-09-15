@@ -57,5 +57,11 @@ namespace tetris
         //特徴量を受け取るため
         FeatureData feature1P;
         FeatureData feature2P;
+
+        //閉じたとき
+        private void EvaluateDispForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Dispose();
+        }
     }
 }
