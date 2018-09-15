@@ -62,6 +62,7 @@ namespace tetris
             feature_data.horizon_change = CalcHorizonChange(field_manage);
             feature_data.veritical_change = CalcVerticalChange(field_manage);
             feature_data.hole = CalcHole(field_manage);
+            feature_data.well_total =  CalcWellTotal(field_manage);
 
             return feature_data;
         }
@@ -245,6 +246,99 @@ namespace tetris
             }
                     return hole_num;
         }
+
+        /// <summary>
+        /// 特徴量６　井戸の高さの階和の総数
+        /// </summary>
+        /// <param name="ai_field_manage"></param>
+        /// <returns></returns>
+        private int CalcWellTotal(FieldManage ai_field_manage)
+        {
+            //井戸の深さ・両側との高さの差をとれば分かる
+
+            int well_total = 0;
+
+            List<int> HeightList = new List<int>();
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
+                {
+                    int now = ai_field_manage.BlockField[y, x];
+
+                    if( now != 0)
+                    {
+                        HeightList.Add(y);
+                        break;
+                    }
+                }
+            }
+
+            List<int> WellHeightList = new List<int>();
+
+            for(int i = 0; i < HeightList.Count;i++)
+            {
+                if(i == 0)
+                {
+                    //左端
+                    int diff = HeightList[i+1] - HeightList[i];
+                    if( diff < 0)
+                    {
+                        WellHeightList.Add(Math.Abs(diff));
+                    }
+                    else
+                    {
+                        WellHeightList.Add(0);
+                    }
+                }
+                else if( i == HeightList.Count-1)
+                {
+                    //右端
+                    int diff = HeightList[i - 1] - HeightList[i];
+                    if (diff < 0)
+                    {
+                        WellHeightList.Add(Math.Abs(diff));
+                    }
+                    else
+                    {
+                        WellHeightList.Add(0);
+                    }
+                }
+                else
+                {
+                    int diff1 = HeightList[i - 1] - HeightList[i];
+                    int diff2 = HeightList[i + 1] - HeightList[i];
+
+                    if (diff1 < 0 && diff2 < 0)
+                    {
+                        if( diff2 > diff1)
+                        {
+                            WellHeightList.Add(Math.Abs(diff2));
+                        }
+                        else
+                        {
+                            WellHeightList.Add(Math.Abs(diff1));
+                        }
+                    }
+                    else
+                    {
+                        WellHeightList.Add(0);
+                    }
+                }
+            }
+
+            //階和
+            foreach(int va in WellHeightList)
+            {
+                well_total += (va * (va + 1)) / 2;
+
+            }
+
+
+            return well_total;
+        }
+
+
+
 
         public LAST_BLOCK_INFO LastBlockInfo;
 

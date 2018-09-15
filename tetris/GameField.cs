@@ -246,7 +246,11 @@ namespace tetris
                         this.Mode = GAME_MODE.MODE_ATTACK_BLOCK;
 
                         FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
-                        this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+
+                        if(evaluateDispForm != null)
+                        {
+                            this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                        }
                     }
                     break;
 
