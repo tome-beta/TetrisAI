@@ -12,7 +12,7 @@ namespace tetris
         public int eraseline_and_block;    //２．消えたラインの数×ミノの中で消えたブロックの数
         public int horizon_change;         //３．横方向にスキャンした時にセルの内容が変化する回数
         public int veritical_change;       //４．縦方向にスキャンした時にセルの内容が変化する回数
-        public int hole;                   //５．穴の数
+        public int hole;                   //５．穴の数(空白の上にブロックが存在）
         public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
         public int hole_on_block_total;    //７．穴の上のブロックの数の和
         public int hole_row;               //８．穴のある行数
@@ -43,12 +43,12 @@ namespace tetris
             EvaluateWeight = new double[FEATURE_NUM];
 
             //仮設定　TODO
-            EvaluateWeight[0] = 1.0;
+            EvaluateWeight[0] = 10.0;
             EvaluateWeight[1] = 4.0;
             EvaluateWeight[2] = 2.0;
             EvaluateWeight[3] = 5.0;
-            EvaluateWeight[4] = -0.5;
-            EvaluateWeight[5] = 1.0;
+            EvaluateWeight[4] = -4.0;
+            EvaluateWeight[5] = 0.0;
             EvaluateWeight[6] = 1.0;
             EvaluateWeight[7] = 1.0;
         }
@@ -255,27 +255,23 @@ namespace tetris
 
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
-                for (int y = 1; y < FieldManage.FIELD_HEIGHT - 1; y++)
+                for (int y = FieldManage.FIELD_HEIGHT - 1; y >= 0; y--)
                 {
                     int now = ai_field_manage.BlockField[y, x];
 
                     //空き空間があれば
                     if( now == 0)
                     {
-                        //四方が壁か置かれたブロックであるかを調べる
-                        bool chk = false;
-
-                        if( ai_field_manage.BlockField[y,x+1] >= 10 &&
-                            ai_field_manage.BlockField[y, x - 1] >= 10 &&
-                            ai_field_manage.BlockField[y - 1, x] >= 10 &&
-                            ai_field_manage.BlockField[y + 1, x] >= 10 
-                            )
+                        //空きの上部を探索してブロックがあれば穴とする
+                        for(int chk_y = y; chk_y >= 0; chk_y--)
                         {
-                            chk = true;
-                        }
-                        if (chk )
-                        {
-                            hole_num++;
+                            int chk = ai_field_manage.BlockField[chk_y, x];
+                            if (chk != 0)
+                            {
+                                hole_num++;
+                                y = chk_y;//チェック場所を更新
+                                break;
+                            }
                         }
                     }
 
