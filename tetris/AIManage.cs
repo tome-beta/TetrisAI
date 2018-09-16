@@ -57,7 +57,7 @@ namespace tetris
                  AIBlockControle.SetBlockInField(AIFieldManage.BlockField);
 
                 //フィールドから特徴量を作る
-                AIEvaluateManage.Exec(AIBlockControle, AIFieldManage);
+                AIEvaluateManage.Exec(AIBlockControle, AIFieldManage,ref score);
 
                 //計算した特徴量からフィールドのスコアを求める
 

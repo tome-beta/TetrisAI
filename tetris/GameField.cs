@@ -164,8 +164,13 @@ namespace tetris
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                             this.blockControle[player].SetBlockInField(field);
 
-                            FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
-                            this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                            int score = 0;
+                            FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player],ref score);
+                            if (evaluateDispForm != null)
+                            {
+                                this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                                this.evaluateDispForm.SetScore(score, (int)playerTurn);
+                            }
                         }
                         else
                         {
@@ -195,7 +200,14 @@ namespace tetris
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
 
+                                int score = 0;
+                                FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
 
+                                if (evaluateDispForm != null)
+                                {
+                                    this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                                    this.evaluateDispForm.SetScore(score, (int)playerTurn);
+                                }
                             }
                         }
                     }
@@ -245,12 +257,6 @@ namespace tetris
 
                         this.Mode = GAME_MODE.MODE_ATTACK_BLOCK;
 
-                        FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player]);
-
-                        if(evaluateDispForm != null)
-                        {
-                            this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
-                        }
                     }
                     break;
 

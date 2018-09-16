@@ -54,6 +54,9 @@
             this.textBox2PFeature3 = new System.Windows.Forms.TextBox();
             this.textBox2PFeature2 = new System.Windows.Forms.TextBox();
             this.textBox2PFeature1 = new System.Windows.Forms.TextBox();
+            this.labelScore = new System.Windows.Forms.Label();
+            this.textBox1PScore = new System.Windows.Forms.TextBox();
+            this.textBox2PScore = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelFeature1
@@ -284,11 +287,40 @@
             this.textBox2PFeature1.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature1.TabIndex = 18;
             // 
+            // labelScore
+            // 
+            this.labelScore.AutoSize = true;
+            this.labelScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelScore.Location = new System.Drawing.Point(23, 435);
+            this.labelScore.Name = "labelScore";
+            this.labelScore.Size = new System.Drawing.Size(69, 28);
+            this.labelScore.TabIndex = 26;
+            this.labelScore.Text = "スコア";
+            // 
+            // textBox1PScore
+            // 
+            this.textBox1PScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox1PScore.Location = new System.Drawing.Point(575, 427);
+            this.textBox1PScore.Name = "textBox1PScore";
+            this.textBox1PScore.Size = new System.Drawing.Size(100, 36);
+            this.textBox1PScore.TabIndex = 27;
+            // 
+            // textBox2PScore
+            // 
+            this.textBox2PScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox2PScore.Location = new System.Drawing.Point(725, 427);
+            this.textBox2PScore.Name = "textBox2PScore";
+            this.textBox2PScore.Size = new System.Drawing.Size(100, 36);
+            this.textBox2PScore.TabIndex = 28;
+            // 
             // EvaluateDispForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 450);
+            this.ClientSize = new System.Drawing.Size(964, 519);
+            this.Controls.Add(this.textBox2PScore);
+            this.Controls.Add(this.textBox1PScore);
+            this.Controls.Add(this.labelScore);
             this.Controls.Add(this.textBox2PFeature8);
             this.Controls.Add(this.textBox2PFeature7);
             this.Controls.Add(this.textBox2PFeature6);
@@ -351,5 +383,8 @@
         private System.Windows.Forms.TextBox textBox2PFeature3;
         private System.Windows.Forms.TextBox textBox2PFeature2;
         private System.Windows.Forms.TextBox textBox2PFeature1;
+        private System.Windows.Forms.Label labelScore;
+        private System.Windows.Forms.TextBox textBox1PScore;
+        private System.Windows.Forms.TextBox textBox2PScore;
     }
 }

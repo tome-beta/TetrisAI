@@ -30,6 +30,20 @@ namespace tetris
             }
         }
 
+        //盤面評価スコアを設定
+        public void SetScore(int input, int player)
+        {
+            if (player == 0)
+            {
+                this.Score1P = input;
+            }
+            else
+            {
+                this.Score2P = input;
+            }
+        }
+
+
         public void UpdateDisp()
         {
             //1P側の表示
@@ -42,6 +56,8 @@ namespace tetris
             this.textBox1PFeature7.Text = this.feature1P.hole_on_block_total.ToString();
             this.textBox1PFeature8.Text = this.feature1P.hole_row.ToString();
 
+            this.textBox1PScore.Text = this.Score1P.ToString();
+
             //2P側の表示
             this.textBox2PFeature1.Text = this.feature2P.last_block_height.ToString();
             this.textBox2PFeature2.Text = this.feature2P.eraseline_and_block.ToString();
@@ -52,11 +68,14 @@ namespace tetris
             this.textBox2PFeature7.Text = this.feature2P.hole_on_block_total.ToString();
             this.textBox2PFeature8.Text = this.feature2P.hole_row.ToString();
 
+            this.textBox2PScore.Text = this.Score2P.ToString();
         }
 
         //特徴量を受け取るため
         FeatureData feature1P;
         FeatureData feature2P;
+        int Score1P;
+        int Score2P;
 
         //閉じたとき
         private void EvaluateDispForm_FormClosed(object sender, FormClosedEventArgs e)
