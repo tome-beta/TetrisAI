@@ -161,16 +161,7 @@ namespace tetris
             LAST_BLOCK_INFO last_block = ai_controle.LastBlockInfo; //TODO これが更新されてない
 
             int erase_and_block = 0;
-            /*
-                        //デバッグ用 置いたところの隙間を埋める感じ
-                        for(int x = 1; x < 11; x++)
-                        {
-                            if(ai_field_manage.BlockField[last_block.pos.Y,x] == 0)
-                            {
-                                ai_field_manage.BlockField[last_block.pos.Y,x] = (int)(last_block.type)+1 + 10;
-                            }
-                        }
-            */
+
             //消えるライン数をチェック
             int erase_line_num = ai_field_manage.CheckEraseLine();
 
@@ -260,41 +251,13 @@ namespace tetris
         /// 穴・空白の上がブロックで埋まっている箇所
         /// </summary>
         /// <param name="data"></param>
-        private int CalcHole(FieldManage ai_field_manage)
+        private int CalcHole(FieldManage field_manage)
         {
             int hole_num = 0;
 
-            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
-            {
-                for (int y = FieldManage.FIELD_HEIGHT - 1; y >= 0; y--)
-                {
-                    int now = ai_field_manage.BlockField[y, x];
+            List<int[]> PosList = SearchHole(field_manage);
 
-                    //空き空間があれば
-                    if( now == 0)
-                    {
-                        //空きの上部を探索してブロックがあれば穴とする
-                        for(int chk_y = y; chk_y >= 0; chk_y--)
-                        {
-                            int chk = ai_field_manage.BlockField[chk_y, x];
-                            if (chk != 0)
-                            {
-                                //このとき左右が空間でないこと
-                                int chk2 = ai_field_manage.BlockField[y, x-1];
-                                int chk3 = ai_field_manage.BlockField[y, x+1];
-
-                                if( chk2 != 0  && chk3 != 0)
-                                {
-                                    hole_num++;
-                                    y = chk_y;//チェック場所を更新
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
+            hole_num = PosList.Count;
             return hole_num;
         }
 
@@ -421,40 +384,8 @@ namespace tetris
         /// <returns></returns>
         private int CalcHoleOnBlock(FieldManage field_manage)
         {
-            List<int[]> PosList = new List<int[]>();
-            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
-            {
-                for (int y = FieldManage.FIELD_HEIGHT - 1; y >= 0; y--)
-                {
-                    int now = field_manage.BlockField[y, x];
+            List<int[]> PosList = SearchHole(field_manage);
 
-                    //空き空間があれば
-                    if (now == 0)
-                    {
-                        //空きの上部を探索してブロックがあれば穴とする
-                        for (int chk_y = y; chk_y >= 0; chk_y--)
-                        {
-                            int chk = field_manage.BlockField[chk_y, x];
-                            if (chk != 0)
-                            {
-                                //このとき左右が空間でないこと
-                                int chk2 = field_manage.BlockField[y, x - 1];
-                                int chk3 = field_manage.BlockField[y, x + 1];
-
-                                if (chk2 != 0 && chk3 != 0)
-                                {
-                                    //穴の座標を記録
-                                    int[] pos = { x, y };
-                                    PosList.Add(pos);
-                                    y = chk_y;//チェック場所を更新
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
             int total = 0;
             //穴の上のブロックを検索
             foreach (int[] pos in PosList)
@@ -489,6 +420,31 @@ namespace tetris
         private int CalcHoleRow(FieldManage field_manage)
         {
             int total = 0;
+            List<int[]>PosList = SearchHole(field_manage);
+
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                foreach(int[] pos in PosList)
+                {
+                    //行数一致
+                    if( x == pos[0])
+                    {
+                        total++;
+                        break;
+                    }
+                }
+            }
+
+            return total;
+        }
+
+        /// <summary>
+        /// 穴のある座標を取得
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        private List<int[]> SearchHole(FieldManage field_manage)
+        {
             List<int[]> PosList = new List<int[]>();
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
@@ -520,12 +476,13 @@ namespace tetris
                             }
                         }
                     }
+
                 }
             }
-            total = PosList.Count;
 
-            return total;
+            return PosList;
         }
+
 
         public LAST_BLOCK_INFO LastBlockInfo;
         private double[] EvaluateWeight;
