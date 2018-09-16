@@ -102,6 +102,9 @@ namespace tetris
             feature_data.hole = CalcHole(field_manage);
             feature_data.well_total =  CalcWellTotal(field_manage);
             feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage);
+            feature_data.hole_row = CalcHoleRow(field_manage);
+
+
             return feature_data;
         }
 
@@ -277,8 +280,8 @@ namespace tetris
                             if (chk != 0)
                             {
                                 //このとき左右が空間でないこと
-                                int chk2 = ai_field_manage.BlockField[chk_y, x-1];
-                                int chk3 = ai_field_manage.BlockField[chk_y, x+1];
+                                int chk2 = ai_field_manage.BlockField[y, x-1];
+                                int chk3 = ai_field_manage.BlockField[y, x+1];
 
                                 if( chk2 != 0  && chk3 != 0)
                                 {
@@ -434,16 +437,16 @@ namespace tetris
                             int chk = field_manage.BlockField[chk_y, x];
                             if (chk != 0)
                             {
-                                y = chk_y;//チェック場所を更新
                                 //このとき左右が空間でないこと
-                                int chk2 = field_manage.BlockField[chk_y, x - 1];
-                                int chk3 = field_manage.BlockField[chk_y, x + 1];
+                                int chk2 = field_manage.BlockField[y, x - 1];
+                                int chk3 = field_manage.BlockField[y, x + 1];
 
                                 if (chk2 != 0 && chk3 != 0)
                                 {
                                     //穴の座標を記録
                                     int[] pos = { x, y };
                                     PosList.Add(pos);
+                                    y = chk_y;//チェック場所を更新
                                     break;
                                 }
                             }
@@ -459,13 +462,16 @@ namespace tetris
                 int start_x = pos[0];
                 int start_y = pos[1];
 
-                for (int y = start_y; y >= 0; y--)
+                for (int y = start_y-1; y >= 0; y--)
                 {
                     int chk = field_manage.BlockField[y, start_x];
 
                     if( chk != 0)
                     {
                         total++;
+                    }
+                    else
+                    {
                         break;
                     }
                 }
@@ -475,6 +481,51 @@ namespace tetris
             return total;
         }
 
+        /// <summary>
+        /// 特徴量８　穴のある行数
+        /// </summary>
+        /// <param name="field_manage"></param>
+        /// <returns></returns>
+        private int CalcHoleRow(FieldManage field_manage)
+        {
+            int total = 0;
+            List<int[]> PosList = new List<int[]>();
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                for (int y = FieldManage.FIELD_HEIGHT - 1; y >= 0; y--)
+                {
+                    int now = field_manage.BlockField[y, x];
+
+                    //空き空間があれば
+                    if (now == 0)
+                    {
+                        //空きの上部を探索してブロックがあれば穴とする
+                        for (int chk_y = y; chk_y >= 0; chk_y--)
+                        {
+                            int chk = field_manage.BlockField[chk_y, x];
+                            if (chk != 0)
+                            {
+                                //このとき左右が空間でないこと
+                                int chk2 = field_manage.BlockField[y, x - 1];
+                                int chk3 = field_manage.BlockField[y, x + 1];
+
+                                if (chk2 != 0 && chk3 != 0)
+                                {
+                                    //穴の座標を記録
+                                    int[] pos = { x, y };
+                                    PosList.Add(pos);
+                                    y = chk_y;//チェック場所を更新
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            total = PosList.Count;
+
+            return total;
+        }
 
         public LAST_BLOCK_INFO LastBlockInfo;
         private double[] EvaluateWeight;
