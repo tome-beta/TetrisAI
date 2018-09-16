@@ -42,13 +42,14 @@ namespace tetris
 
             EvaluateWeight = new double[FEATURE_NUM];
 
+
             //仮設定　TODO
             EvaluateWeight[0] = 10.0;
             EvaluateWeight[1] = 4.0;
             EvaluateWeight[2] = 2.0;
             EvaluateWeight[3] = 5.0;
-            EvaluateWeight[4] = -4.0;
-            EvaluateWeight[5] = 0.0;
+            EvaluateWeight[4] = -10.0;
+            EvaluateWeight[5] = 0.1;
             EvaluateWeight[6] = 1.0;
             EvaluateWeight[7] = 1.0;
         }
@@ -246,7 +247,7 @@ namespace tetris
 
         /// <summary>
         /// 特徴量５　穴の数をカウント
-        /// 穴・・四方を囲まれているセル
+        /// 穴・空白の上がブロックで埋まっている箇所
         /// </summary>
         /// <param name="data"></param>
         private int CalcHole(FieldManage ai_field_manage)
@@ -294,76 +295,102 @@ namespace tetris
             List<int> HeightList = new List<int>();
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
+                bool well = false;
+                int height = 0;
                 for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
                 {
                     int now = ai_field_manage.BlockField[y, x];
 
-                    if( now != 0)
+                    if (x == 1)
                     {
-                        HeightList.Add(y);
-                        break;
-                    }
-                }
-            }
+                        //左端
+                        int chk = ai_field_manage.BlockField[y, x + 1];
 
-            List<int> WellHeightList = new List<int>();
-
-            for(int i = 0; i < HeightList.Count;i++)
-            {
-                if(i == 0)
-                {
-                    //左端
-                    int diff = HeightList[i+1] - HeightList[i];
-                    if( diff < 0)
-                    {
-                        WellHeightList.Add(Math.Abs(diff));
-                    }
-                    else
-                    {
-                        WellHeightList.Add(0);
-                    }
-                }
-                else if( i == HeightList.Count-1)
-                {
-                    //右端
-                    int diff = HeightList[i - 1] - HeightList[i];
-                    if (diff < 0)
-                    {
-                        WellHeightList.Add(Math.Abs(diff));
-                    }
-                    else
-                    {
-                        WellHeightList.Add(0);
-                    }
-                }
-                else
-                {
-                    int diff1 = HeightList[i - 1] - HeightList[i];
-                    int diff2 = HeightList[i + 1] - HeightList[i];
-
-                    if (diff1 < 0 && diff2 < 0)
-                    {
-                        if( diff2 > diff1)
+                        if (!well)
                         {
-                            WellHeightList.Add(Math.Abs(diff2));
+                            //井戸かどうかを調べる
+                            if (now == 0 && chk != 0)
+                            {
+                                well = true;
+                            }
+                            if( now != 0)
+                            {
+                                //ブロックが見つかったら終わり
+                                break;
+                            }
                         }
                         else
                         {
-                            WellHeightList.Add(Math.Abs(diff1));
+                            //井戸の深さを調べる
+                            height++;
+                            if (now != 0 || chk == 0)
+                            {
+                                HeightList.Add(height);
+                                break;
+                            }
+                        }
+
+                    }
+                    else if (x == FieldManage.FIELD_HEIGHT - 1)
+                    {
+                        //右端
+                        int chk = ai_field_manage.BlockField[y, x - 1];
+                        if (!well)
+                        {
+                            if (now == 0 && chk != 0)
+                            {
+                                well = true;
+                            }
+                            if (now != 0)
+                            {
+                                //ブロックが見つかったら終わり
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            height++;
+                            if (now != 0 || chk == 0)
+                            {
+                                HeightList.Add(height);
+                                break;
+                            }
                         }
                     }
                     else
                     {
-                        WellHeightList.Add(0);
+                        //右端
+                        int chk1 = ai_field_manage.BlockField[y, x - 1];
+                        int chk2 = ai_field_manage.BlockField[y, x + 1];
+                        if (!well)
+                        {
+                            if (now == 0 && chk1 != 0 && chk2 != 0)
+                            {
+                                well = true;
+                            }
+                            if (now != 0)
+                            {
+                                //ブロックが見つかったら終わり
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            height++;
+                            if (now != 0 || chk1 == 0 || chk2 == 0)
+                            {
+                                HeightList.Add(height);
+                                break;
+                            }
+                        }
                     }
                 }
             }
 
             //階和
-            foreach(int va in WellHeightList)
+            foreach(int va in HeightList)
             {
                 well_total += (va * (va + 1)) / 2;
-
             }
 
 
