@@ -44,10 +44,10 @@ namespace tetris
 
             //仮設定　TODO
             EvaluateWeight[0] = 1.0;
-            EvaluateWeight[1] = 1.0;
-            EvaluateWeight[2] = 1.0;
-            EvaluateWeight[3] = 1.0;
-            EvaluateWeight[4] = 1.0;
+            EvaluateWeight[1] = 4.0;
+            EvaluateWeight[2] = 2.0;
+            EvaluateWeight[3] = 5.0;
+            EvaluateWeight[4] = -0.5;
             EvaluateWeight[5] = 1.0;
             EvaluateWeight[6] = 1.0;
             EvaluateWeight[7] = 1.0;

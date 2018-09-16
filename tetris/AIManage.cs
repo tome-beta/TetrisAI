@@ -19,7 +19,7 @@ namespace tetris
                                 FieldManage field_manage)
         {
             int score = 0;
-
+            int max_score = 0;
             //TOD 整頓必須
 
             //インスタンスをコピー
@@ -60,17 +60,14 @@ namespace tetris
                 AIEvaluateManage.Exec(AIBlockControle, AIFieldManage,ref score);
 
                 //計算した特徴量からフィールドのスコアを求める
-
-
-                //TODO ランダムで場所をきめるため
-                block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
-                block_ctrl.CurrentPos.X = info.x;
-                block_ctrl.CurrentPos.Y = info.y;
-
-                if (Common.MyRandom.Next(10) == 0)
+                if( max_score < score)
                 {
-                    break;
+                    max_score = score;
+                    block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
+                    block_ctrl.CurrentPos.X = info.x;
+                    block_ctrl.CurrentPos.Y = info.y;
                 }
+
 
             }
             return score;
