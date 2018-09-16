@@ -23,6 +23,8 @@ namespace tetris
     //特徴量の算出と盤面の評価点を出す
     class EvaluateManage
     {
+        public readonly int FEATURE_NUM = 8;
+
         //最後に操作したブロック
         [Serializable]
         public struct LAST_BLOCK_INFO
@@ -37,6 +39,18 @@ namespace tetris
         {
             LastBlockInfo = new LAST_BLOCK_INFO();
             LastBlockInfo.pos = new Point();
+
+            EvaluateWeight = new double[FEATURE_NUM];
+
+            //仮設定　TODO
+            EvaluateWeight[0] = 1.0;
+            EvaluateWeight[1] = 1.0;
+            EvaluateWeight[2] = 1.0;
+            EvaluateWeight[3] = 1.0;
+            EvaluateWeight[4] = 1.0;
+            EvaluateWeight[5] = 1.0;
+            EvaluateWeight[6] = 1.0;
+            EvaluateWeight[7] = 1.0;
         }
 
         /// <summary>
@@ -44,11 +58,34 @@ namespace tetris
         /// </summary>
         /// <param name="block_controle"></param>
         /// <param name="field_manage"></param>
-        public FeatureData Exec(BlockControle block_controle, FieldManage field_manage)
+        public FeatureData Exec(BlockControle block_controle, FieldManage field_manage,ref int score)
         {
             FeatureData feature = CalcFeature(block_controle, field_manage);
 
+            score = CalcScore(feature, this.EvaluateWeight);
+
             return feature;
+        }
+
+        /// <summary>
+        /// 盤面の評価点を求める
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private int CalcScore(FeatureData data,double[] weight_data)
+        {
+            int score = 0;
+
+            score += (int)(data.last_block_height * weight_data[0]);
+            score += (int)(data.eraseline_and_block * weight_data[1]);
+            score += (int)(data.horizon_change * weight_data[2]);
+            score += (int)(data.veritical_change * weight_data[3]);
+            score += (int)(data.hole * weight_data[4]);
+            score += (int)(data.well_total * weight_data[5]);
+            score += (int)(data.hole_on_block_total * weight_data[6]);
+            score += (int)(data.hole_row * weight_data[7]);
+
+            return score;
         }
 
         //特徴量を計算する
@@ -341,6 +378,6 @@ namespace tetris
 
 
         public LAST_BLOCK_INFO LastBlockInfo;
-
+        private double[] EvaluateWeight;
     }
 }
