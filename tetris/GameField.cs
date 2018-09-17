@@ -47,6 +47,7 @@ namespace tetris
         {
             InitializeComponent();
 
+            Common.MyRandom = new Random((int)DateTime.Now.Ticks);
             fps = 0;
             Init();
         }
