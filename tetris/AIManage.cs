@@ -7,6 +7,16 @@ namespace tetris
     //  AIの動作を管理
     class AIManage
     {
+        //学習に使う設定
+        public struct EvaluateSetting
+        {
+            public int ExecNum;            //繰り返し回数
+            public int EvaluateScore;      //評価点
+            public int AverageScore;       //平均点
+            public int EndConditionsBlock; //終了ブロック数　これだけ落としたら止める。
+        };
+
+
         /// <summary>
         //フィールドを評価して点数をつける関数
         /// </summary>

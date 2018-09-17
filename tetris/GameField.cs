@@ -288,6 +288,21 @@ namespace tetris
                         messageControle[player].SetMessage(@"Press F1 key to start", false);
                         this.Mode = GAME_MODE.MODE_WAIT;
                         GameOverFlag = true;
+
+                        //AI学習モード
+                        if(this.AILearningMode == true)
+                        {
+                            if( this.evaluateSetting.ExecNum > 0)
+                            {
+                                this.evaluateSetting.ExecNum--;
+                                //TODO スコアの集計
+
+                                //繰り返し
+                                this.GameStart = true;
+                                this.Mode = GAME_MODE.MODE_WAIT;
+                            }
+                        }
+
                     }
                     break;
                 default:
@@ -629,6 +644,9 @@ namespace tetris
                 //TODO ２プレイヤーをAIプレイヤーにしておく
                 this.PlayerAI[0] = false;
                 this.PlayerAI[1] = true;
+
+                //学習セッティング
+                evaluateSetting.ExecNum = 0;
             }
             else if(MenuItemVS.Checked)
             {
@@ -636,12 +654,16 @@ namespace tetris
                 //TODO ２プレイヤーをAIプレイヤーにしておく
                 this.PlayerAI[0] = false;
                 this.PlayerAI[1] = true;
+
+                //学習セッティング
+                evaluateSetting.ExecNum = 0;
             }
             else if( MenuItemComOnly.Checked)
             {
                 player_select = (int)PLAY_MODE.ONLY_1P;
                 this.PlayerAI[0] = true;
                 this.PlayerAI[1] = true;
+
             }
         }
 
@@ -651,6 +673,8 @@ namespace tetris
            this.MenuItem1Ponly.Checked = true;
            this.MenuItemVS.Checked = false;
             this.MenuItemComOnly.Checked = false;
+
+            this.AILearningMode = false;
         }
 
         //メニューからVSを選択
@@ -659,6 +683,8 @@ namespace tetris
             this.MenuItem1Ponly.Checked = false;
             this.MenuItemVS.Checked = true;
             this.MenuItemComOnly.Checked = false;
+
+            this.AILearningMode = false;
         }
 
         //メニューからCOMONLYを選択
@@ -668,7 +694,21 @@ namespace tetris
             this.MenuItemVS.Checked = false;
             this.MenuItemComOnly.Checked = true;
 
+            this.AILearningMode = true;
+
+            SettingLearn();
         }
+
+        //学習設定
+        private void SettingLearn()
+        {
+            //学習設定
+            evaluateSetting.ExecNum = 5;
+            evaluateSetting.EvaluateScore = 0;
+            evaluateSetting.AverageScore = 0;
+            evaluateSetting.EndConditionsBlock = 1000;
+        }
+
 
         /// <summary>
         /// AIによるフィールドの評価
@@ -694,15 +734,16 @@ namespace tetris
         NextBlockManage[] nextManage;
         AIManage aiManage = new AIManage();
         EvaluateManage evaluateManage = new EvaluateManage();
+        AIManage.EvaluateSetting evaluateSetting = new AIManage.EvaluateSetting();
 
         PLAYER_DEFINE playerTurn;
 
-        //一人プレイかどうか
+        //一人プレーか二人プレーがどうか
         private int player_select = 0;
 
         private bool GameOverFlag = false;
         private bool[] PlayerAI = new bool[(int)PLAYER_DEFINE.PLAYER_NUM];
-
+        private bool AILearningMode = false;
 
         //キー入力持ち
         private bool HardDrop = false;
