@@ -23,12 +23,11 @@ namespace tetris
             PLAYER_NUM = 2,
         };
 
+        //１プレイヤーか２プレイヤーか
         enum PLAY_MODE
         {
             ONLY_1P = 0,    //１P
-            VS_AI = 1,      //AIとの対戦
-            AI_ONLY = 2,    //AIだけで動かす時　仮
-
+            VS = 1,      //対戦
         };
 
         enum GAME_MODE
@@ -80,9 +79,6 @@ namespace tetris
 
             Mode = GAME_MODE.MODE_WAIT;
 
-            //TODO ２プレイヤーをAIプレイヤーにしておく
-            this.PlayerAI[0] = false;
-            this.PlayerAI[1] = true;
         }
 
 
@@ -630,10 +626,22 @@ namespace tetris
             if(MenuItem1Ponly.Checked)
             {
                 player_select = (int)PLAY_MODE.ONLY_1P;
+                //TODO ２プレイヤーをAIプレイヤーにしておく
+                this.PlayerAI[0] = false;
+                this.PlayerAI[1] = true;
             }
             else if(MenuItemVS.Checked)
             {
-                player_select = (int)PLAY_MODE.VS_AI;
+                player_select = (int)PLAY_MODE.VS;
+                //TODO ２プレイヤーをAIプレイヤーにしておく
+                this.PlayerAI[0] = false;
+                this.PlayerAI[1] = true;
+            }
+            else if( MenuItemComOnly.Checked)
+            {
+                player_select = (int)PLAY_MODE.ONLY_1P;
+                this.PlayerAI[0] = true;
+                this.PlayerAI[1] = true;
             }
         }
 
@@ -642,6 +650,7 @@ namespace tetris
         {
            this.MenuItem1Ponly.Checked = true;
            this.MenuItemVS.Checked = false;
+            this.MenuItemComOnly.Checked = false;
         }
 
         //メニューからVSを選択
@@ -649,6 +658,16 @@ namespace tetris
         {
             this.MenuItem1Ponly.Checked = false;
             this.MenuItemVS.Checked = true;
+            this.MenuItemComOnly.Checked = false;
+        }
+
+        //メニューからCOMONLYを選択
+        private void MenuItemComOnly_Click(object sender, EventArgs e)
+        {
+            this.MenuItem1Ponly.Checked = false;
+            this.MenuItemVS.Checked = false;
+            this.MenuItemComOnly.Checked = true;
+
         }
 
         /// <summary>
@@ -714,5 +733,7 @@ namespace tetris
                 evaluateDispForm.Show();
             }
         }
+
+
     }
 }

@@ -66,6 +66,7 @@
             this.MenuItemVS = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.盤面評価ウインドウToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItemComOnly = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
@@ -426,7 +427,8 @@
             // 
             this.MenuPlayMode.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem1Ponly,
-            this.MenuItemVS});
+            this.MenuItemVS,
+            this.MenuItemComOnly});
             this.MenuPlayMode.Name = "MenuPlayMode";
             this.MenuPlayMode.Size = new System.Drawing.Size(98, 27);
             this.MenuPlayMode.Text = "play mode";
@@ -436,14 +438,14 @@
             this.MenuItem1Ponly.Checked = true;
             this.MenuItem1Ponly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem1Ponly.Name = "MenuItem1Ponly";
-            this.MenuItem1Ponly.Size = new System.Drawing.Size(133, 28);
+            this.MenuItem1Ponly.Size = new System.Drawing.Size(180, 28);
             this.MenuItem1Ponly.Text = "1P only";
             this.MenuItem1Ponly.Click += new System.EventHandler(this.MenuItem1Ponly_Click);
             // 
             // MenuItemVS
             // 
             this.MenuItemVS.Name = "MenuItemVS";
-            this.MenuItemVS.Size = new System.Drawing.Size(133, 28);
+            this.MenuItemVS.Size = new System.Drawing.Size(180, 28);
             this.MenuItemVS.Text = "VS ";
             this.MenuItemVS.Click += new System.EventHandler(this.MenuItemVS_Click);
             // 
@@ -461,6 +463,13 @@
             this.盤面評価ウインドウToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
             this.盤面評価ウインドウToolStripMenuItem.Text = "盤面評価ウインドウ";
             this.盤面評価ウインドウToolStripMenuItem.Click += new System.EventHandler(this.盤面評価ウインドウToolStripMenuItem_Click);
+            // 
+            // MenuItemComOnly
+            // 
+            this.MenuItemComOnly.Name = "MenuItemComOnly";
+            this.MenuItemComOnly.Size = new System.Drawing.Size(180, 28);
+            this.MenuItemComOnly.Text = "COM only";
+            this.MenuItemComOnly.Click += new System.EventHandler(this.MenuItemComOnly_Click);
             // 
             // GameField
             // 
@@ -560,5 +569,6 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItemVS;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 盤面評価ウインドウToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MenuItemComOnly;
     }
 }
