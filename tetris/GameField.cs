@@ -97,6 +97,9 @@ namespace tetris
                     {
                         if(this.GameStart)
                         {
+                            //メニューで選択してるモードのチェック
+                            ChkMenuPlayMode();
+
                             //フィールドの初期化をする
                             BlockFieldInit();
                             this.GameStart = false;
@@ -622,18 +625,28 @@ namespace tetris
             }
         }
 
+        private void ChkMenuPlayMode()
+        {
+            if(MenuItem1Ponly.Checked)
+            {
+                player_select = (int)PLAY_MODE.ONLY_1P;
+            }
+            else if(MenuItemVS.Checked)
+            {
+                player_select = (int)PLAY_MODE.VS_AI;
+            }
+        }
+
         //メニューから１Pを選択
         private void MenuItem1Ponly_Click(object sender, EventArgs e)
         {
-            player_select = (int)PLAY_MODE.ONLY_1P;
-            this.MenuItem1Ponly.Checked = true;
-            this.MenuItemVS.Checked = false;
+           this.MenuItem1Ponly.Checked = true;
+           this.MenuItemVS.Checked = false;
         }
 
         //メニューからVSを選択
         private void MenuItemVS_Click(object sender, EventArgs e)
         {
-            player_select = (int)PLAY_MODE.VS_AI;
             this.MenuItem1Ponly.Checked = false;
             this.MenuItemVS.Checked = true;
         }
