@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace tetris
 {
+
     //フィールドの特徴量　外部でも扱えるように外に出しておく　微妙？
     [Serializable]
     public struct FeatureData
@@ -52,6 +54,23 @@ namespace tetris
             EvaluateWeight[5] = 0.1;
             EvaluateWeight[6] = 1.0;
             EvaluateWeight[7] = 1.0;
+        }
+
+        /// <summary>
+        /// 重み付け設定
+        /// </summary>
+        /// <param name="weight"></param>
+        public void SetWeightData(int[] weight)
+        {
+            if( weight.Length >= FEATURE_NUM)
+            {
+                Debug.Assert(false);
+            }
+
+            for (int i = 0; i < FEATURE_NUM; i++)
+            {
+                this.EvaluateWeight[i] = weight[i];
+            }
         }
 
         /// <summary>

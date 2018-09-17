@@ -292,14 +292,43 @@ namespace tetris
                         //AI学習モード
                         if(this.AILearningMode == true)
                         {
-                            if( this.evaluateSetting.ExecNum > 0)
+                            this.LearningSetting[this.LearningTypeCount].ExecNum--;
+
+                            if ( this.LearningSetting[this.LearningTypeCount].ExecNum > 0)
                             {
-                                this.evaluateSetting.ExecNum--;
                                 //TODO スコアの集計
+
 
                                 //繰り返し
                                 this.GameStart = true;
                                 this.Mode = GAME_MODE.MODE_WAIT;
+                            }
+                            else
+                            {
+                                //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
+                                this.LearningTypeCount++;
+
+                                //4タイプの評価が終わったら
+                                if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
+                                {
+                                    //GAによって重みの平均スコアによる更新評価
+                                    //世代数をチェックしておわるかどうか決める
+                                    //if 世代数が終わっていない
+                                    this.LearningTypeCount = 0;
+
+                                    //学習初期化
+                                    SettingLearn();
+                                    //if世代数が終わった
+                                    //学習終わり
+                                }
+                                else
+                                {
+                                    //次のタイプで繰り返し
+                                    //重みをGAから取得して実行開始
+                                    //繰り返し
+                                    this.GameStart = true;
+                                    this.Mode = GAME_MODE.MODE_WAIT;
+                                }
                             }
                         }
 
@@ -510,6 +539,13 @@ namespace tetris
             messageControle[p2].Message = this.labelMessage2P;
             messageControle[p2].SetMessage(@"Press F1 key to start", false);
 
+            //学習パラメータ
+            this.LearningSetting = new AIManage.LearningSetting[AIManage.LEARNING_TYPE_NUM];
+            for(int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
+            {
+                this.LearningSetting[i] = new AIManage.LearningSetting();
+            }
+            LearningTypeCount = 0;
         }
 
         private void CreateImageObject()
@@ -645,8 +681,6 @@ namespace tetris
                 this.PlayerAI[0] = false;
                 this.PlayerAI[1] = true;
 
-                //学習セッティング
-                evaluateSetting.ExecNum = 0;
             }
             else if(MenuItemVS.Checked)
             {
@@ -654,9 +688,6 @@ namespace tetris
                 //TODO ２プレイヤーをAIプレイヤーにしておく
                 this.PlayerAI[0] = false;
                 this.PlayerAI[1] = true;
-
-                //学習セッティング
-                evaluateSetting.ExecNum = 0;
             }
             else if( MenuItemComOnly.Checked)
             {
@@ -702,11 +733,17 @@ namespace tetris
         //学習設定
         private void SettingLearn()
         {
-            //学習設定
-            evaluateSetting.ExecNum = 5;
-            evaluateSetting.EvaluateScore = 0;
-            evaluateSetting.AverageScore = 0;
-            evaluateSetting.EndConditionsBlock = 1000;
+            for(int i = 0; i < AIManage.LEARNING_TYPE_NUM;i++)
+            {
+                //学習設定
+                LearningSetting[i].ExecNum = 5;
+                LearningSetting[i].EvaluateScore = 0;
+                LearningSetting[i].AverageScore = 0;
+                LearningSetting[i].EndConditionsBlock = 1000;
+            }
+
+
+            //TODO　ここで重みをGAから取得して保持しておく
         }
 
 
@@ -734,7 +771,8 @@ namespace tetris
         NextBlockManage[] nextManage;
         AIManage aiManage = new AIManage();
         EvaluateManage evaluateManage = new EvaluateManage();
-        AIManage.EvaluateSetting evaluateSetting = new AIManage.EvaluateSetting();
+        AIManage.LearningSetting[] LearningSetting;
+        int LearningTypeCount = 0;
 
         PLAYER_DEFINE playerTurn;
 
