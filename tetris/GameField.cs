@@ -546,6 +546,15 @@ namespace tetris
                 this.LearningSetting[i] = new AIManage.LearningSetting();
             }
             LearningTypeCount = 0;
+
+            //GA
+            GA_Unit = new GA_UNIT();
+            GA_Unit.colony = new Colony();
+            GA_Unit.colony.Initialize(EvaluateManage.FEATURE_NUM);//遺伝子のサイズ
+            GA_Unit.manager = new GenomManager();
+            GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
+            GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
+            GA_Unit.manager.SetGeneration(100);
         }
 
         private void CreateImageObject()
@@ -770,9 +779,14 @@ namespace tetris
         FieldManage[] fieldManage;
         NextBlockManage[] nextManage;
         AIManage aiManage = new AIManage();
-        EvaluateManage evaluateManage = new EvaluateManage();
-        AIManage.LearningSetting[] LearningSetting;
+
+        //学習関係
+        EvaluateManage evaluateManage = new EvaluateManage();  //盤面評価
+        AIManage.LearningSetting[] LearningSetting;            //学習セッティング
         int LearningTypeCount = 0;
+        GA_UNIT GA_Unit;
+
+
 
         PLAYER_DEFINE playerTurn;
 
