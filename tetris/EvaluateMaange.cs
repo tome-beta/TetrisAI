@@ -25,7 +25,7 @@ namespace tetris
     //特徴量の算出と盤面の評価点を出す
     class EvaluateManage
     {
-        public readonly int FEATURE_NUM = 8;
+        public const int FEATURE_NUM = 8;
 
         //最後に操作したブロック
         [Serializable]
