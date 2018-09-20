@@ -62,7 +62,7 @@ namespace tetris
         /// <param name="weight"></param>
         public void SetWeightData(int[] weight)
         {
-            if( weight.Length >= FEATURE_NUM)
+            if( weight.Length > FEATURE_NUM)
             {
                 Debug.Assert(false);
             }

@@ -64,9 +64,11 @@
             this.MenuPlayMode = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem1Ponly = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItemVS = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItemComOnly = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.盤面評価ウインドウToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItemComOnly = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelGAType = new System.Windows.Forms.Label();
+            this.labelGAGeneration = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
@@ -438,16 +440,23 @@
             this.MenuItem1Ponly.Checked = true;
             this.MenuItem1Ponly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem1Ponly.Name = "MenuItem1Ponly";
-            this.MenuItem1Ponly.Size = new System.Drawing.Size(180, 28);
+            this.MenuItem1Ponly.Size = new System.Drawing.Size(148, 28);
             this.MenuItem1Ponly.Text = "1P only";
             this.MenuItem1Ponly.Click += new System.EventHandler(this.MenuItem1Ponly_Click);
             // 
             // MenuItemVS
             // 
             this.MenuItemVS.Name = "MenuItemVS";
-            this.MenuItemVS.Size = new System.Drawing.Size(180, 28);
+            this.MenuItemVS.Size = new System.Drawing.Size(148, 28);
             this.MenuItemVS.Text = "VS ";
             this.MenuItemVS.Click += new System.EventHandler(this.MenuItemVS_Click);
+            // 
+            // MenuItemComOnly
+            // 
+            this.MenuItemComOnly.Name = "MenuItemComOnly";
+            this.MenuItemComOnly.Size = new System.Drawing.Size(148, 28);
+            this.MenuItemComOnly.Text = "COM only";
+            this.MenuItemComOnly.Click += new System.EventHandler(this.MenuItemComOnly_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -464,12 +473,25 @@
             this.盤面評価ウインドウToolStripMenuItem.Text = "盤面評価ウインドウ";
             this.盤面評価ウインドウToolStripMenuItem.Click += new System.EventHandler(this.盤面評価ウインドウToolStripMenuItem_Click);
             // 
-            // MenuItemComOnly
+            // labelGAType
             // 
-            this.MenuItemComOnly.Name = "MenuItemComOnly";
-            this.MenuItemComOnly.Size = new System.Drawing.Size(180, 28);
-            this.MenuItemComOnly.Text = "COM only";
-            this.MenuItemComOnly.Click += new System.EventHandler(this.MenuItemComOnly_Click);
+            this.labelGAType.AutoSize = true;
+            this.labelGAType.Font = new System.Drawing.Font("メイリオ", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelGAType.Location = new System.Drawing.Point(12, 783);
+            this.labelGAType.Name = "labelGAType";
+            this.labelGAType.Size = new System.Drawing.Size(69, 24);
+            this.labelGAType.TabIndex = 34;
+            this.labelGAType.Text = "GAType";
+            // 
+            // labelGAGeneration
+            // 
+            this.labelGAGeneration.AutoSize = true;
+            this.labelGAGeneration.Font = new System.Drawing.Font("メイリオ", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelGAGeneration.Location = new System.Drawing.Point(12, 811);
+            this.labelGAGeneration.Name = "labelGAGeneration";
+            this.labelGAGeneration.Size = new System.Drawing.Size(96, 24);
+            this.labelGAGeneration.TabIndex = 35;
+            this.labelGAGeneration.Text = "Generation";
             // 
             // GameField
             // 
@@ -477,6 +499,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1620, 834);
+            this.Controls.Add(this.labelGAGeneration);
+            this.Controls.Add(this.labelGAType);
             this.Controls.Add(this.labelMessage2P);
             this.Controls.Add(this.label1Line2P);
             this.Controls.Add(this.label2Line2P);
@@ -570,5 +594,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 盤面評価ウインドウToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MenuItemComOnly;
+        private System.Windows.Forms.Label labelGAType;
+        private System.Windows.Forms.Label labelGAGeneration;
     }
 }
