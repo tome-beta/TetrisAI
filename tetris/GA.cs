@@ -137,7 +137,7 @@ namespace tetris
         //持っているパラメータ
         public int[] DNA;
 
-        public readonly int DNA_SIZE = 10;//デフォルト　まず使わない
+        public readonly int DNA_SIZE = 8;//デフォルト　まず使わない
         public readonly int DNA_VALUE_MAX = 100;
         public readonly int DNA_VALUE_MIN = -100;
 
@@ -146,6 +146,33 @@ namespace tetris
     //遺伝子操作クラス(局所空間)
     public class GenomManager
     {
+        public Genom GetGenom(int no)
+        {
+            if( no >= 4)
+            {
+                Debug.Assert(false);
+            }
+
+            if(no == 0)
+            {
+                return ParentList[0];
+            }
+            if (no == 1)
+            {
+                return ParentList[1];
+            }
+            if (no == 2)
+            {
+                return ChildList[0];
+            }
+            if (no == 3)
+            {
+                return ChildList[1];
+            }
+
+            return null;
+        }
+
         //順位にしたがって残す遺伝子を決める
         public void SelectExec(int[] ranking)
         {
@@ -242,11 +269,11 @@ namespace tetris
         {
             this.ParentList.Clear();
 
-            int num = rand.Next(this.AllGenomList.Count);
+            int num = Common.MyRandom.Next(this.AllGenomList.Count);
             this.ParentList.Add(this.AllGenomList[num]);
             this.AllGenomList.RemoveAt(num);
 
-            num = rand.Next(this.AllGenomList.Count);
+            num = Common.MyRandom.Next(this.AllGenomList.Count);
             this.ParentList.Add(this.AllGenomList[num]);
             this.AllGenomList.RemoveAt(num);
 
@@ -271,7 +298,7 @@ namespace tetris
             int[] p2 = ParentList[1].DNA;
 
             //交叉点の作成
-            int[] cutPoint = MakeCutPoint(rand.Next(1, p1.Length), 0, p1.Length);
+            int[] cutPoint = MakeCutPoint(Common.MyRandom.Next(1, p1.Length), 0, p1.Length);
 
             //分割点の最後に配列のサイズを入れる
             Array.Resize(ref cutPoint, cutPoint.Length + 1);
@@ -310,19 +337,19 @@ namespace tetris
         public void Mutation()
         {
             //子のどちらかを突然変異させる
-            int num = rand.Next(2);
+            int num = Common.MyRandom.Next(2);
             Genom ch = ChildList[num];
 
             HashSet<int> hsTable = new HashSet<int>();
             while (true)
             {
-                int point = rand.Next(ch.DNA_SIZE);
+                int point = Common.MyRandom.Next(ch.DNA_SIZE);
                 if (hsTable.Add(point) == false)
                 {
                     break;
                 }
 
-                ch.DNA[point] = rand.Next(ch.DNA_VALUE_MIN, ch.DNA_VALUE_MAX);
+                ch.DNA[point] = Common.MyRandom.Next(ch.DNA_VALUE_MIN, ch.DNA_VALUE_MAX);
             }
         }
 
@@ -338,7 +365,7 @@ namespace tetris
             SortedSet<int> ssTable = new SortedSet<int>();
             while (ssTable.Count() < cut_num)
             {
-                ssTable.Add(rand.Next(start + 1, end));
+                ssTable.Add(Common.MyRandom.Next(start + 1, end));
             }
             int[] ans = new int[cut_num];
             ssTable.CopyTo(ans);
@@ -363,7 +390,6 @@ namespace tetris
         public int GenerationMAX = 0;
         public int GenerationCount = 0;
 
-        Random rand = new Random();
     }
 
         //計算するところは外部になる
