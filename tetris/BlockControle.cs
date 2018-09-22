@@ -210,6 +210,12 @@ namespace tetris
             int base_x = this.CurrentPos.X;
             int base_y = this.CurrentPos.Y;
 
+            if( base_y < 0)
+            {
+                Debug.Assert(false);
+            }
+
+
             for (int y = 0; y < BlockInfo.BLOCK_CELL_HEIGHT; y++)
             {
                 for (int x = 0; x < BlockInfo.BLOCK_CELL_WIDTH; x++)
