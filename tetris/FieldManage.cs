@@ -136,15 +136,19 @@ namespace tetris
         //消去するラインを調べる
         public void ExecEraseLine()
         {
+            int vanish_line = 0;
+            bool vanish = false;
             //ブロックを実際に消す処理
             //アニメーションをそのうちつける
             for (int h = 0; h < FieldManage.FIELD_HEIGHT; h++)
             {
+                vanish = false;
                 //壁の所は見ない
                 for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
                 {
                     if (BlockField[h, w] >= (int)BlockInfo.BlockType.MINO_VANISH)
                     {
+                        vanish = true;
                         BlockField[h, w] = 0;
                         for (int h2 = h; h2 > 0; h2--)
                         {
@@ -152,12 +156,22 @@ namespace tetris
                         }
                     }
                 }
+
+                if(vanish)
+                {
+                    vanish_line++;
+                }
+
             }
 
-            //一番上のラインを埋める
-            for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
+
+            //消したラインのぶんだけ空のラインを作る
+            for(int i = 0; i < vanish_line; i++)
             {
-                BlockField[0, w] = 0;
+                for (int w = 1; w < FieldManage.FIELD_WIDTH - 1; w++)
+                {
+                    BlockField[i, w] = 0;
+                }
             }
 
             this.EraseLine.Clear();

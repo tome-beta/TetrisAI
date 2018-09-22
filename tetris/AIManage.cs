@@ -125,7 +125,7 @@ namespace tetris
                 }
 
                 //左端から右端までの位置を作成
-                for(int x = info.min_x + 1; x < info.max_x;x++ )
+                for(int x = info.min_x; x <= info.max_x;x++ )
                 {
                     info.x = x;
                     //Listに追加
