@@ -523,7 +523,7 @@ namespace tetris
 
 
         public LAST_BLOCK_INFO LastBlockInfo;
-        private double[] EvaluateWeight;
+        public double[] EvaluateWeight;
 
         //ニューラルネットワーク
         private NN Nnetwork;

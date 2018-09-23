@@ -537,6 +537,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "GameField";
             this.Text = "GameField";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GameField_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameField_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).EndInit();
