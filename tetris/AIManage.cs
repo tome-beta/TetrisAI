@@ -13,7 +13,7 @@ namespace tetris
         {
             public int ExecNum;            //繰り返し回数
             public int EvaluateScore;      //評価点
-            public int AverageScore;       //平均点
+            public double AverageScore;       //平均点
             public int EndConditionsBlock; //終了ブロック数　これだけ落としたら止める。
         };
 
@@ -60,8 +60,16 @@ namespace tetris
 
                 //ハードドロップ
                 AIBlockControle.HardDropCurrentBlock(AIFieldManage.BlockField);
+                //画面外にならないように
+                if (AIBlockControle.CurrentPos.Y < 0)
+                {
+                    //除外
+                    continue;
+                }
+
+
                 //ゲームオーバーの判定がいる
-                if( AIBlockControle.CheckGameOver(AIFieldManage.BlockField))
+                if ( AIBlockControle.CheckGameOver(AIFieldManage.BlockField))
                 {
                     return 0;
                 }

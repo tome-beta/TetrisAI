@@ -102,7 +102,7 @@ namespace tetris
             score += (int)(data.veritical_change * weight_data[3]);
             score += (int)(data.hole * weight_data[4]);
             score += (int)(data.well_total * weight_data[5]);
-            score += (int)(data.hole_on_block_total * weight_data[6]);
+//            score += (int)(data.hole_on_block_total * weight_data[6]);
             score += (int)(data.hole_row * weight_data[7]);
 
             return score;

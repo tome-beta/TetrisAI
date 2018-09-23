@@ -308,7 +308,7 @@ namespace tetris
                             }
                             else
                             {
-                                this.LearningSetting[this.LearningTypeCount].AverageScore = this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5;
+                                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5);
 
 
                                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
@@ -318,10 +318,10 @@ namespace tetris
                                 //4タイプの評価が終わったら
                                 if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
                                 {
-                                    List<Tuple<int, int>> score_list = new List<Tuple<int, int>>();
+                                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
                                     for (int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
                                     {
-                                        Tuple<int, int> score = Tuple.Create(LearningSetting[i].AverageScore,i);
+                                        Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore,i);
                                         score_list.Add(score);
                                     }
                                     score_list.Sort();
@@ -587,7 +587,7 @@ namespace tetris
             GA_Unit.manager = new GenomManager();
             GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
             GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
-            GA_Unit.manager.SetGeneration(10);
+            GA_Unit.manager.SetGeneration(10000);
         }
 
         private void CreateImageObject()
