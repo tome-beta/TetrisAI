@@ -77,7 +77,7 @@ namespace tetris
         public Genom RandomGetGenom()
         {
 
-            int num = rand.Next(GENOM_MAX);
+            int num = Common.MyRandom.Next(GENOM_MAX);
 
             if (GenomList.Count <= num)
             {
@@ -89,9 +89,7 @@ namespace tetris
         }
 
         //遺伝子リストを持っとく
-
-        private List<Genom> GenomList = new List<Genom>();
-        Random rand = new Random();
+       private List<Genom> GenomList = new List<Genom>();
     }
 
     //遺伝子
@@ -241,7 +239,7 @@ namespace tetris
                     AddGenom(this.ParentList[parent_up]);
                     if (this.AllGenomList.Count < 2)
                     {
-                        Genom n = new Genom(4 * 5);
+                        Genom n = new Genom(DNA_size);
                         AddGenom(n);
                     }
                     break;
@@ -251,7 +249,7 @@ namespace tetris
                     break;
                 case "CP": //type D 子供 1人 異邦人要求 コロニー 増減なし
                     AddGenom(this.ChildList[child_up]);
-                    Genom n2 = new Genom(4 * 5);
+                    Genom n2 = new Genom(DNA_size);
                     AddGenom(n2);
                     break;
             }
@@ -387,9 +385,14 @@ namespace tetris
             GenerationCount = 0;
         }
 
+        public void SetDNASize(int size)
+        {
+            this.DNA_size = size;
+        }
+
         public int GenerationMAX = 0;
         public int GenerationCount = 0;
-
+        public int DNA_size = 0;
     }
 
         //計算するところは外部になる

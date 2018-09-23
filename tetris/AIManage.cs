@@ -25,12 +25,12 @@ namespace tetris
         /// <param name="block_ctrl">Nブロック操作</param>
         /// <param name="field_manage">フィールド操作</param>
         /// <returns></returns>
-        public int EvaluateField(NextBlockManage next_manage,
+        public double EvaluateField(NextBlockManage next_manage,
                                 BlockControle block_ctrl,
                                 FieldManage field_manage)
         {
-            int score = 0;
-            int max_score = 0;
+            double score = 0;
+            double max_score = 0;
             //TOD 整頓必須
 
             //インスタンスをコピー

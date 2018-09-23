@@ -31,7 +31,7 @@ namespace tetris
         }
 
         //盤面評価スコアを設定
-        public void SetScore(int input, int player)
+        public void SetScore(double input, int player)
         {
             if (player == 0)
             {
@@ -74,8 +74,8 @@ namespace tetris
         //特徴量を受け取るため
         FeatureData feature1P;
         FeatureData feature2P;
-        int Score1P;
-        int Score2P;
+        double Score1P;
+        double Score2P;
 
         //閉じたとき
         private void EvaluateDispForm_FormClosed(object sender, FormClosedEventArgs e)
