@@ -92,6 +92,7 @@
     <Compile Include="GameField.Designer.cs">
       <DependentUpon>GameField.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogManage.cs" />
     <Compile Include="MessageControle.cs" />
     <Compile Include="NextBlockManage.cs" />
     <Compile Include="NN.cs" />

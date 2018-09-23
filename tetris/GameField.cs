@@ -308,12 +308,27 @@ namespace tetris
                             }
                             else
                             {
-                                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5);
+                                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5.0);
+
+
+                                String WeightStr = @"";
+                                for (int i = 0; i < evaluateManage.NN_WEIGHT_NUM; i++)
+                                {
+                                    WeightStr += evaluateManage.EvaluateWeight[i].ToString();
+                                    WeightStr += ",";
+                                }
+
+                                LogManager.WriteLine(GA_Unit.manager.GenerationCount.ToString() + "," +
+                                                    this.LearningTypeCount.ToString() + "," +
+                                                    this.LearningSetting[this.LearningTypeCount].AverageScore.ToString("0.000") + "," +
+                                                    WeightStr);
+
 
 
                                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
                                 this.LearningTypeCount++;
                                 this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString();
+
 
                                 //4タイプの評価が終わったら
                                 if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
@@ -340,13 +355,18 @@ namespace tetris
 
                                     GA_Unit.manager.GenerationCount++;
 
-                                    if(GA_Unit.manager.GenerationCount < GA_Unit.manager.GenerationMAX)
+                                    if (GA_Unit.manager.GenerationCount < GA_Unit.manager.GenerationMAX)
                                     {
                                         //学習初期化
                                         SettingLearn();
                                         this.GameStart = true;
                                         this.Mode = GAME_MODE.MODE_WAIT;
 
+                                    }
+                                    else
+                                    {
+                                        //学習終了
+                                        LogManager.EndLogOutput();
                                     }
 
                                     this.labelGAGeneration.Text = @"Generation : " + GA_Unit.manager.GenerationCount.ToString();
@@ -771,6 +791,10 @@ namespace tetris
 
             this.AILearningMode = true;
 
+            LogManager.StartLogOutput(@"AI_Log.csv");
+
+            LogManager.WriteLine(@"世代,ダイプ,平均点,遺伝子");
+
             SettingLearn();
         }
 
@@ -826,7 +850,7 @@ namespace tetris
         int LearningTypeCount = 0;
         GA_UNIT GA_Unit;
         int AI_Score = 0;
-
+        LogManage LogManager = new LogManage();
 
         PLAYER_DEFINE playerTurn;
 
@@ -867,6 +891,10 @@ namespace tetris
             }
         }
 
-
+        //フォームが閉じる時
+        private void GameField_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            LogManager.EndLogOutput();
+        }
     }
 }
