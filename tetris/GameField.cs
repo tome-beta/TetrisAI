@@ -296,8 +296,8 @@ namespace tetris
                         {
                             this.LearningSetting[this.LearningTypeCount].ExecNum--;
 
-                            //TODO スコアの集計
-                            this.LearningSetting[this.LearningTypeCount].EvaluateScore += AI_Score;
+                            //スコアの集計
+                            this.LearningSetting[this.LearningTypeCount].EvaluateScore += (AI_Score * AI_Score);
                             AI_Score = 0;
 
                             if ( this.LearningSetting[this.LearningTypeCount].ExecNum > 0)
@@ -310,7 +310,7 @@ namespace tetris
                             {
                                 this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5.0);
 
-
+                                //ログを出力
                                 String WeightStr = @"";
                                 for (int i = 0; i < evaluateManage.NN_WEIGHT_NUM; i++)
                                 {
@@ -542,7 +542,7 @@ namespace tetris
 
             switch(result.Line)
             {
-                case 1: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE);  break;
+                case 1: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE); break;
                 case 2: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
                 case 3: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
                 case 4: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
