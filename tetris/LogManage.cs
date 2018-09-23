@@ -17,12 +17,18 @@ namespace tetris
 
        public void EndLogOutput()
        {
-            this.sw.Dispose();
-       }
+            if( sw != null)
+            {
+                this.sw.Dispose();
+            }
+        }
 
         public void WriteLine(String str)
         {
-            sw.WriteLine(str);
+            if (sw != null)
+            {
+                sw.WriteLine(str);
+            }
         }
 
 
