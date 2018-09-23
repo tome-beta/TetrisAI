@@ -188,6 +188,11 @@ namespace tetris
 
             }
 
+            //座標と見た目の数字が反転しているので 20 -> 0 5-> 15
+
+            height = (height - FieldManage.FIELD_HEIGHT + 1) * -1;
+
+
 
             return height;
         }
