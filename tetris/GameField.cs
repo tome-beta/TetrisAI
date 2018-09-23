@@ -163,7 +163,7 @@ namespace tetris
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                             this.blockControle[player].SetBlockInField(field);
 
-                            int score = 0;
+                            double score = 0;
                             FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player],ref score);
                             if (evaluateDispForm != null)
                             {
@@ -199,7 +199,7 @@ namespace tetris
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
 
-                                int score = 0;
+                                double score = 0;
                                 FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
 
                                 if (evaluateDispForm != null)
@@ -583,11 +583,13 @@ namespace tetris
             //GA
             GA_Unit = new GA_UNIT();
             GA_Unit.colony = new Colony();
-            GA_Unit.colony.Initialize(EvaluateManage.FEATURE_NUM);//遺伝子のサイズ
+            GA_Unit.colony.Initialize(evaluateManage.NN_WEIGHT_NUM);//遺伝子のサイズ
             GA_Unit.manager = new GenomManager();
             GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
             GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
             GA_Unit.manager.SetGeneration(10000);
+            GA_Unit.manager.SetDNASize(evaluateManage.NN_WEIGHT_NUM);
+
         }
 
         private void CreateImageObject()

@@ -26,6 +26,8 @@ namespace tetris
     class EvaluateManage
     {
         public const int FEATURE_NUM = 8;
+        public readonly int NN_WEIGHT_NUM;
+
 
         //最後に操作したブロック
         [Serializable]
@@ -42,18 +44,22 @@ namespace tetris
             LastBlockInfo = new LAST_BLOCK_INFO();
             LastBlockInfo.pos = new Point();
 
-            EvaluateWeight = new double[FEATURE_NUM];
-
+            NN_WEIGHT_NUM = NN.INPUT_CORE * NN.HIDDIN_CORE + NN.HIDDIN_CORE * NN.OUTPUT_CORE;
 
             //仮設定　TODO
-            EvaluateWeight[0] = 10.0;
-            EvaluateWeight[1] = 4.0;
-            EvaluateWeight[2] = 2.0;
-            EvaluateWeight[3] = 5.0;
-            EvaluateWeight[4] = -10.0;
-            EvaluateWeight[5] = 0.1;
-            EvaluateWeight[6] = 1.0;
-            EvaluateWeight[7] = 1.0;
+            EvaluateWeight = new double[NN_WEIGHT_NUM];
+            for (int i = 0; i < NN_WEIGHT_NUM; i++)
+            {
+                EvaluateWeight[i] = Common.MyRandom.Next(-100,100);
+            }
+
+
+            //ニューラルネットワークの設定
+            Nnetwork = new NN();
+            Nnetwork.Init(NN.INPUT_CORE, NN.HIDDIN_CORE, NN.OUTPUT_CORE);
+            Nnetwork.SettinWeight();
+
+
         }
 
         /// <summary>
@@ -62,15 +68,17 @@ namespace tetris
         /// <param name="weight"></param>
         public void SetWeightData(int[] weight)
         {
-            if( weight.Length > FEATURE_NUM)
+            if( weight.Length != NN_WEIGHT_NUM)
             {
                 Debug.Assert(false);
             }
 
-            for (int i = 0; i < FEATURE_NUM; i++)
+            for (int i = 0; i < NN_WEIGHT_NUM; i++)
             {
                 this.EvaluateWeight[i] = weight[i];
             }
+
+            Nnetwork.SettingWeight(this.EvaluateWeight);
         }
 
         /// <summary>
@@ -78,7 +86,7 @@ namespace tetris
         /// </summary>
         /// <param name="block_controle"></param>
         /// <param name="field_manage"></param>
-        public FeatureData Exec(BlockControle block_controle, FieldManage field_manage,ref int score)
+        public FeatureData Exec(BlockControle block_controle, FieldManage field_manage,ref double score)
         {
             FeatureData feature = CalcFeature(block_controle, field_manage);
 
@@ -92,20 +100,31 @@ namespace tetris
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private int CalcScore(FeatureData data,double[] weight_data)
+        private double CalcScore(FeatureData data,double[] weight_data)
         {
-            int score = 0;
-
+/*
             score += (int)(data.last_block_height * weight_data[0]);
             score += (int)(data.eraseline_and_block * weight_data[1]);
             score += (int)(data.horizon_change * weight_data[2]);
             score += (int)(data.veritical_change * weight_data[3]);
             score += (int)(data.hole * weight_data[4]);
             score += (int)(data.well_total * weight_data[5]);
-//            score += (int)(data.hole_on_block_total * weight_data[6]);
+            score += (int)(data.hole_on_block_total * weight_data[6]);
             score += (int)(data.hole_row * weight_data[7]);
+*/
+            Nnetwork.InputData[0] = data.last_block_height;
+            Nnetwork.InputData[1] = data.eraseline_and_block;
+            Nnetwork.InputData[2] = data.horizon_change;
+            Nnetwork.InputData[3] = data.veritical_change;
+            Nnetwork.InputData[4] = data.hole;
+            Nnetwork.InputData[5] = data.well_total;
+            Nnetwork.InputData[6] = data.hole_on_block_total;
+            Nnetwork.InputData[7] = data.hole_row;
 
-            return score;
+            //計算
+            Nnetwork.ForwardPropagation();
+
+            return Nnetwork.GetOutput();
         }
 
         //特徴量を計算する
@@ -505,5 +524,8 @@ namespace tetris
 
         public LAST_BLOCK_INFO LastBlockInfo;
         private double[] EvaluateWeight;
+
+        //ニューラルネットワーク
+        private NN Nnetwork;
     }
 }
