@@ -218,7 +218,7 @@ namespace tetris
                         //消えるラインのチェック
                         int line_num = this.fieldManage[player].CheckEraseLine();
                         bool perfect = this.fieldManage[player].CheckPerfect(line_num);
-                        int tspin_type = CheckTspin(this.blockControle[player].status);
+                        int tspin_type = this.blockControle[player].CheckTspin();
 
                         AttackLineManage.EraseLineResult result = new AttackLineManage.EraseLineResult();
 
@@ -240,7 +240,7 @@ namespace tetris
                         //スコアを記録
                         if ( line_num > 0)
                         {
-                            int tspin = CheckTspin(this.blockControle[player].status);
+                            int tspin = this.blockControle[player].CheckTspin();
                             this.scoreManage[player].SetEraseLine(line_num, (tspin == BlockControle.TSPIN));
                         }
 
@@ -304,101 +304,6 @@ namespace tetris
             }
 
         }
-
-        /// <summary>
-        /// 学習設定の更新
-        /// </summary>
-        private void UpdateLearning()
-        {
-            this.LearningSetting[this.LearningTypeCount].ExecNum--;
-
-            //スコアの集計
-            this.LearningSetting[this.LearningTypeCount].EvaluateScore += (AI_Score * AI_Score);
-            AI_Score = 0;
-
-            if (this.LearningSetting[this.LearningTypeCount].ExecNum > 0)
-            {
-                //繰り返し
-                this.GameStart = true;
-                this.Mode = GAME_MODE.MODE_WAIT;
-            }
-            else
-            {
-                //GA評価平均スコアの出力
-                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5.0);
-
-                //ログを出力
-                LogManager.GAResultWrite(GA_Unit.manager.GenerationCount, 
-                    this.LearningTypeCount,
-                    this.LearningSetting[this.LearningTypeCount].AverageScore,
-                    evaluateManage.EvaluateWeight);
-
-
-                //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
-                this.LearningTypeCount++;
-
-                //4タイプの評価が終わったら
-                if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
-                {
-                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
-                    for (int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
-                    {
-                        Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore, i);
-                        score_list.Add(score);
-
-                        //表示
-                        if (evaluateDispForm != null)
-                        {
-                            this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
-                        }
-                    }
-                    score_list.Sort();
-
-                    //GAによって重みの平均スコアによる更新評価
-                    int[] ranking = {score_list[0].Item2,
-                                                    score_list[1].Item2,
-                                                    score_list[2].Item2,
-                                                    score_list[3].Item2};
-                    GA_Unit.manager.SelectExec(ranking);
-
-                    //世代数をチェックしておわるかどうか決める
-                    //if 世代数が終わっていない
-                    this.LearningTypeCount = 0;
-
-                    GA_Unit.manager.GenerationCount++;
-
-                    if (GA_Unit.manager.GenerationCount < GA_Unit.manager.GenerationMAX)
-                    {
-                        //学習初期化
-                        SettingLearn();
-                        this.GameStart = true;
-                        this.Mode = GAME_MODE.MODE_WAIT;
-
-                    }
-                    else
-                    {
-                        //学習終了
-                        LogManager.EndLogOutput();
-                    }
-
-                    this.labelGAGeneration.Text = @"Generation : " + GA_Unit.manager.GenerationCount.ToString();
-
-                }
-                else
-                {
-                    //次のタイプで繰り返し
-                    //重みをGAから取得して実行開始
-                    Genom ge = GA_Unit.manager.GetGenom(this.LearningTypeCount);
-                    this.evaluateManage.SetWeightData(ge.DNA);
-                    //繰り返し
-                    this.GameStart = true;
-                    this.Mode = GAME_MODE.MODE_WAIT;
-                }
-            }
-
-            this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString() + @"_" + this.LearningSetting[this.LearningTypeCount].ExecNum.ToString();
-        }
-
 
         /// <summary>
         /// 描画更新
@@ -490,27 +395,6 @@ namespace tetris
             nextManage[0].InitNextBlock();
             nextManage[1].InitNextBlock();
 
-        }
-
-
-        /// <summary>
-        /// Tspinで有るかをチェック
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        private int CheckTspin(int status)
-        {
-            int ret = BlockControle.NUN;
-            if ((status & BlockControle.TSPIN) == BlockControle.TSPIN)
-            {
-                ret = BlockControle.TSPIN;
-            }
-            else if ((status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
-            {
-                ret = BlockControle.TSPIN_MINI;
-            }
-
-            return ret;
         }
 
         /// <summary>
@@ -656,6 +540,95 @@ namespace tetris
             this.gAttackLine[p2] = Graphics.FromImage(canvasAttackLine[p2]);
 
         }
+
+        /// <summary>
+        /// 学習設定の更新
+        /// </summary>
+        private void UpdateLearning()
+        {
+            //スコアの集計
+            this.LearningSetting[this.LearningTypeCount].EvaluateScore += (AI_Score * AI_Score);
+            AI_Score = 0;
+
+            this.LearningSetting[this.LearningTypeCount].ExecNum--;
+            if (this.LearningSetting[this.LearningTypeCount].ExecNum > 0)
+            {
+                //繰り返し
+                this.GameStart = true;
+                this.Mode = GAME_MODE.MODE_WAIT;
+            }
+            else
+            {
+                //GA評価平均スコアの出力
+                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5.0);
+
+                //ログを出力
+                LogManager.GAResultWrite(GA_Unit.manager.GenerationCount,
+                    this.LearningTypeCount,
+                    this.LearningSetting[this.LearningTypeCount].AverageScore,
+                    evaluateManage.EvaluateWeight);
+
+
+                //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
+                this.LearningTypeCount++;
+
+                //4タイプの評価が終わったら
+                if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
+                {
+                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
+                    for (int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
+                    {
+                        Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore, i);
+                        score_list.Add(score);
+                        //表示
+                        if (evaluateDispForm != null)
+                        {
+                            this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
+                        }
+                    }
+                    score_list.Sort();
+
+                    //GAによって重みの平均スコアによる更新評価
+                    int[] ranking = {score_list[0].Item2,
+                                                    score_list[1].Item2,
+                                                    score_list[2].Item2,
+                                                    score_list[3].Item2};
+                    GA_Unit.manager.SelectExec(ranking);
+
+                    //世代数をチェックしておわるかどうか決める
+                    if (GA_Unit.manager.GenerationCount++ < GA_Unit.manager.GenerationMAX)
+                    {
+                        this.LearningTypeCount = 0;
+                        //学習初期化
+                        SettingLearn();
+                        this.GameStart = true;
+                        this.Mode = GAME_MODE.MODE_WAIT;
+
+                    }
+                    else
+                    {
+                        //学習終了
+                        LogManager.EndLogOutput();
+                    }
+
+                    this.labelGAGeneration.Text = @"Generation : " + GA_Unit.manager.GenerationCount.ToString();
+
+                }
+                else
+                {
+                    //次のタイプで繰り返し
+                    //重みをGAから取得して実行開始
+                    Genom ge = GA_Unit.manager.GetGenom(this.LearningTypeCount);
+                    this.evaluateManage.SetWeightData(ge.DNA);
+                    //繰り返し
+                    this.GameStart = true;
+                    this.Mode = GAME_MODE.MODE_WAIT;
+                }
+            }
+
+            this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString() + @"_" + this.LearningSetting[this.LearningTypeCount].ExecNum.ToString();
+        }
+
 
         //リセットする
         private void ResetGame()
@@ -817,7 +790,7 @@ namespace tetris
                 LearningSetting[i].AverageScore = 0;
                 LearningSetting[i].EndConditionsBlock = 1000;
             }
-            //TODO　ここで重みをGAから取得して保持しておく
+            //ここで重みをGAから取得して保持しておく
             GA_Unit.manager.MakeParentGenom();
             GA_Unit.manager.CrossExec();
             GA_Unit.manager.Mutation();

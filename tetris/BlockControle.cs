@@ -512,6 +512,21 @@ namespace tetris
             };
         }
 
+        public int CheckTspin()
+        {
+            int ret = BlockControle.NUN;
+            if ((status & BlockControle.TSPIN) == BlockControle.TSPIN)
+            {
+                ret = BlockControle.TSPIN;
+            }
+            else if ((status & BlockControle.TSPIN_MINI) == BlockControle.TSPIN_MINI)
+            {
+                ret = BlockControle.TSPIN_MINI;
+            }
+
+            return ret;
+        }
+
         //外部からパラメータを設定するため
         public void  SetValue(BlockControle ctrl)
         {
