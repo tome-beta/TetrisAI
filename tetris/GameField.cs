@@ -116,23 +116,17 @@ namespace tetris
                 case GAME_MODE.MODE_SET_BLOCK:
                     {
                         //次のブロックを取り出す
-                        nextManage[player].UpdateNextBlock();
-
                         int type = nextManage[player].GetNextBlock();
-
                         blockControle[player].SetCurrentBlock((BlockInfo.BlockType)type);
-
-                        int[,] field = this.fieldManage[player].BlockField;
 
                         //AIの番ならフィールドの評価を行う
                         if(this.PlayerAI[player])
                         {
                             EvaluateField();
                         }
-
-
+                        
                         //ここでブロックを置くことができなければゲームオーバー
-                        if (this.blockControle[player].CheckGameOver(field))
+                        if (this.blockControle[player].CheckGameOver(this.fieldManage[player].BlockField))
                         {
                             Mode = GAME_MODE.MODE_GAME_OVER;
                             this.fieldManage[player].GameOverField();
@@ -151,25 +145,14 @@ namespace tetris
                         //AIの番なら自動操作
                         if (this.PlayerAI[player])
                         {
-                            //擬似的にハードドロップさせる
-                            int[,] field = this.fieldManage[player].BlockField;
-
                             //ハードドロップ
-                            this.blockControle[player].HardDropCurrentBlock(field);
+                            this.blockControle[player].HardDropCurrentBlock(this.fieldManage[player].BlockField);
 
                             this.blockControle[player].DoHold = false;
                             this.HardDrop = false;
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
-                            this.blockControle[player].SetBlockInField(field);
-
-                            double score = 0;
-                            FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player],ref score);
-                            if (evaluateDispForm != null)
-                            {
-                                this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
-                                this.evaluateDispForm.SetScore(score, (int)playerTurn);
-                            }
+                            this.blockControle[player].SetBlockInField(this.fieldManage[player].BlockField);
                         }
                         else
                         {
@@ -198,16 +181,16 @@ namespace tetris
 
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
-
-                                double score = 0;
-                                FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
-
-                                if (evaluateDispForm != null)
-                                {
-                                    this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
-                                    this.evaluateDispForm.SetScore(score, (int)playerTurn);
-                                }
                             }
+                        }
+
+                        //盤面の評価
+                        double score = 0;
+                        FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
+                        if (evaluateDispForm != null)
+                        {
+                            this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                            this.evaluateDispForm.SetScore(score, (int)playerTurn);
                         }
                     }
                     break;
@@ -245,7 +228,10 @@ namespace tetris
                         }
 
                         //AI学習用
-                        AI_Score += line_num;
+                        if (this.PlayerAI[player])
+                        {
+                            AI_Score += line_num;
+                        }
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
                     }
@@ -292,7 +278,7 @@ namespace tetris
                         GameOverFlag = true;
 
                         //AI学習モード
-                        if(this.AILearningMode == true)
+                        if(this.AILearningMode)
                         {
                             UpdateLearning();
                         }
@@ -319,7 +305,6 @@ namespace tetris
             {
                 for (int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
                 {
-
                     //設置したブロックを描画
                     DrawGameField(player);
 
@@ -423,7 +408,6 @@ namespace tetris
             }
 
             //メッセージ
-
             messageControle[p1].Message = this.labelMessage1P;
             messageControle[p1].SetMessage(@"Press F1 key to start", false);
             messageControle[p2].Message = this.labelMessage2P;
