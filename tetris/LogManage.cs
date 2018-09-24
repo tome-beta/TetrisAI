@@ -23,6 +23,28 @@ namespace tetris
             }
         }
 
+        /// <summary>
+        /// 結果ログに書き込み
+        /// </summary>
+        /// <param name="generation"></param>
+        /// <param name="learn_type"></param>
+        /// <param name="average_score"></param>
+        public void GAResultWrite(int generation,int learn_type,double average_score,double [] weight_array)
+        {
+            String WeightStr = @"";
+            for (int i = 0; i < weight_array.Length; i++)
+            {
+                WeightStr += weight_array[i].ToString();
+                WeightStr += ",";
+            }
+
+            WriteLine(generation.ToString() + "," +
+                                learn_type.ToString() + "," +
+                                average_score.ToString("0.000") + "," +
+                                WeightStr);
+
+        }
+
         public void WriteLine(String str)
         {
             if (sw != null)

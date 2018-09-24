@@ -28,6 +28,7 @@ namespace tetris
         //NEXTブロックを取得
         public int GetNextBlock()
         {
+            UpdateNextBlock();
             //一つ取り出す
             int type = NextBlock[0];
             NextBlock.RemoveAt(0);
