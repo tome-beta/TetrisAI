@@ -57,6 +57,11 @@
             this.labelScore = new System.Windows.Forms.Label();
             this.textBox1PScore = new System.Windows.Forms.TextBox();
             this.textBox2PScore = new System.Windows.Forms.TextBox();
+            this.labelGAScore = new System.Windows.Forms.Label();
+            this.textBoxGAScore1 = new System.Windows.Forms.TextBox();
+            this.textBoxGAScore2 = new System.Windows.Forms.TextBox();
+            this.textBoxGAScore3 = new System.Windows.Forms.TextBox();
+            this.textBoxGAScore4 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelFeature1
@@ -313,11 +318,58 @@
             this.textBox2PScore.Size = new System.Drawing.Size(100, 36);
             this.textBox2PScore.TabIndex = 28;
             // 
+            // labelGAScore
+            // 
+            this.labelGAScore.AutoSize = true;
+            this.labelGAScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelGAScore.Location = new System.Drawing.Point(33, 482);
+            this.labelGAScore.Name = "labelGAScore";
+            this.labelGAScore.Size = new System.Drawing.Size(134, 28);
+            this.labelGAScore.TabIndex = 29;
+            this.labelGAScore.Text = "GA評価スコア";
+            // 
+            // textBoxGAScore1
+            // 
+            this.textBoxGAScore1.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxGAScore1.Location = new System.Drawing.Point(28, 519);
+            this.textBoxGAScore1.Name = "textBoxGAScore1";
+            this.textBoxGAScore1.Size = new System.Drawing.Size(100, 36);
+            this.textBoxGAScore1.TabIndex = 30;
+            // 
+            // textBoxGAScore2
+            // 
+            this.textBoxGAScore2.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxGAScore2.Location = new System.Drawing.Point(163, 519);
+            this.textBoxGAScore2.Name = "textBoxGAScore2";
+            this.textBoxGAScore2.Size = new System.Drawing.Size(100, 36);
+            this.textBoxGAScore2.TabIndex = 31;
+            // 
+            // textBoxGAScore3
+            // 
+            this.textBoxGAScore3.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxGAScore3.Location = new System.Drawing.Point(308, 519);
+            this.textBoxGAScore3.Name = "textBoxGAScore3";
+            this.textBoxGAScore3.Size = new System.Drawing.Size(100, 36);
+            this.textBoxGAScore3.TabIndex = 32;
+            // 
+            // textBoxGAScore4
+            // 
+            this.textBoxGAScore4.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBoxGAScore4.Location = new System.Drawing.Point(445, 519);
+            this.textBoxGAScore4.Name = "textBoxGAScore4";
+            this.textBoxGAScore4.Size = new System.Drawing.Size(100, 36);
+            this.textBoxGAScore4.TabIndex = 33;
+            // 
             // EvaluateDispForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 519);
+            this.ClientSize = new System.Drawing.Size(964, 567);
+            this.Controls.Add(this.textBoxGAScore4);
+            this.Controls.Add(this.textBoxGAScore3);
+            this.Controls.Add(this.textBoxGAScore2);
+            this.Controls.Add(this.textBoxGAScore1);
+            this.Controls.Add(this.labelGAScore);
             this.Controls.Add(this.textBox2PScore);
             this.Controls.Add(this.textBox1PScore);
             this.Controls.Add(this.labelScore);
@@ -386,5 +438,10 @@
         private System.Windows.Forms.Label labelScore;
         private System.Windows.Forms.TextBox textBox1PScore;
         private System.Windows.Forms.TextBox textBox2PScore;
+        private System.Windows.Forms.Label labelGAScore;
+        private System.Windows.Forms.TextBox textBoxGAScore1;
+        private System.Windows.Forms.TextBox textBoxGAScore2;
+        private System.Windows.Forms.TextBox textBoxGAScore3;
+        private System.Windows.Forms.TextBox textBoxGAScore4;
     }
 }

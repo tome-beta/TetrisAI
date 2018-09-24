@@ -338,15 +338,17 @@ namespace tetris
                                     {
                                         Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore,i);
                                         score_list.Add(score);
+
+                                        //表示
+                                        this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
                                     }
                                     score_list.Sort();
 
-
                                     //GAによって重みの平均スコアによる更新評価
-                                    int[] ranking = {score_list[3].Item2,
-                                                    score_list[2].Item2,
+                                    int[] ranking = {score_list[0].Item2,
                                                     score_list[1].Item2,
-                                                    score_list[0].Item2};
+                                                    score_list[2].Item2,
+                                                    score_list[3].Item2};
                                     GA_Unit.manager.SelectExec(ranking);
 
                                     //世代数をチェックしておわるかどうか決める

@@ -195,11 +195,11 @@ namespace tetris
                 {
                     if (i >= 2)
                     {
-                        result = result.Insert(result.Length, "C");
+                        result += @"C";
                     }
                     else
                     {
-                        result = result.Insert(result.Length, "P");
+                        result += @"P";
                     }
 
                 }
@@ -324,6 +324,9 @@ namespace tetris
             //子をつくる
             Genom ch_genom1 = new Genom(ch1);
             Genom ch_genom2 = new Genom(ch2);
+
+            //子供リストをクリア
+            ChildList.Clear();
 
             ChildList.Add(ch_genom1);
             ChildList.Add(ch_genom2);
