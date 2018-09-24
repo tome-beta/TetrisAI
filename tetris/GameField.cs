@@ -235,7 +235,7 @@ namespace tetris
                             );
 
                         //メッセージを作る
-                        MakeEraseLineMessage(result, player);
+                        messageControle[player].MakeEraseLineMessage(result);
 
                         //スコアを記録
                         if ( line_num > 0)
@@ -396,59 +396,6 @@ namespace tetris
             nextManage[1].InitNextBlock();
 
         }
-
-        /// <summary>
-        /// 消去したラインによってメッセージを作る
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="player">0 = 1P 1 = 2P</param>
-        private void MakeEraseLineMessage(AttackLineManage.EraseLineResult result,int player)
-        {
-            if (result.Line <= 0)
-            {
-                return;
-            }
-
-            if (result.perfect)
-            {
-                //パーフェクトは他にメッセージを出さない
-                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.PERFECT);
-                this.messageControle[player].MakeMessage();
-                return;
-            }
-
-            if (result.BtoB)
-            {
-                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
-            }
-            if (result.Tspin == BlockControle.TSPIN)
-            {
-                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
-            }
-            else if (result.Tspin == BlockControle.TSPIN_MINI)
-            {
-                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN_MINI);
-            }
-
-            switch(result.Line)
-            {
-                case 1: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE); break;
-                case 2: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
-                case 3: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
-                case 4: this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
-                default: break;
-            }
-
-            //REN
-            if( result.Ren >= 3)
-            {
-                this.messageControle[player].ren_num = result.Ren;
-                this.messageControle[player].message_list.Add(MessageControle.MESSAGE_TYPE.REN);
-            }
-
-            this.messageControle[player].MakeMessage();
-        }
-
         /// <summary>
         /// 管理クラスの初期化
         /// </summary>

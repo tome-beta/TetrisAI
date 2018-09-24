@@ -36,10 +36,59 @@ namespace tetris
             message_list.Clear();
         }
 
+        public void MakeEraseLineMessage(AttackLineManage.EraseLineResult result)
+        {
+            if (result.Line <= 0)
+            {
+                return;
+            }
+
+            if (result.perfect)
+            {
+                //パーフェクトは他にメッセージを出さない
+                message_list.Add(MessageControle.MESSAGE_TYPE.PERFECT);
+                MakeMessage();
+                return;
+            }
+
+            if (result.BtoB)
+            {
+                message_list.Add(MessageControle.MESSAGE_TYPE.BACK_TO_BACK);
+            }
+            if (result.Tspin == BlockControle.TSPIN)
+            {
+                message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN);
+            }
+            else if (result.Tspin == BlockControle.TSPIN_MINI)
+            {
+                message_list.Add(MessageControle.MESSAGE_TYPE.T_SPIN_MINI);
+            }
+
+            switch (result.Line)
+            {
+                case 1: message_list.Add(MessageControle.MESSAGE_TYPE.SINGLE); break;
+                case 2: message_list.Add(MessageControle.MESSAGE_TYPE.DOUBLE); break;
+                case 3: message_list.Add(MessageControle.MESSAGE_TYPE.TRIPLE); break;
+                case 4: message_list.Add(MessageControle.MESSAGE_TYPE.TETRIS); break;
+                default: break;
+            }
+
+            //REN
+            if (result.Ren >= 3)
+            {
+                ren_num = result.Ren;
+                message_list.Add(MessageControle.MESSAGE_TYPE.REN);
+            }
+
+            MakeMessage();
+
+        }
+
+
         /// <summary>
         /// メッセージを作成する
         /// </summary>
-        public void MakeMessage()
+        private void MakeMessage()
         {
             string message = @"";
 
