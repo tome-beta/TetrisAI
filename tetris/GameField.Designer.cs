@@ -69,6 +69,7 @@
             this.盤面評価ウインドウToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelGAType = new System.Windows.Forms.Label();
             this.labelGAGeneration = new System.Windows.Forms.Label();
+            this.描画OFFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
@@ -461,7 +462,8 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.盤面評価ウインドウToolStripMenuItem});
+            this.盤面評価ウインドウToolStripMenuItem,
+            this.描画OFFToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(68, 27);
             this.toolStripMenuItem1.Text = "option";
@@ -492,6 +494,13 @@
             this.labelGAGeneration.Size = new System.Drawing.Size(96, 24);
             this.labelGAGeneration.TabIndex = 35;
             this.labelGAGeneration.Text = "Generation";
+            // 
+            // 描画OFFToolStripMenuItem
+            // 
+            this.描画OFFToolStripMenuItem.Name = "描画OFFToolStripMenuItem";
+            this.描画OFFToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
+            this.描画OFFToolStripMenuItem.Text = "描画OFF";
+            this.描画OFFToolStripMenuItem.Click += new System.EventHandler(this.描画OFFToolStripMenuItem_Click);
             // 
             // GameField
             // 
@@ -597,5 +606,6 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItemComOnly;
         private System.Windows.Forms.Label labelGAType;
         private System.Windows.Forms.Label labelGAGeneration;
+        private System.Windows.Forms.ToolStripMenuItem 描画OFFToolStripMenuItem;
     }
 }
