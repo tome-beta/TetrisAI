@@ -327,8 +327,6 @@ namespace tetris
 
                                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
                                 this.LearningTypeCount++;
-                                this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString();
-
 
                                 //4タイプの評価が終わったら
                                 if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
@@ -340,7 +338,10 @@ namespace tetris
                                         score_list.Add(score);
 
                                         //表示
-                                        this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
+                                        if(evaluateDispForm != null)
+                                        {
+                                            this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
+                                        }
                                     }
                                     score_list.Sort();
 
@@ -385,6 +386,8 @@ namespace tetris
                                     this.Mode = GAME_MODE.MODE_WAIT;
                                 }
                             }
+
+                            this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString() + @"_" + this.LearningSetting[this.LearningTypeCount].ExecNum.ToString();
                         }
 
                     }
@@ -402,52 +405,38 @@ namespace tetris
         {
             Console.WriteLine(@"Disp");
             this.labelFPS.Text = @"FPS: " + this.fps.ToString();
+            int p1 = (int)PLAYER_DEFINE.PLAYER_1;
+            int p2 = (int)PLAYER_DEFINE.PLAYER_2;
 
-            for(int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM;player++)
+            if (!描画OFFToolStripMenuItem.Checked)
             {
-                //設置したブロックを描画
-                DrawGameField(player);
-
-                //NEXTブロックの描画
-                DrawNextBlock(player);
-
-                if(player == (int)this.playerTurn)
+                for (int player = 0; player < (int)PLAYER_DEFINE.PLAYER_NUM; player++)
                 {
-                    //操作中のブロックを描画
-                    DrawCurrentBlock(player,GameOverFlag);
-                    //落下位置ブロックを描画
-                    DrawGuideBlock(player);
+
+                    //設置したブロックを描画
+                    DrawGameField(player);
+
+                    //NEXTブロックの描画
+                    DrawNextBlock(player);
+
+                    if (player == (int)this.playerTurn)
+                    {
+                        //操作中のブロックを描画
+                        DrawCurrentBlock(player, GameOverFlag);
+                        //落下位置ブロックを描画
+                        DrawGuideBlock(player);
+                    }
+
+                    //HOLDブロックを描画
+                    DrawHoldBlock(player);
+
+                    //スコア表示の描画
+                    DrawScore(player);
+
+                    //攻撃ライン表示
+                    DrawAttackLine(player);
+
                 }
-
-                //HOLDブロックを描画
-                DrawHoldBlock(player);
-
-                //スコア表示の描画
-                DrawScore(player);
-
-                //攻撃ライン表示
-                DrawAttackLine(player);
-
-            }
-
-            //盤面評価ウインドウの表示更新
-            if( this.evaluateDispForm != null)
-            {
-                evaluateDispForm.UpdateDisp();
-            }
-
-
-
-
-
-            {
-                int p1 = (int)PLAYER_DEFINE.PLAYER_1;
-                int p2 = (int)PLAYER_DEFINE.PLAYER_2;
-
-                //メッセージの表示
-                this.messageControle[p1].DrawUpdate();
-                this.messageControle[p2].DrawUpdate();
-
                 //PictureBoxを更新
                 this.pictureBoxField1P.Image = canvasFiled[p1];
                 this.pictureBoxField2P.Image = canvasFiled[p2];
@@ -460,6 +449,19 @@ namespace tetris
 
                 this.pictureBoxAttackLine1P.Image = canvasAttackLine[p1];
                 this.pictureBoxAttackLine2P.Image = canvasAttackLine[p2];
+            }
+
+
+
+            //メッセージの表示
+            this.messageControle[p1].DrawUpdate();
+            this.messageControle[p2].DrawUpdate();
+
+
+            //盤面評価ウインドウの表示更新
+            if (this.evaluateDispForm != null)
+            {
+                evaluateDispForm.UpdateDisp();
             }
 
 
@@ -794,10 +796,12 @@ namespace tetris
             this.AILearningMode = true;
 
             LogManager.StartLogOutput(@"AI_Log.csv");
-
             LogManager.WriteLine(@"世代,ダイプ,平均点,遺伝子");
 
             SettingLearn();
+
+            this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString() + @"_" + this.LearningSetting[this.LearningTypeCount].ExecNum.ToString();
+            this.labelGAGeneration.Text = @"Generation : " + GA_Unit.manager.GenerationCount.ToString();
         }
 
         //学習設定
@@ -897,6 +901,19 @@ namespace tetris
         private void GameField_FormClosing(object sender, FormClosingEventArgs e)
         {
             LogManager.EndLogOutput();
+        }
+
+        //描画OFFにチェック
+        private void 描画OFFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(描画OFFToolStripMenuItem.Checked)
+            {
+                描画OFFToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                描画OFFToolStripMenuItem.Checked = true;
+            }
         }
     }
 }
