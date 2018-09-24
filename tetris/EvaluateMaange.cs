@@ -66,7 +66,7 @@ namespace tetris
         /// 重み付け設定
         /// </summary>
         /// <param name="weight"></param>
-        public void SetWeightData(int[] weight)
+        public void SetWeightData(double[] weight)
         {
             if( weight.Length != NN_WEIGHT_NUM)
             {

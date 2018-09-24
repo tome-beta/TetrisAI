@@ -98,21 +98,21 @@ namespace tetris
         //デフォルトコンストラクタ
         public Genom()
         {
-            this.DNA = new int[this.DNA_SIZE];
+            this.DNA = new double[this.DNA_SIZE];
             SettingDefaultDNA();
         }
 
         //DNAのサイズを指定して作成
         public Genom(int DNA_size)
         {
-            this.DNA = new int[DNA_size];
+            this.DNA = new double[DNA_size];
             SettingDefaultDNA();
         }
 
         //遺伝子配列を指定して作成。
-        public Genom(int[] input_dna)
+        public Genom(double[] input_dna)
         {
-            this.DNA = (int[])input_dna.Clone();
+            this.DNA = (double[])input_dna.Clone();
         }
 
         public int GetDNASize()
@@ -128,12 +128,13 @@ namespace tetris
             for (int i = 0; i < DNA.Length; i++)
             {
                 this.DNA[i] = rand.Next(DNA_VALUE_MIN, DNA_VALUE_MAX);
+                this.DNA[i] /= 100.0;
             }
         }
 
 
         //持っているパラメータ
-        public int[] DNA;
+        public double[] DNA;
 
         public readonly int DNA_SIZE = 8;//デフォルト　まず使わない
         public readonly int DNA_VALUE_MAX = 100;
@@ -292,8 +293,8 @@ namespace tetris
         //親２つで交叉を行う
         public void CrossExec()
         {
-            int[] p1 = ParentList[0].DNA;
-            int[] p2 = ParentList[1].DNA;
+            double[] p1 = ParentList[0].DNA;
+            double[] p2 = ParentList[1].DNA;
 
             //交叉点の作成
             int[] cutPoint = MakeCutPoint(Common.MyRandom.Next(1, p1.Length), 0, p1.Length);
@@ -303,8 +304,8 @@ namespace tetris
             cutPoint[cutPoint.Length - 1] = p1.Length;
 
             //交叉実行
-            int[] ch1 = new int[p1.Length];
-            int[] ch2 = new int[p1.Length];
+            double[] ch1 = new double[p1.Length];
+            double[] ch2 = new double[p1.Length];
             int IX = 0, st = 0;
             foreach (int pt in cutPoint)
             {
