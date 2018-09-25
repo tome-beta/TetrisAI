@@ -153,6 +153,15 @@ namespace tetris
 
                             this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                             this.blockControle[player].SetBlockInField(this.fieldManage[player].BlockField);
+
+                            //盤面の評価
+                            double score = 0;
+                            FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
+                            if (evaluateDispForm != null)
+                            {
+                                this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                                this.evaluateDispForm.SetScore(score, (int)playerTurn);
+                            }
                         }
                         else
                         {
@@ -181,17 +190,19 @@ namespace tetris
 
                                 this.Mode = GAME_MODE.MODE_ERASE_CHECK;
                                 this.blockControle[player].SetBlockInField(field);
+
+                                //盤面の評価
+                                double score = 0;
+                                FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
+                                if (evaluateDispForm != null)
+                                {
+                                    this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
+                                    this.evaluateDispForm.SetScore(score, (int)playerTurn);
+                                }
+
                             }
                         }
 
-                        //盤面の評価
-                        double score = 0;
-                        FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
-                        if (evaluateDispForm != null)
-                        {
-                            this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
-                            this.evaluateDispForm.SetScore(score, (int)playerTurn);
-                        }
                     }
                     break;
 
