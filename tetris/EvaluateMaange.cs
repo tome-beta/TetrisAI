@@ -18,8 +18,8 @@ namespace tetris
         public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
         public int hole_on_block_total;    //７．穴の上のブロックの数の和
         public int hole_row;               //８．穴のある行数
-        public double average_height;         //９．各列の高さの平均値
-                                           //１０．各列の高さの標準偏差
+        public double average_height;      //９．各列の高さの平均値
+        public double standard_deviation;  //１０．各列の高さの標準偏差
     };
 
     //特徴量の算出と盤面の評価点を出す
@@ -111,6 +111,7 @@ namespace tetris
             Nnetwork.InputData[6] = data.hole_on_block_total;
             Nnetwork.InputData[7] = data.hole_row;
             Nnetwork.InputData[8] = data.average_height;
+            Nnetwork.InputData[8] = data.standard_deviation;
 
             //計算
             Nnetwork.ForwardPropagation();
@@ -133,6 +134,7 @@ namespace tetris
             feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage);
             feature_data.hole_row = CalcHoleRow(field_manage);
             feature_data.average_height = CalcAverageHeight(field_manage);
+            feature_data.standard_deviation = CalcStandardDeviation(field_manage);
 
             return feature_data;
         }
@@ -513,7 +515,7 @@ namespace tetris
         }
 
         /// <summary>
-        /// 特徴量８　穴のある行数
+        /// 特徴量9 高さの平均
         /// </summary>
         /// <param name="field_manage"></param>
         /// <returns></returns>
@@ -547,6 +549,50 @@ namespace tetris
             return average;
         }
 
+        /// <summary>
+        /// 特徴量１０　高さの標準偏差
+        /// </summary>
+        /// <param name="field_manage"></param>
+        /// <returns></returns>
+        public double CalcStandardDeviation(FieldManage field_manage)
+        {
+            double answer = 0.0;
+
+            List<int> HeightList = new List<int>();
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
+                {
+                    int now = field_manage.BlockField[y, x];
+                    if (now != 0)
+                    {
+                        int h = (y - FieldManage.FIELD_HEIGHT + 1) * -1;
+                        HeightList.Add(h);
+                        break;
+                    }
+                }
+            }
+
+            //総数
+            int sum = 0;
+            foreach (int h in HeightList)
+            {
+                sum += h;
+            }
+
+            //平均
+            double average = sum / (double)HeightList.Count;
+
+            //標準偏差
+            foreach (int h in HeightList)
+            {
+                answer += (h - average) * (h - average);
+            }
+            answer = Math.Sqrt(answer / (double)HeightList.Count);
+
+
+            return answer;
+        }
 
         public LAST_BLOCK_INFO LastBlockInfo;
         public double[] EvaluateWeight;
