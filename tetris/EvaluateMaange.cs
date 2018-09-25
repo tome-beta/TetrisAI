@@ -102,16 +102,6 @@ namespace tetris
         /// <returns></returns>
         private double CalcScore(FeatureData data,double[] weight_data)
         {
-/*
-            score += (int)(data.last_block_height * weight_data[0]);
-            score += (int)(data.eraseline_and_block * weight_data[1]);
-            score += (int)(data.horizon_change * weight_data[2]);
-            score += (int)(data.veritical_change * weight_data[3]);
-            score += (int)(data.hole * weight_data[4]);
-            score += (int)(data.well_total * weight_data[5]);
-            score += (int)(data.hole_on_block_total * weight_data[6]);
-            score += (int)(data.hole_row * weight_data[7]);
-*/
             Nnetwork.InputData[0] = data.last_block_height;
             Nnetwork.InputData[1] = data.eraseline_and_block;
             Nnetwork.InputData[2] = data.horizon_change;
@@ -488,6 +478,8 @@ namespace tetris
         /// <returns></returns>
         private List<int[]> SearchHole(FieldManage field_manage)
         {
+            //穴とは空白の上にブロックが乗っている状態
+
             List<int[]> PosList = new List<int[]>();
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
@@ -504,18 +496,11 @@ namespace tetris
                             int chk = field_manage.BlockField[chk_y, x];
                             if (chk != 0)
                             {
-                                //このとき左右が空間でないこと
-                                int chk2 = field_manage.BlockField[y, x - 1];
-                                int chk3 = field_manage.BlockField[y, x + 1];
-
-                                if (chk2 != 0 && chk3 != 0)
-                                {
-                                    //穴の座標を記録
-                                    int[] pos = { x, y };
-                                    PosList.Add(pos);
-                                    y = chk_y;//チェック場所を更新
-                                    break;
-                                }
+                                //穴の座標を記録
+                                int[] pos = { x, y };
+                                PosList.Add(pos);
+                                break;
+//                                y = chk_y;//チェック場所を更新
                             }
                         }
                     }
