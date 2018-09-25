@@ -18,14 +18,14 @@ namespace tetris
         public int well_total;             //６．井戸の高さの階和(例４の階和4+3+2+1)の和
         public int hole_on_block_total;    //７．穴の上のブロックの数の和
         public int hole_row;               //８．穴のある行数
-                                           //９．各列の高さの平均値
+        public double average_height;         //９．各列の高さの平均値
                                            //１０．各列の高さの標準偏差
     };
 
     //特徴量の算出と盤面の評価点を出す
     class EvaluateManage
     {
-        public const int FEATURE_NUM = 8;
+        public const int FEATURE_NUM = 9;
         public readonly int NN_WEIGHT_NUM;
 
 
@@ -110,6 +110,7 @@ namespace tetris
             Nnetwork.InputData[5] = data.well_total;
             Nnetwork.InputData[6] = data.hole_on_block_total;
             Nnetwork.InputData[7] = data.hole_row;
+            Nnetwork.InputData[8] = data.average_height;
 
             //計算
             Nnetwork.ForwardPropagation();
@@ -131,7 +132,7 @@ namespace tetris
             feature_data.well_total =  CalcWellTotal(field_manage);
             feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage);
             feature_data.hole_row = CalcHoleRow(field_manage);
-
+            feature_data.average_height = CalcAverageHeight(field_manage);
 
             return feature_data;
         }
@@ -509,6 +510,41 @@ namespace tetris
             }
 
             return PosList;
+        }
+
+        /// <summary>
+        /// 特徴量８　穴のある行数
+        /// </summary>
+        /// <param name="field_manage"></param>
+        /// <returns></returns>
+        private double CalcAverageHeight(FieldManage field_manage)
+        {
+            double average = 0.0;
+
+            List<int> HeightList = new List<int>();
+            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+            {
+                for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
+                {
+                    int now = field_manage.BlockField[y, x];
+                    if( now != 0)
+                    {
+                        int h = (y - FieldManage.FIELD_HEIGHT + 1) * -1;
+                        HeightList.Add(h);
+                        break;
+                    }
+                }
+            }
+
+            int sum = 0;
+            foreach(int h in HeightList)
+            {
+                sum += h;
+            }
+
+            average = sum / (double)HeightList.Count;
+
+            return average;
         }
 
 
