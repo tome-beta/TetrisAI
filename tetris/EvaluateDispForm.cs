@@ -62,6 +62,8 @@ namespace tetris
             this.textBox1PFeature6.Text = this.feature1P.well_total.ToString();
             this.textBox1PFeature7.Text = this.feature1P.hole_on_block_total.ToString();
             this.textBox1PFeature8.Text = this.feature1P.hole_row.ToString();
+            this.textBox1PFeature9.Text = this.feature1P.average_height.ToString();
+            this.textBox1PFeature10.Text = this.feature1P.standard_deviation.ToString();
 
             this.textBox1PScore.Text = this.Score1P.ToString();
 
@@ -74,6 +76,8 @@ namespace tetris
             this.textBox2PFeature6.Text = this.feature2P.well_total.ToString();
             this.textBox2PFeature7.Text = this.feature2P.hole_on_block_total.ToString();
             this.textBox2PFeature8.Text = this.feature2P.hole_row.ToString();
+            this.textBox2PFeature9.Text = this.feature2P.average_height.ToString();
+            this.textBox2PFeature10.Text = this.feature2P.standard_deviation.ToString();
 
             this.textBox2PScore.Text = this.Score2P.ToString();
 
