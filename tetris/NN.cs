@@ -24,7 +24,7 @@ namespace tetris
 */
     public class NN
     {
-        public const int INPUT_CORE = 9;    //入力層の数
+        public const int INPUT_CORE = 10;    //入力層の数
         public const int HIDDIN_CORE = 5;   //中間層の数
         public const int OUTPUT_CORE = 1;   //出力層の数
 
