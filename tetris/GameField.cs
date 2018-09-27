@@ -241,7 +241,8 @@ namespace tetris
                         //AI学習用
                         if (this.PlayerAI[player])
                         {
-                            AI_Score += line_num;
+                            //一度に多く消したときの価値を大きくするため
+                            AI_Score += (line_num * line_num);
                         }
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
@@ -486,7 +487,7 @@ namespace tetris
         private void UpdateLearning()
         {
             //スコアの集計
-            this.LearningSetting[this.LearningTypeCount].EvaluateScore += (AI_Score * AI_Score);
+            this.LearningSetting[this.LearningTypeCount].EvaluateScore = AI_Score;
             AI_Score = 0;
 
             this.LearningSetting[this.LearningTypeCount].ExecNum--;
