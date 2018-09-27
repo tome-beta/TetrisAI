@@ -16,6 +16,13 @@ namespace tetris
         public EvaluateDispForm()
         {
             InitializeComponent();
+            this.textBoxLog.Text = @"test";
+            //ロガーとしてテキストボックスを登録
+            this.textBoxLog.Text = @"";
+            TextBoxLogger.GetInstance().SetTextBox(this.textBoxLog);
+
+            TextBoxLogger.GetInstance().clear();
+            TextBoxLogger.GetInstance().log(@"評価ボックス");
         }
 
         public void SetGAScoreData(double score,int type)
@@ -76,13 +83,6 @@ namespace tetris
             this.textBox2PFeature8.Text = this.feature2P.hole_row.ToString();
 
             this.textBox2PScore.Text = this.Score2P.ToString();
-
-
-            //GAScore
-            this.textBoxGAScore1.Text = this.GAScore[0].ToString();
-            this.textBoxGAScore2.Text = this.GAScore[1].ToString();
-            this.textBoxGAScore3.Text = this.GAScore[2].ToString();
-            this.textBoxGAScore4.Text = this.GAScore[3].ToString();
 
         }
 

@@ -241,7 +241,8 @@ namespace tetris
                         //AI学習用
                         if (this.PlayerAI[player])
                         {
-                            AI_Score += line_num;
+                            //一度に多く消したときの価値を大きくするため
+                            AI_Score += (line_num * line_num);
                         }
 
                         this.Mode = GAME_MODE.MODE_ERASE_BLOCK;
@@ -486,7 +487,7 @@ namespace tetris
         private void UpdateLearning()
         {
             //スコアの集計
-            this.LearningSetting[this.LearningTypeCount].EvaluateScore += (AI_Score * AI_Score);
+            this.LearningSetting[this.LearningTypeCount].EvaluateScore = AI_Score;
             AI_Score = 0;
 
             this.LearningSetting[this.LearningTypeCount].ExecNum--;
@@ -499,7 +500,8 @@ namespace tetris
             else
             {
                 //GA評価平均スコアの出力
-                this.LearningSetting[this.LearningTypeCount].AverageScore = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / 5.0);
+                double avre_score = (double)(this.LearningSetting[this.LearningTypeCount].EvaluateScore / (double)AIManage.LEARNING_EXEC);
+                this.LearningSetting[this.LearningTypeCount].AverageScore = avre_score;
 
                 //ログを出力
                 LogManager.GAResultWrite(GA_Unit.manager.GenerationCount,
@@ -507,6 +509,13 @@ namespace tetris
                     this.LearningSetting[this.LearningTypeCount].AverageScore,
                     evaluateManage.EvaluateWeight);
 
+                //ログ表示
+                String exec_log = @"";
+                exec_log += @"世代_遺伝子: " + GA_Unit.manager.GenerationCount.ToString() + 
+                    "_"+ this.LearningTypeCount.ToString() + " ";
+                exec_log += @"スコア: " + this.LearningSetting[this.LearningTypeCount].AverageScore.ToString() + " ";
+
+                TextBoxLogger.GetInstance().log(exec_log);
 
                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
                 this.LearningTypeCount++;
@@ -514,20 +523,6 @@ namespace tetris
                 //100タイプの評価が終わったら
                 if (this.LearningTypeCount >= GAManager.ALL_GENOM_NUM)
                 {
-                    /*                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
-                                        for (int i = 0; i < GAManager.ALL_GENOM_NUM; i++)
-                                        {
-                                            Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore, i);
-                                            score_list.Add(score);
-                                            //表示
-                                            if (evaluateDispForm != null)
-                                            {
-                                                this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
-                                            }
-
-                                        }
-                                        score_list.Sort();
-                    */
                     double[] score = new double[GAManager.ALL_GENOM_NUM];
                     for (int i = 0; i < GAManager.ALL_GENOM_NUM; i++)
                     {
@@ -726,7 +721,7 @@ namespace tetris
             for(int i = 0; i < GAManager.ALL_GENOM_NUM;i++)
             {
                 //学習設定
-                LearningSetting[i].ExecNum = 5;
+                LearningSetting[i].ExecNum = AIManage.LEARNING_EXEC;
                 LearningSetting[i].EvaluateScore = 0;
                 LearningSetting[i].AverageScore = 0;
                 LearningSetting[i].EndConditionsBlock = 1000;
