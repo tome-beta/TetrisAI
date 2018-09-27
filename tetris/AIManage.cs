@@ -7,7 +7,7 @@ namespace tetris
     //  AIの動作を管理
     class AIManage
     {
-//        public const int LEARNING_TYPE_NUM = 100;
+        public const int LEARNING_EXEC = 4; //平均をとるために繰り返し実行回数
         //学習に使う設定
         public struct LearningSetting
         {
