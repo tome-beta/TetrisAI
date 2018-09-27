@@ -10,7 +10,7 @@ namespace tetris
     public struct GA_UNIT
     {
         public Colony colony;
-        public GenomManager manager;
+        public GAManager manager;
     };
 
     /*
@@ -139,11 +139,9 @@ namespace tetris
         //初期値をランダムで決める
         private void SettingDefaultDNA()
         {
-            Random rand = new Random();
-
             for (int i = 0; i < DNA.Length; i++)
             {
-                this.DNA[i] = rand.Next(DNA_VALUE_MIN, DNA_VALUE_MAX);
+                this.DNA[i] = Common.MyRandom.Next(DNA_VALUE_MIN, DNA_VALUE_MAX);
                 this.DNA[i] /= 100.0;
             }
         }
@@ -422,25 +420,29 @@ namespace tetris
         public const int RANKING_GENOM = 50;
 
         //遺伝子の初期設定
-        public void Init(int genom_num)
+        public void Init(int genom_num,int genom_size)
         {
             for (int i = 0; i < genom_num; i++)
             {
-                AllGenomList.Add(new Genom(10));
+                AllGenomList.Add(new Genom(genom_size));
             }
         }
 
-        /// <summary>
-        /// 結果による世代交代処理
-        /// </summary>
-        /// <param name="score_array"></param>
-        public void GenerationUpdate(int[] score_array)
+        public Genom GetGenom(int no)
+        {
+            return AllGenomList[no];
+        }
+            /// <summary>
+            /// 結果による世代交代処理
+            /// </summary>
+            /// <param name="score_array"></param>
+            public void GenerationUpdate(double[] score_array)
         {
             //スコアによってランキングをつくる
-            List<Tuple<int, int>> sort_list = new List<Tuple<int, int>>();
+            List<Tuple<double, int>> sort_list = new List<Tuple<double, int>>();
             for (int i = 0; i < ALL_GENOM_NUM; i++)
             {
-                Tuple<int, int> t = new Tuple<int, int>(score_array[i], i);
+                Tuple<double, int> t = new Tuple<double, int>(score_array[i], i);
                 sort_list.Add(t);
             }
             sort_list.Sort();
@@ -490,8 +492,8 @@ namespace tetris
         //作成した２つの子を受け取る
         private void CrossExec(Genom p1, Genom p2, ref Genom c1, ref Genom c2)
         {
-            int[] p1_DNA = (int[])p1.DNA.Clone();
-            int[] p2_DNA = (int[])p2.DNA.Clone();
+            double[] p1_DNA = (double[])p1.DNA.Clone();
+            double[] p2_DNA = (double[])p2.DNA.Clone();
 
             //交叉点の作成
             int[] cutPoint = MakeCutPoint(Common.MyRandom.Next(1, p1_DNA.Length), 0, p1_DNA.Length);
@@ -501,8 +503,8 @@ namespace tetris
             cutPoint[cutPoint.Length - 1] = p1_DNA.Length;
 
             //交叉実行
-            int[] ch1 = new int[p1_DNA.Length];
-            int[] ch2 = new int[p1_DNA.Length];
+            double[] ch1 = new double[p1_DNA.Length];
+            double[] ch2 = new double[p1_DNA.Length];
             int IX = 0, st = 0;
             foreach (int pt in cutPoint)
             {
@@ -574,7 +576,17 @@ namespace tetris
             }
         }
 
+        //何世代目まで実行するか
+        public void SetGeneration(int generation)
+        {
+            GenerationMAX = generation;
+            GenerationCount = 0;
+        }
+
         List<Genom> AllGenomList = new List<Genom>();
+        public int GenerationMAX = 0;
+        public int GenerationCount = 0;
+        public int DNA_size = 0;
     }
 
 }

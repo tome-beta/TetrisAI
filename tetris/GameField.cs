@@ -425,8 +425,8 @@ namespace tetris
             messageControle[p2].SetMessage(@"Press F1 key to start", false);
 
             //学習パラメータ
-            this.LearningSetting = new AIManage.LearningSetting[AIManage.LEARNING_TYPE_NUM];
-            for(int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
+            this.LearningSetting = new AIManage.LearningSetting[GAManager.ALL_GENOM_NUM];
+            for(int i = 0; i < GAManager.ALL_GENOM_NUM; i++)
             {
                 this.LearningSetting[i] = new AIManage.LearningSetting();
             }
@@ -436,12 +436,9 @@ namespace tetris
             GA_Unit = new GA_UNIT();
             GA_Unit.colony = new Colony();
             GA_Unit.colony.Initialize(evaluateManage.NN_WEIGHT_NUM);//遺伝子のサイズ
-            GA_Unit.manager = new GenomManager();
-            GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
-            GA_Unit.manager.AddGenom(GA_Unit.colony.RandomGetGenom());
-            GA_Unit.manager.SetGeneration(10000);
-            GA_Unit.manager.SetDNASize(evaluateManage.NN_WEIGHT_NUM);
-
+            GA_Unit.manager = new GAManager();
+            GA_Unit.manager.Init(GAManager.ALL_GENOM_NUM,evaluateManage.NN_WEIGHT_NUM);
+            GA_Unit.manager.SetGeneration(1000);
         }
 
         private void CreateImageObject()
@@ -514,28 +511,30 @@ namespace tetris
                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
                 this.LearningTypeCount++;
 
-                //4タイプの評価が終わったら
-                if (this.LearningTypeCount >= AIManage.LEARNING_TYPE_NUM)
+                //100タイプの評価が終わったら
+                if (this.LearningTypeCount >= GAManager.ALL_GENOM_NUM)
                 {
-                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
-                    for (int i = 0; i < AIManage.LEARNING_TYPE_NUM; i++)
-                    {
-                        Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore, i);
-                        score_list.Add(score);
-                        //表示
-                        if (evaluateDispForm != null)
-                        {
-                            this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
-                        }
-                    }
-                    score_list.Sort();
+                    /*                    List<Tuple<double, int>> score_list = new List<Tuple<double, int>>();
+                                        for (int i = 0; i < GAManager.ALL_GENOM_NUM; i++)
+                                        {
+                                            Tuple<double, int> score = Tuple.Create(LearningSetting[i].AverageScore, i);
+                                            score_list.Add(score);
+                                            //表示
+                                            if (evaluateDispForm != null)
+                                            {
+                                                this.evaluateDispForm.SetGAScoreData(LearningSetting[i].AverageScore, i);
+                                            }
 
+                                        }
+                                        score_list.Sort();
+                    */
+                    double[] score = new double[GAManager.ALL_GENOM_NUM];
+                    for (int i = 0; i < GAManager.ALL_GENOM_NUM; i++)
+                    {
+                        score[i] = this.LearningSetting[i].AverageScore;
+                    }
                     //GAによって重みの平均スコアによる更新評価
-                    int[] ranking = {score_list[0].Item2,
-                                                    score_list[1].Item2,
-                                                    score_list[2].Item2,
-                                                    score_list[3].Item2};
-                    GA_Unit.manager.SelectExec(ranking);
+                    GA_Unit.manager.GenerationUpdate(score);
 
                     //世代数をチェックしておわるかどうか決める
                     if (GA_Unit.manager.GenerationCount++ < GA_Unit.manager.GenerationMAX)
@@ -724,7 +723,7 @@ namespace tetris
         //学習設定
         private void SettingLearn()
         {
-            for(int i = 0; i < AIManage.LEARNING_TYPE_NUM;i++)
+            for(int i = 0; i < GAManager.ALL_GENOM_NUM;i++)
             {
                 //学習設定
                 LearningSetting[i].ExecNum = 5;
@@ -733,10 +732,6 @@ namespace tetris
                 LearningSetting[i].EndConditionsBlock = 1000;
             }
             //ここで重みをGAから取得して保持しておく
-            GA_Unit.manager.MakeParentGenom();
-            GA_Unit.manager.CrossExec();
-            GA_Unit.manager.Mutation();
-
             Genom ge = GA_Unit.manager.GetGenom(0);
 
             this.evaluateManage.SetWeightData(ge.DNA);
