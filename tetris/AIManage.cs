@@ -7,13 +7,13 @@ namespace tetris
     //  AIの動作を管理
     class AIManage
     {
-        public const int LEARNING_TYPE_NUM = 4;
+//        public const int LEARNING_TYPE_NUM = 100;
         //学習に使う設定
         public struct LearningSetting
         {
             public int ExecNum;            //繰り返し回数
             public int EvaluateScore;      //評価点
-            public double AverageScore;       //平均点
+            public double AverageScore;    //平均点
             public int EndConditionsBlock; //終了ブロック数　これだけ落としたら止める。
         };
 
