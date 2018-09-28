@@ -487,7 +487,7 @@ namespace tetris
         private void UpdateLearning()
         {
             //スコアの集計
-            this.LearningSetting[this.LearningTypeCount].EvaluateScore = AI_Score;
+            this.LearningSetting[this.LearningTypeCount].EvaluateScore += AI_Score;
             AI_Score = 0;
 
             this.LearningSetting[this.LearningTypeCount].ExecNum--;
@@ -515,7 +515,10 @@ namespace tetris
                     "_"+ this.LearningTypeCount.ToString() + " ";
                 exec_log += @"スコア: " + this.LearningSetting[this.LearningTypeCount].AverageScore.ToString() + " ";
 
-                TextBoxLogger.GetInstance().log(exec_log);
+                if(evaluateDispForm != null)
+                {
+                    TextBoxLogger.GetInstance().log(exec_log);
+                }
 
                 //遺伝子１タイプの平均スコアが記録できたら次のタイプへ
                 this.LearningTypeCount++;

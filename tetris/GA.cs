@@ -418,7 +418,7 @@ namespace tetris
     {
         public const int ALL_GENOM_NUM = 100;
         public const int RANKING_GENOM = 50;
-
+        public const int NEW_GENOM = 10;
         //遺伝子の初期設定
         public void Init(int genom_num,int genom_size)
         {
@@ -426,6 +426,7 @@ namespace tetris
             {
                 AllGenomList.Add(new Genom(genom_size));
             }
+            DNA_size = genom_size;
         }
 
         public Genom GetGenom(int no)
@@ -461,7 +462,7 @@ namespace tetris
                     break;
                 }
             }
-            while (tmp_list.Count < ALL_GENOM_NUM)
+            while (tmp_list.Count < ALL_GENOM_NUM - NEW_GENOM)
             {
                 int p1_num = Common.MyRandom.Next(0, RANKING_GENOM);
                 int p2_num = Common.MyRandom.Next(0, RANKING_GENOM);
@@ -478,6 +479,12 @@ namespace tetris
                 Mutation(ref c1, ref c2);
                 tmp_list.Add(c1);
                 tmp_list.Add(c2);
+            }
+
+            //１０個は毎回新しいのを追加する。多様性のため
+            for(int i = 0; i < NEW_GENOM; i++)
+            {
+                tmp_list.Add(new Genom(DNA_size));
             }
 
             //遺伝子リストを更新
