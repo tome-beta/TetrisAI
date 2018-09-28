@@ -558,16 +558,20 @@ namespace tetris
         private void Mutation(ref Genom c1, ref Genom c2)
         {
             //子のどちらかを突然変異させる
-            int num = Common.MyRandom.Next(2);
+            int num = Common.MyRandom.Next(100);
             Genom ch;
 
             if (num == 0)
             {
                 ch = c1;
             }
-            else
+            else if (num == 1)
             {
                 ch = c2;
+            }
+            else
+            {
+                return;
             }
 
             HashSet<int> hsTable = new HashSet<int>();
