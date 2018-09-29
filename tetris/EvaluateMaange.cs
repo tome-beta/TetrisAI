@@ -124,18 +124,33 @@ namespace tetris
         {
             FeatureData feature_data = new FeatureData();
 
+#if DEBUG
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+#endif
+
             //特徴量の作成
+            List<int[]> hole_list = SearchHole(field_manage);
+
             feature_data.last_block_height = CalcLastBlockHeight(block_controle, field_manage.BlockField);
             feature_data.eraseline_and_block = CalcEraseAndBlock(block_controle, field_manage);
             feature_data.horizon_change = CalcHorizonChange(field_manage);
             feature_data.veritical_change = CalcVerticalChange(field_manage);
-            feature_data.hole = CalcHole(field_manage);
+            feature_data.hole = CalcHole(field_manage,hole_list);
             feature_data.well_total =  CalcWellTotal(field_manage);
-            feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage);
-            feature_data.hole_row = CalcHoleRow(field_manage);
+            feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage, hole_list);
+            feature_data.hole_row = CalcHoleRow(field_manage, hole_list);
             feature_data.average_height = CalcAverageHeight(field_manage);
             feature_data.standard_deviation = CalcStandardDeviation(field_manage);
 
+#if DEBUG
+            sw.Stop();
+            Console.WriteLine("■特徴量計算");
+            TimeSpan ts = sw.Elapsed;
+            Console.WriteLine($"　{ts}");
+            Console.WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
+            Console.WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
+#endif
             return feature_data;
         }
 
@@ -287,14 +302,9 @@ namespace tetris
         /// 穴・空白の上がブロックで埋まっている箇所
         /// </summary>
         /// <param name="data"></param>
-        private int CalcHole(FieldManage field_manage)
+        private int CalcHole(FieldManage field_manage,List<int[]> hole_list)
         {
-            int hole_num = 0;
-
-            List<int[]> PosList = SearchHole(field_manage);
-
-            hole_num = PosList.Count;
-            return hole_num;
+            return hole_list.Count;
         }
 
         /// <summary>
@@ -418,13 +428,11 @@ namespace tetris
         /// </summary>
         /// <param name="ai_field_manage"></param>
         /// <returns></returns>
-        private int CalcHoleOnBlock(FieldManage field_manage)
+        private int CalcHoleOnBlock(FieldManage field_manage,List<int[]> hole_list)
         {
-            List<int[]> PosList = SearchHole(field_manage);
-
             int total = 0;
             //穴の上のブロックを検索
-            foreach (int[] pos in PosList)
+            foreach (int[] pos in hole_list)
             {
                 int start_x = pos[0];
                 int start_y = pos[1];
@@ -453,14 +461,12 @@ namespace tetris
         /// </summary>
         /// <param name="field_manage"></param>
         /// <returns></returns>
-        private int CalcHoleRow(FieldManage field_manage)
+        private int CalcHoleRow(FieldManage field_manage, List<int[]> hole_list)
         {
             int total = 0;
-            List<int[]>PosList = SearchHole(field_manage);
-
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
-                foreach(int[] pos in PosList)
+                foreach(int[] pos in hole_list)
                 {
                     //行数一致
                     if( x == pos[0])
@@ -503,7 +509,6 @@ namespace tetris
                                 int[] pos = { x, y };
                                 PosList.Add(pos);
                                 break;
-//                                y = chk_y;//チェック場所を更新
                             }
                         }
                     }
