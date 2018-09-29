@@ -84,7 +84,6 @@ namespace tetris
 
         public void Exec()
         {
-            Console.WriteLine(@"EXEC");
             int player = (int)playerTurn;
 
             switch (Mode)
@@ -308,7 +307,6 @@ namespace tetris
         /// </summary>
         public void DrawUpdate()
         {
-            Console.WriteLine(@"Disp");
             this.labelFPS.Text = @"FPS: " + this.fps.ToString();
             int p1 = (int)PLAYER_DEFINE.PLAYER_1;
             int p2 = (int)PLAYER_DEFINE.PLAYER_2;
