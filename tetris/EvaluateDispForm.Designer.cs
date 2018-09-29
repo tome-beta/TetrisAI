@@ -59,13 +59,19 @@
             this.textBox2PScore = new System.Windows.Forms.TextBox();
             this.labelGAScore = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.textBox2PFeature9 = new System.Windows.Forms.TextBox();
+            this.textBox1PFeature9 = new System.Windows.Forms.TextBox();
+            this.labelHeightAverage = new System.Windows.Forms.Label();
+            this.textBox2PFeature10 = new System.Windows.Forms.TextBox();
+            this.textBox1PFeature10 = new System.Windows.Forms.TextBox();
+            this.labelHeightDeviation = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelFeature1
             // 
             this.labelFeature1.AutoSize = true;
             this.labelFeature1.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature1.Location = new System.Drawing.Point(23, 57);
+            this.labelFeature1.Location = new System.Drawing.Point(23, 65);
             this.labelFeature1.Name = "labelFeature1";
             this.labelFeature1.Size = new System.Drawing.Size(221, 28);
             this.labelFeature1.TabIndex = 0;
@@ -75,7 +81,7 @@
             // 
             this.labelFeature2.AutoSize = true;
             this.labelFeature2.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature2.Location = new System.Drawing.Point(23, 98);
+            this.labelFeature2.Location = new System.Drawing.Point(23, 106);
             this.labelFeature2.Name = "labelFeature2";
             this.labelFeature2.Size = new System.Drawing.Size(445, 28);
             this.labelFeature2.TabIndex = 1;
@@ -85,7 +91,7 @@
             // 
             this.labelFeature3.AutoSize = true;
             this.labelFeature3.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature3.Location = new System.Drawing.Point(23, 140);
+            this.labelFeature3.Location = new System.Drawing.Point(23, 148);
             this.labelFeature3.Name = "labelFeature3";
             this.labelFeature3.Size = new System.Drawing.Size(468, 28);
             this.labelFeature3.TabIndex = 2;
@@ -95,7 +101,7 @@
             // 
             this.labelFeature4.AutoSize = true;
             this.labelFeature4.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature4.Location = new System.Drawing.Point(23, 182);
+            this.labelFeature4.Location = new System.Drawing.Point(23, 190);
             this.labelFeature4.Name = "labelFeature4";
             this.labelFeature4.Size = new System.Drawing.Size(468, 28);
             this.labelFeature4.TabIndex = 3;
@@ -105,7 +111,7 @@
             // 
             this.labelFeature5.AutoSize = true;
             this.labelFeature5.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature5.Location = new System.Drawing.Point(23, 224);
+            this.labelFeature5.Location = new System.Drawing.Point(23, 232);
             this.labelFeature5.Name = "labelFeature5";
             this.labelFeature5.Size = new System.Drawing.Size(69, 28);
             this.labelFeature5.TabIndex = 4;
@@ -115,7 +121,7 @@
             // 
             this.labelFeature6.AutoSize = true;
             this.labelFeature6.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature6.Location = new System.Drawing.Point(23, 266);
+            this.labelFeature6.Location = new System.Drawing.Point(23, 274);
             this.labelFeature6.Name = "labelFeature6";
             this.labelFeature6.Size = new System.Drawing.Size(202, 28);
             this.labelFeature6.TabIndex = 5;
@@ -125,7 +131,7 @@
             // 
             this.labelFeature7.AutoSize = true;
             this.labelFeature7.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature7.Location = new System.Drawing.Point(23, 308);
+            this.labelFeature7.Location = new System.Drawing.Point(23, 316);
             this.labelFeature7.Name = "labelFeature7";
             this.labelFeature7.Size = new System.Drawing.Size(240, 28);
             this.labelFeature7.TabIndex = 6;
@@ -135,7 +141,7 @@
             // 
             this.labelFeature8.AutoSize = true;
             this.labelFeature8.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelFeature8.Location = new System.Drawing.Point(23, 350);
+            this.labelFeature8.Location = new System.Drawing.Point(23, 358);
             this.labelFeature8.Name = "labelFeature8";
             this.labelFeature8.Size = new System.Drawing.Size(126, 28);
             this.labelFeature8.TabIndex = 7;
@@ -228,7 +234,7 @@
             // textBox2PFeature8
             // 
             this.textBox2PFeature8.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature8.Location = new System.Drawing.Point(725, 347);
+            this.textBox2PFeature8.Location = new System.Drawing.Point(725, 350);
             this.textBox2PFeature8.Name = "textBox2PFeature8";
             this.textBox2PFeature8.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature8.TabIndex = 25;
@@ -236,7 +242,7 @@
             // textBox2PFeature7
             // 
             this.textBox2PFeature7.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature7.Location = new System.Drawing.Point(725, 305);
+            this.textBox2PFeature7.Location = new System.Drawing.Point(725, 309);
             this.textBox2PFeature7.Name = "textBox2PFeature7";
             this.textBox2PFeature7.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature7.TabIndex = 24;
@@ -244,7 +250,7 @@
             // textBox2PFeature6
             // 
             this.textBox2PFeature6.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature6.Location = new System.Drawing.Point(725, 263);
+            this.textBox2PFeature6.Location = new System.Drawing.Point(725, 267);
             this.textBox2PFeature6.Name = "textBox2PFeature6";
             this.textBox2PFeature6.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature6.TabIndex = 23;
@@ -252,7 +258,7 @@
             // textBox2PFeature5
             // 
             this.textBox2PFeature5.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature5.Location = new System.Drawing.Point(725, 221);
+            this.textBox2PFeature5.Location = new System.Drawing.Point(725, 225);
             this.textBox2PFeature5.Name = "textBox2PFeature5";
             this.textBox2PFeature5.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature5.TabIndex = 22;
@@ -260,7 +266,7 @@
             // textBox2PFeature4
             // 
             this.textBox2PFeature4.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature4.Location = new System.Drawing.Point(725, 179);
+            this.textBox2PFeature4.Location = new System.Drawing.Point(725, 183);
             this.textBox2PFeature4.Name = "textBox2PFeature4";
             this.textBox2PFeature4.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature4.TabIndex = 21;
@@ -268,7 +274,7 @@
             // textBox2PFeature3
             // 
             this.textBox2PFeature3.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature3.Location = new System.Drawing.Point(725, 137);
+            this.textBox2PFeature3.Location = new System.Drawing.Point(725, 141);
             this.textBox2PFeature3.Name = "textBox2PFeature3";
             this.textBox2PFeature3.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature3.TabIndex = 20;
@@ -276,7 +282,7 @@
             // textBox2PFeature2
             // 
             this.textBox2PFeature2.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature2.Location = new System.Drawing.Point(725, 95);
+            this.textBox2PFeature2.Location = new System.Drawing.Point(725, 99);
             this.textBox2PFeature2.Name = "textBox2PFeature2";
             this.textBox2PFeature2.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature2.TabIndex = 19;
@@ -284,7 +290,7 @@
             // textBox2PFeature1
             // 
             this.textBox2PFeature1.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PFeature1.Location = new System.Drawing.Point(725, 54);
+            this.textBox2PFeature1.Location = new System.Drawing.Point(725, 57);
             this.textBox2PFeature1.Name = "textBox2PFeature1";
             this.textBox2PFeature1.Size = new System.Drawing.Size(100, 36);
             this.textBox2PFeature1.TabIndex = 18;
@@ -293,7 +299,7 @@
             // 
             this.labelScore.AutoSize = true;
             this.labelScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelScore.Location = new System.Drawing.Point(23, 418);
+            this.labelScore.Location = new System.Drawing.Point(23, 513);
             this.labelScore.Name = "labelScore";
             this.labelScore.Size = new System.Drawing.Size(69, 28);
             this.labelScore.TabIndex = 26;
@@ -302,7 +308,7 @@
             // textBox1PScore
             // 
             this.textBox1PScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1PScore.Location = new System.Drawing.Point(575, 410);
+            this.textBox1PScore.Location = new System.Drawing.Point(575, 505);
             this.textBox1PScore.Name = "textBox1PScore";
             this.textBox1PScore.Size = new System.Drawing.Size(100, 36);
             this.textBox1PScore.TabIndex = 27;
@@ -310,7 +316,7 @@
             // textBox2PScore
             // 
             this.textBox2PScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox2PScore.Location = new System.Drawing.Point(725, 410);
+            this.textBox2PScore.Location = new System.Drawing.Point(725, 505);
             this.textBox2PScore.Name = "textBox2PScore";
             this.textBox2PScore.Size = new System.Drawing.Size(100, 36);
             this.textBox2PScore.TabIndex = 28;
@@ -319,7 +325,7 @@
             // 
             this.labelGAScore.AutoSize = true;
             this.labelGAScore.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.labelGAScore.Location = new System.Drawing.Point(33, 465);
+            this.labelGAScore.Location = new System.Drawing.Point(17, 566);
             this.labelGAScore.Name = "labelGAScore";
             this.labelGAScore.Size = new System.Drawing.Size(134, 28);
             this.labelGAScore.TabIndex = 29;
@@ -328,7 +334,7 @@
             // textBoxLog
             // 
             this.textBoxLog.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBoxLog.Location = new System.Drawing.Point(28, 496);
+            this.textBoxLog.Location = new System.Drawing.Point(12, 597);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -336,11 +342,69 @@
             this.textBoxLog.TabIndex = 30;
             this.textBoxLog.Text = "test";
             // 
+            // textBox2PFeature9
+            // 
+            this.textBox2PFeature9.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox2PFeature9.Location = new System.Drawing.Point(725, 392);
+            this.textBox2PFeature9.Name = "textBox2PFeature9";
+            this.textBox2PFeature9.Size = new System.Drawing.Size(100, 36);
+            this.textBox2PFeature9.TabIndex = 33;
+            // 
+            // textBox1PFeature9
+            // 
+            this.textBox1PFeature9.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox1PFeature9.Location = new System.Drawing.Point(575, 392);
+            this.textBox1PFeature9.Name = "textBox1PFeature9";
+            this.textBox1PFeature9.Size = new System.Drawing.Size(100, 36);
+            this.textBox1PFeature9.TabIndex = 32;
+            // 
+            // labelHeightAverage
+            // 
+            this.labelHeightAverage.AutoSize = true;
+            this.labelHeightAverage.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelHeightAverage.Location = new System.Drawing.Point(25, 400);
+            this.labelHeightAverage.Name = "labelHeightAverage";
+            this.labelHeightAverage.Size = new System.Drawing.Size(88, 28);
+            this.labelHeightAverage.TabIndex = 31;
+            this.labelHeightAverage.Text = "高さ平均";
+            // 
+            // textBox2PFeature10
+            // 
+            this.textBox2PFeature10.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox2PFeature10.Location = new System.Drawing.Point(725, 434);
+            this.textBox2PFeature10.Name = "textBox2PFeature10";
+            this.textBox2PFeature10.Size = new System.Drawing.Size(100, 36);
+            this.textBox2PFeature10.TabIndex = 36;
+            // 
+            // textBox1PFeature10
+            // 
+            this.textBox1PFeature10.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.textBox1PFeature10.Location = new System.Drawing.Point(575, 434);
+            this.textBox1PFeature10.Name = "textBox1PFeature10";
+            this.textBox1PFeature10.Size = new System.Drawing.Size(100, 36);
+            this.textBox1PFeature10.TabIndex = 35;
+            // 
+            // labelHeightDeviation
+            // 
+            this.labelHeightDeviation.AutoSize = true;
+            this.labelHeightDeviation.Font = new System.Drawing.Font("メイリオ", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.labelHeightDeviation.Location = new System.Drawing.Point(23, 442);
+            this.labelHeightDeviation.Name = "labelHeightDeviation";
+            this.labelHeightDeviation.Size = new System.Drawing.Size(145, 28);
+            this.labelHeightDeviation.TabIndex = 34;
+            this.labelHeightDeviation.Text = "高さの標準偏差";
+            // 
             // EvaluateDispForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 726);
+            this.ClientSize = new System.Drawing.Size(964, 878);
+            this.Controls.Add(this.textBox2PFeature10);
+            this.Controls.Add(this.textBox1PFeature10);
+            this.Controls.Add(this.labelHeightDeviation);
+            this.Controls.Add(this.textBox2PFeature9);
+            this.Controls.Add(this.textBox1PFeature9);
+            this.Controls.Add(this.labelHeightAverage);
             this.Controls.Add(this.textBoxLog);
             this.Controls.Add(this.labelGAScore);
             this.Controls.Add(this.textBox2PScore);
@@ -413,5 +477,11 @@
         private System.Windows.Forms.TextBox textBox2PScore;
         private System.Windows.Forms.Label labelGAScore;
         private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.TextBox textBox2PFeature9;
+        private System.Windows.Forms.TextBox textBox1PFeature9;
+        private System.Windows.Forms.Label labelHeightAverage;
+        private System.Windows.Forms.TextBox textBox2PFeature10;
+        private System.Windows.Forms.TextBox textBox1PFeature10;
+        private System.Windows.Forms.Label labelHeightDeviation;
     }
 }
