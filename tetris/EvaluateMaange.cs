@@ -131,6 +131,7 @@ namespace tetris
 
             //特徴量の作成
             List<int[]> hole_list = SearchHole(field_manage);
+            List<int> height_list = SearchHeightList(field_manage);
 
             feature_data.last_block_height = CalcLastBlockHeight(block_controle, field_manage.BlockField);
             feature_data.eraseline_and_block = CalcEraseAndBlock(block_controle, field_manage);
@@ -140,8 +141,8 @@ namespace tetris
             feature_data.well_total =  CalcWellTotal(field_manage);
             feature_data.hole_on_block_total = CalcHoleOnBlock(field_manage, hole_list);
             feature_data.hole_row = CalcHoleRow(field_manage, hole_list);
-            feature_data.average_height = CalcAverageHeight(field_manage);
-            feature_data.standard_deviation = CalcStandardDeviation(field_manage);
+            feature_data.average_height = CalcAverageHeight(field_manage, height_list);
+            feature_data.standard_deviation = CalcStandardDeviation(field_manage, height_list, feature_data.average_height);
 
 #if DEBUG
             sw.Stop();
@@ -464,19 +465,19 @@ namespace tetris
         private int CalcHoleRow(FieldManage field_manage, List<int[]> hole_list)
         {
             int total = 0;
-            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
+
+            for (int y = FieldManage.FIELD_HEIGHT - 1; y >= 0; y--)
             {
-                foreach(int[] pos in hole_list)
+                foreach (int[] pos in hole_list)
                 {
                     //行数一致
-                    if( x == pos[0])
+                    if (y == pos[1])
                     {
                         total++;
                         break;
                     }
                 }
             }
-
             return total;
         }
 
@@ -524,32 +525,17 @@ namespace tetris
         /// </summary>
         /// <param name="field_manage"></param>
         /// <returns></returns>
-        private double CalcAverageHeight(FieldManage field_manage)
+        private double CalcAverageHeight(FieldManage field_manage,List<int> height_list)
         {
             double average = 0.0;
 
-            List<int> HeightList = new List<int>();
-            for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
-            {
-                for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
-                {
-                    int now = field_manage.BlockField[y, x];
-                    if( now != 0)
-                    {
-                        int h = (y - FieldManage.FIELD_HEIGHT + 1) * -1;
-                        HeightList.Add(h);
-                        break;
-                    }
-                }
-            }
-
             int sum = 0;
-            foreach(int h in HeightList)
+            foreach(int h in height_list)
             {
                 sum += h;
             }
 
-            average = sum / (double)HeightList.Count;
+            average = sum / (double)height_list.Count;
 
             return average;
         }
@@ -559,16 +545,29 @@ namespace tetris
         /// </summary>
         /// <param name="field_manage"></param>
         /// <returns></returns>
-        public double CalcStandardDeviation(FieldManage field_manage)
+        public double CalcStandardDeviation(FieldManage field_manage,List<int> height_list,double height_average)
         {
             double answer = 0.0;
+            //標準偏差
+            foreach (int h in height_list)
+            {
+                answer += (h - height_average) * (h - height_average);
+            }
+            answer = Math.Sqrt(answer / (double)height_list.Count);
 
+
+            return answer;
+        }
+
+        //各列の高さを検索
+        private List<int> SearchHeightList(FieldManage manage)
+        {
             List<int> HeightList = new List<int>();
             for (int x = 1; x < FieldManage.FIELD_WIDTH - 1; x++)
             {
                 for (int y = 1; y < FieldManage.FIELD_HEIGHT; y++)
                 {
-                    int now = field_manage.BlockField[y, x];
+                    int now = manage.BlockField[y, x];
                     if (now != 0)
                     {
                         int h = (y - FieldManage.FIELD_HEIGHT + 1) * -1;
@@ -578,25 +577,7 @@ namespace tetris
                 }
             }
 
-            //総数
-            int sum = 0;
-            foreach (int h in HeightList)
-            {
-                sum += h;
-            }
-
-            //平均
-            double average = sum / (double)HeightList.Count;
-
-            //標準偏差
-            foreach (int h in HeightList)
-            {
-                answer += (h - average) * (h - average);
-            }
-            answer = Math.Sqrt(answer / (double)HeightList.Count);
-
-
-            return answer;
+            return HeightList;
         }
 
         public LAST_BLOCK_INFO LastBlockInfo;
