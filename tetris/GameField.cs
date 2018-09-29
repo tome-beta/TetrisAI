@@ -742,7 +742,8 @@ namespace tetris
             int player = (int)playerTurn;
             aiManage.EvaluateField(this.nextManage[player],
                                          this.blockControle[player],
-                                         this.fieldManage[player]);
+                                         this.fieldManage[player],
+                                         this.evaluateManage);
 
         }
 

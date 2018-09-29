@@ -24,10 +24,12 @@ namespace tetris
         /// <param name="nextBlock">NEXTブロック情報</param>
         /// <param name="block_ctrl">Nブロック操作</param>
         /// <param name="field_manage">フィールド操作</param>
+        /// <param name="evaluate_manage">評価管理</param>
         /// <returns></returns>
         public double EvaluateField(NextBlockManage next_manage,
                                 BlockControle block_ctrl,
-                                FieldManage field_manage)
+                                FieldManage field_manage,
+                                EvaluateManage evaluate_manage)
         {
             double score = 0;
             double max_score = 0;
@@ -76,7 +78,7 @@ namespace tetris
                  AIBlockControle.SetBlockInField(AIFieldManage.BlockField);
 
                 //フィールドから特徴量を作る
-                AIEvaluateManage.Exec(AIBlockControle, AIFieldManage,ref score);
+                evaluate_manage.Exec(AIBlockControle, AIFieldManage,ref score);
 
                 //計算した特徴量からフィールドのスコアを求める
                 if( max_score < score)
@@ -159,7 +161,5 @@ namespace tetris
         private NextBlockManage AINextBlockManage = new NextBlockManage();
         private BlockControle AIBlockControle = new BlockControle();
         private FieldManage AIFieldManage = new FieldManage();
-
-        private EvaluateManage AIEvaluateManage = new EvaluateManage();
     }
 }
