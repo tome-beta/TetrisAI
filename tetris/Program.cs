@@ -72,7 +72,7 @@ namespace tetris
                 if (period - procTime > 1)
                 {
                     // Sleepする
-                    System.Threading.Thread.Sleep((int)(period - procTime));
+  //                  System.Threading.Thread.Sleep((int)(period - procTime));
                 }
             }
         }

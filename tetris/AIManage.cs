@@ -37,10 +37,15 @@ namespace tetris
             AINextBlockManage = Common.DeepCopyHelper.DeepCopy<NextBlockManage>(next_manage);
             AIBlockControle = Common.DeepCopyHelper.DeepCopy<BlockControle>(block_ctrl);
             AIFieldManage = Common.DeepCopyHelper.DeepCopy<FieldManage>(field_manage);
+            AIFieldManage2 = Common.DeepCopyHelper.DeepCopy<FieldManage>(field_manage);
+
+            //先読むする回数
+            int Search_Move = 2;
 
             //擬似的に次のブロックを取り出す
-            int type = AINextBlockManage.GetNextBlock();
-
+//            int type = AINextBlockManage.GetNextBlock();
+//            BlockInfo.BlockType type = AINextBlockManage.GetBlockType(0);
+//            AIBlockControle.SetCurrentBlock((BlockInfo.BlockType)type);
 
             //４つの回転毎に左右に移動できる限界点を探す
             List<SearchPosInfo> searchList = MakeSerachPos(AIBlockControle, AIFieldManage.BlockField);
@@ -66,8 +71,6 @@ namespace tetris
                     //除外
                     continue;
                 }
-
-
                 //ゲームオーバーの判定がいる
                 if ( AIBlockControle.CheckGameOver(AIFieldManage.BlockField))
                 {
@@ -75,22 +78,57 @@ namespace tetris
                 }
                  AIBlockControle.SetBlockInField(AIFieldManage.BlockField);
 
-                //フィールドから特徴量を作る
-                AIEvaluateManage.Exec(AIBlockControle, AIFieldManage,ref score);
-
-                //計算した特徴量からフィールドのスコアを求める
-                if( max_score < score)
+                //ここで入れ子構造にする
+                //次の点の４つの回転毎に左右に移動できる限界点を探す
                 {
-                    max_score = score;
-                    block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
-                    block_ctrl.CurrentPos.X = info.x;
-                    block_ctrl.CurrentPos.Y = info.y;
+                    BlockInfo.BlockType type = AINextBlockManage.GetBlockType(0);
+                    AIBlockControle.SetCurrentBlock((BlockInfo.BlockType)type);
+                    List<SearchPosInfo> searchList2 = MakeSerachPos(AIBlockControle, AIFieldManage.BlockField);
+                    foreach (var info2 in searchList)
+                    {
+                        //一回ごとにフィールドを元にもどす
+                        AIFieldManage2 = Common.DeepCopyHelper.DeepCopy<FieldManage>(AIFieldManage);
+
+                        //置く場所を決める
+                        AIBlockControle.CurrentRot = (BlockInfo.BlockRot)info.rot;
+                        AIBlockControle.CurrentPos.X = info.x;
+                        AIBlockControle.CurrentPos.Y = info.y;
+
+                        //ハードドロップ
+                        AIBlockControle.HardDropCurrentBlock(AIFieldManage2.BlockField);
+                        //画面外にならないように
+                        if (AIBlockControle.CurrentPos.Y < 0)
+                        {
+                            //除外
+                            continue;
+                        }
+                        //ゲームオーバーの判定がいる
+                        if (AIBlockControle.CheckGameOver(AIFieldManage2.BlockField))
+                        {
+                            return 0;
+                        }
+                        AIBlockControle.SetBlockInField(AIFieldManage2.BlockField);
+
+                        //フィールドから特徴量を作る
+                        AIEvaluateManage.Exec(AIBlockControle, AIFieldManage2, ref score);
+
+                        //計算した特徴量からフィールドのスコアを求める
+                        if (max_score < score)
+                        {
+                            max_score = score;
+                            block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
+                            block_ctrl.CurrentPos.X = info.x;
+                            block_ctrl.CurrentPos.Y = info.y;
+                        }
+
+                    }
                 }
 
-
             }
+
             return score;
         }
+
 
         //AIが探索するブロックの移動範囲を探す
         private List<SearchPosInfo> MakeSerachPos(BlockControle ctrl , int[,] field)
@@ -159,7 +197,7 @@ namespace tetris
         private NextBlockManage AINextBlockManage = new NextBlockManage();
         private BlockControle AIBlockControle = new BlockControle();
         private FieldManage AIFieldManage = new FieldManage();
-
+        private FieldManage AIFieldManage2 = new FieldManage();
         private EvaluateManage AIEvaluateManage = new EvaluateManage();
     }
 }

@@ -35,6 +35,11 @@ namespace tetris
             return type;
         }
 
+        public BlockInfo.BlockType GetBlockType(int num)
+        {
+            return (BlockInfo.BlockType)NextBlock[num];
+        }
+
         /// <summary>
         /// nextブロックの更新
         /// </summary>

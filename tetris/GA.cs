@@ -462,7 +462,7 @@ namespace tetris
                     break;
                 }
             }
-            while (tmp_list.Count < ALL_GENOM_NUM - NEW_GENOM)
+            while (tmp_list.Count < ALL_GENOM_NUM)
             {
                 int p1_num = Common.MyRandom.Next(0, RANKING_GENOM);
                 int p2_num = Common.MyRandom.Next(0, RANKING_GENOM);
@@ -482,11 +482,11 @@ namespace tetris
             }
 
             //１０個は毎回新しいのを追加する。多様性のため
-            for(int i = 0; i < NEW_GENOM; i++)
+/*            for(int i = 0; i < NEW_GENOM; i++)
             {
                 tmp_list.Add(new Genom(DNA_size));
             }
-
+*/
             //遺伝子リストを更新
             this.AllGenomList.Clear();
 
