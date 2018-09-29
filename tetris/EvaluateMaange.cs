@@ -176,7 +176,7 @@ namespace tetris
                     //Iブロックはみ出し対策
                     if(chk_x < 0)
                     {
-                        break;
+                        continue;
                     }
 
 
@@ -315,8 +315,6 @@ namespace tetris
         /// <returns></returns>
         private int CalcWellTotal(FieldManage ai_field_manage)
         {
-            //井戸の深さ・両側との高さの差をとれば分かる
-
             int well_total = 0;
 
             List<int> HeightList = new List<int>();
