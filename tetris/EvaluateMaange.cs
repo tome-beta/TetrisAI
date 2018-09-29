@@ -417,7 +417,11 @@ namespace tetris
             //階和
             foreach(int va in HeightList)
             {
-                well_total += (va * (va + 1)) / 2;
+                //高さ１は井戸としない
+                if ( va > 1)
+                {
+                    well_total += (va * (va + 1)) / 2;
+                }
             }
 
 
