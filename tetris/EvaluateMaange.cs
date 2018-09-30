@@ -111,7 +111,7 @@ namespace tetris
             Nnetwork.InputData[6] = data.hole_on_block_total;
             Nnetwork.InputData[7] = data.hole_row;
             Nnetwork.InputData[8] = data.average_height;
-            Nnetwork.InputData[8] = data.standard_deviation;
+            Nnetwork.InputData[9] = data.standard_deviation;
 
             //計算
             Nnetwork.ForwardPropagation();
