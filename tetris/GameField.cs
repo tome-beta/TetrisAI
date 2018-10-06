@@ -652,69 +652,6 @@ namespace tetris
             }
         }
 
-        private void ChkMenuPlayMode()
-        {
-            if(MenuItem1Ponly.Checked)
-            {
-                player_select = (int)PLAY_MODE.ONLY_1P;
-                //TODO ２プレイヤーをAIプレイヤーにしておく
-                this.PlayerAI[0] = false;
-                this.PlayerAI[1] = true;
-
-            }
-            else if(MenuItemVS.Checked)
-            {
-                player_select = (int)PLAY_MODE.VS;
-                //TODO ２プレイヤーをAIプレイヤーにしておく
-                this.PlayerAI[0] = false;
-                this.PlayerAI[1] = true;
-            }
-            else if( MenuItemComOnly.Checked)
-            {
-                player_select = (int)PLAY_MODE.ONLY_1P;
-                this.PlayerAI[0] = true;
-                this.PlayerAI[1] = true;
-
-            }
-        }
-
-        //メニューから１Pを選択
-        private void MenuItem1Ponly_Click(object sender, EventArgs e)
-        {
-           this.MenuItem1Ponly.Checked = true;
-           this.MenuItemVS.Checked = false;
-            this.MenuItemComOnly.Checked = false;
-
-            this.AILearningMode = false;
-        }
-
-        //メニューからVSを選択
-        private void MenuItemVS_Click(object sender, EventArgs e)
-        {
-            this.MenuItem1Ponly.Checked = false;
-            this.MenuItemVS.Checked = true;
-            this.MenuItemComOnly.Checked = false;
-
-            this.AILearningMode = false;
-        }
-
-        //メニューからCOMONLYを選択
-        private void MenuItemComOnly_Click(object sender, EventArgs e)
-        {
-            this.MenuItem1Ponly.Checked = false;
-            this.MenuItemVS.Checked = false;
-            this.MenuItemComOnly.Checked = true;
-
-            this.AILearningMode = true;
-
-            LogManager.StartLogOutput(@"AI_Log.csv");
-            LogManager.WriteLine(@"世代,ダイプ,平均点,遺伝子");
-
-            SettingLearn();
-
-            this.labelGAType.Text = @"GAType : " + this.LearningTypeCount.ToString() + @"_" + this.LearningSetting[this.LearningTypeCount].ExecNum.ToString();
-            this.labelGAGeneration.Text = @"Generation : " + GA_Unit.manager.GenerationCount.ToString();
-        }
 
         //学習設定
         private void SettingLearn()
@@ -824,5 +761,6 @@ namespace tetris
                 描画OFFToolStripMenuItem.Checked = true;
             }
         }
+
     }
 }

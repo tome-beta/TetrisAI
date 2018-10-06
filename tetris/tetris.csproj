@@ -69,11 +69,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AIManage.cs" />
-    <Compile Include="AttackLineManage.cs" />
-    <Compile Include="BlockControle.cs" />
-    <Compile Include="BlockInfo.cs" />
-    <Compile Include="Common.cs" />
+    <Compile Include="AI\AIManage.cs" />
+    <Compile Include="GameProces\AttackLineManage.cs" />
+    <Compile Include="GameProces\BlockControle.cs" />
+    <Compile Include="GameProces\BlockInfo.cs" />
+    <Compile Include="Common\Common.cs" />
     <Compile Include="DrawGameFiled.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,23 +83,26 @@
     <Compile Include="EvaluateDispForm.Designer.cs">
       <DependentUpon>EvaluateDispForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EvaluateMaange.cs" />
-    <Compile Include="FieldManage.cs" />
-    <Compile Include="GA.cs" />
+    <Compile Include="AI\EvaluateMaange.cs" />
+    <Compile Include="GameProces\FieldManage.cs" />
+    <Compile Include="AI\GA.cs" />
     <Compile Include="GameField.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GameField.Designer.cs">
       <DependentUpon>GameField.cs</DependentUpon>
     </Compile>
-    <Compile Include="LogManage.cs" />
-    <Compile Include="MessageControle.cs" />
-    <Compile Include="NextBlockManage.cs" />
-    <Compile Include="NN.cs" />
+    <Compile Include="Common\LogManage.cs" />
+    <Compile Include="GameProces\MessageControle.cs" />
+    <Compile Include="GameProces\NextBlockManage.cs" />
+    <Compile Include="AI\NN.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScoreManage.cs" />
-    <Compile Include="TextBoxLogger.cs" />
+    <Compile Include="GameProces\ScoreManage.cs" />
+    <Compile Include="Common\TextBoxLogger.cs" />
+    <Compile Include="SettingMenuItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="EvaluateDispForm.resx">
       <DependentUpon>EvaluateDispForm.cs</DependentUpon>
     </EmbeddedResource>

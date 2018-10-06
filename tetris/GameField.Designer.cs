@@ -67,9 +67,16 @@
             this.MenuItemComOnly = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.盤面評価ウインドウToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.描画OFFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.psettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_1P_Human = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_1P_CPU_1Line = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_1P_CPU_4Line = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_2P = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_2P_CPU_1Line = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_2P_CPU_4Line = new System.Windows.Forms.ToolStripMenuItem();
             this.labelGAType = new System.Windows.Forms.Label();
             this.labelGAGeneration = new System.Windows.Forms.Label();
-            this.描画OFFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxField1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold1P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHold2P)).BeginInit();
@@ -419,7 +426,9 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuPlayMode,
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.psettingToolStripMenuItem,
+            this.MenuItem_2P});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1620, 31);
@@ -475,6 +484,71 @@
             this.盤面評価ウインドウToolStripMenuItem.Text = "盤面評価ウインドウ";
             this.盤面評価ウインドウToolStripMenuItem.Click += new System.EventHandler(this.盤面評価ウインドウToolStripMenuItem_Click);
             // 
+            // 描画OFFToolStripMenuItem
+            // 
+            this.描画OFFToolStripMenuItem.Name = "描画OFFToolStripMenuItem";
+            this.描画OFFToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
+            this.描画OFFToolStripMenuItem.Text = "描画OFF";
+            this.描画OFFToolStripMenuItem.Click += new System.EventHandler(this.描画OFFToolStripMenuItem_Click);
+            // 
+            // psettingToolStripMenuItem
+            // 
+            this.psettingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_1P_Human,
+            this.MenuItem_1P_CPU_1Line,
+            this.MenuItem_1P_CPU_4Line});
+            this.psettingToolStripMenuItem.Name = "psettingToolStripMenuItem";
+            this.psettingToolStripMenuItem.Size = new System.Drawing.Size(99, 27);
+            this.psettingToolStripMenuItem.Text = "1P_setting";
+            // 
+            // MenuItem_1P_Human
+            // 
+            this.MenuItem_1P_Human.Checked = true;
+            this.MenuItem_1P_Human.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MenuItem_1P_Human.Name = "MenuItem_1P_Human";
+            this.MenuItem_1P_Human.Size = new System.Drawing.Size(158, 28);
+            this.MenuItem_1P_Human.Text = "Human";
+            this.MenuItem_1P_Human.Click += new System.EventHandler(this.MenuItem_1P_Human_Click);
+            // 
+            // MenuItem_1P_CPU_1Line
+            // 
+            this.MenuItem_1P_CPU_1Line.Name = "MenuItem_1P_CPU_1Line";
+            this.MenuItem_1P_CPU_1Line.Size = new System.Drawing.Size(158, 28);
+            this.MenuItem_1P_CPU_1Line.Text = "CPU_1Line";
+            this.MenuItem_1P_CPU_1Line.Click += new System.EventHandler(this.MenuItem_1P_CPU_1Line_Click);
+            // 
+            // MenuItem_1P_CPU_4Line
+            // 
+            this.MenuItem_1P_CPU_4Line.Name = "MenuItem_1P_CPU_4Line";
+            this.MenuItem_1P_CPU_4Line.Size = new System.Drawing.Size(158, 28);
+            this.MenuItem_1P_CPU_4Line.Text = "CPU_4Line";
+            this.MenuItem_1P_CPU_4Line.Click += new System.EventHandler(this.MenuItem_1P_CPU_4Line_Click);
+            // 
+            // MenuItem_2P
+            // 
+            this.MenuItem_2P.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MenuItem_2P_CPU_1Line,
+            this.MenuItem_2P_CPU_4Line});
+            this.MenuItem_2P.Name = "MenuItem_2P";
+            this.MenuItem_2P.Size = new System.Drawing.Size(105, 27);
+            this.MenuItem_2P.Text = "2P_settting";
+            // 
+            // MenuItem_2P_CPU_1Line
+            // 
+            this.MenuItem_2P_CPU_1Line.Checked = true;
+            this.MenuItem_2P_CPU_1Line.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MenuItem_2P_CPU_1Line.Name = "MenuItem_2P_CPU_1Line";
+            this.MenuItem_2P_CPU_1Line.Size = new System.Drawing.Size(180, 28);
+            this.MenuItem_2P_CPU_1Line.Text = "CPU_1Line";
+            this.MenuItem_2P_CPU_1Line.Click += new System.EventHandler(this.MenuItem_2P_CPU_1Line_Click);
+            // 
+            // MenuItem_2P_CPU_4Line
+            // 
+            this.MenuItem_2P_CPU_4Line.Name = "MenuItem_2P_CPU_4Line";
+            this.MenuItem_2P_CPU_4Line.Size = new System.Drawing.Size(180, 28);
+            this.MenuItem_2P_CPU_4Line.Text = "CPU_4Line";
+            this.MenuItem_2P_CPU_4Line.Click += new System.EventHandler(this.MenuItem_2P_CPU_4Line_Click);
+            // 
             // labelGAType
             // 
             this.labelGAType.AutoSize = true;
@@ -494,13 +568,6 @@
             this.labelGAGeneration.Size = new System.Drawing.Size(96, 24);
             this.labelGAGeneration.TabIndex = 35;
             this.labelGAGeneration.Text = "Generation";
-            // 
-            // 描画OFFToolStripMenuItem
-            // 
-            this.描画OFFToolStripMenuItem.Name = "描画OFFToolStripMenuItem";
-            this.描画OFFToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
-            this.描画OFFToolStripMenuItem.Text = "描画OFF";
-            this.描画OFFToolStripMenuItem.Click += new System.EventHandler(this.描画OFFToolStripMenuItem_Click);
             // 
             // GameField
             // 
@@ -607,5 +674,12 @@
         private System.Windows.Forms.Label labelGAType;
         private System.Windows.Forms.Label labelGAGeneration;
         private System.Windows.Forms.ToolStripMenuItem 描画OFFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem psettingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_1P_Human;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_1P_CPU_1Line;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_1P_CPU_4Line;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_2P;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_2P_CPU_1Line;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_2P_CPU_4Line;
     }
 }
