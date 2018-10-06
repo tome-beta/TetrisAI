@@ -450,22 +450,22 @@
             this.MenuItem1Ponly.Checked = true;
             this.MenuItem1Ponly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem1Ponly.Name = "MenuItem1Ponly";
-            this.MenuItem1Ponly.Size = new System.Drawing.Size(148, 28);
+            this.MenuItem1Ponly.Size = new System.Drawing.Size(181, 28);
             this.MenuItem1Ponly.Text = "1P only";
             this.MenuItem1Ponly.Click += new System.EventHandler(this.MenuItem1Ponly_Click);
             // 
             // MenuItemVS
             // 
             this.MenuItemVS.Name = "MenuItemVS";
-            this.MenuItemVS.Size = new System.Drawing.Size(148, 28);
+            this.MenuItemVS.Size = new System.Drawing.Size(181, 28);
             this.MenuItemVS.Text = "VS ";
             this.MenuItemVS.Click += new System.EventHandler(this.MenuItemVS_Click);
             // 
             // MenuItemComOnly
             // 
             this.MenuItemComOnly.Name = "MenuItemComOnly";
-            this.MenuItemComOnly.Size = new System.Drawing.Size(148, 28);
-            this.MenuItemComOnly.Text = "COM only";
+            this.MenuItemComOnly.Size = new System.Drawing.Size(181, 28);
+            this.MenuItemComOnly.Text = "COM Learning";
             this.MenuItemComOnly.Click += new System.EventHandler(this.MenuItemComOnly_Click);
             // 
             // toolStripMenuItem1
@@ -538,14 +538,14 @@
             this.MenuItem_2P_CPU_1Line.Checked = true;
             this.MenuItem_2P_CPU_1Line.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItem_2P_CPU_1Line.Name = "MenuItem_2P_CPU_1Line";
-            this.MenuItem_2P_CPU_1Line.Size = new System.Drawing.Size(180, 28);
+            this.MenuItem_2P_CPU_1Line.Size = new System.Drawing.Size(158, 28);
             this.MenuItem_2P_CPU_1Line.Text = "CPU_1Line";
             this.MenuItem_2P_CPU_1Line.Click += new System.EventHandler(this.MenuItem_2P_CPU_1Line_Click);
             // 
             // MenuItem_2P_CPU_4Line
             // 
             this.MenuItem_2P_CPU_4Line.Name = "MenuItem_2P_CPU_4Line";
-            this.MenuItem_2P_CPU_4Line.Size = new System.Drawing.Size(180, 28);
+            this.MenuItem_2P_CPU_4Line.Size = new System.Drawing.Size(158, 28);
             this.MenuItem_2P_CPU_4Line.Text = "CPU_4Line";
             this.MenuItem_2P_CPU_4Line.Click += new System.EventHandler(this.MenuItem_2P_CPU_4Line_Click);
             // 

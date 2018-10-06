@@ -95,6 +95,9 @@ namespace tetris
                             //メニューで選択してるモードのチェック
                             ChkMenuPlayMode();
 
+                            //CPUプレイヤーの場合に重みを設定する
+                            SettingCPUPlayer();
+
                             //フィールドの初期化をする
                             BlockFieldInit();
                             this.GameStart = false;
@@ -155,7 +158,7 @@ namespace tetris
 
                             //盤面の評価
                             double score = 0;
-                            FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
+                            FeatureData data = this.evaluateManage[player].Exec(this.blockControle[player], this.fieldManage[player], ref score);
                             if (evaluateDispForm != null)
                             {
                                 this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
@@ -192,7 +195,7 @@ namespace tetris
 
                                 //盤面の評価
                                 double score = 0;
-                                FeatureData data = this.evaluateManage.Exec(this.blockControle[player], this.fieldManage[player], ref score);
+                                FeatureData data = this.evaluateManage[player].Exec(this.blockControle[player], this.fieldManage[player], ref score);
                                 if (evaluateDispForm != null)
                                 {
                                     this.evaluateDispForm.SetFeatureData(data, (int)playerTurn);
@@ -406,6 +409,7 @@ namespace tetris
             attackLineManage = new AttackLineManage[make_num];
             fieldManage = new FieldManage[make_num];
             nextManage = new NextBlockManage[make_num];
+            evaluateManage = new EvaluateManage[make_num];
 
             for (int i = 0; i < make_num; i++)
             {
@@ -415,6 +419,7 @@ namespace tetris
                 attackLineManage[i] = new AttackLineManage();
                 fieldManage[i] = new FieldManage();
                 nextManage[i] = new NextBlockManage();
+                evaluateManage[i] = new EvaluateManage();
             }
 
             //メッセージ
@@ -434,9 +439,9 @@ namespace tetris
             //GA
             GA_Unit = new GA_UNIT();
             GA_Unit.colony = new Colony();
-            GA_Unit.colony.Initialize(evaluateManage.NN_WEIGHT_NUM);//遺伝子のサイズ
+            GA_Unit.colony.Initialize(evaluateManage[0].NN_WEIGHT_NUM);//遺伝子のサイズ
             GA_Unit.manager = new GAManager();
-            GA_Unit.manager.Init(GAManager.ALL_GENOM_NUM,evaluateManage.NN_WEIGHT_NUM);
+            GA_Unit.manager.Init(GAManager.ALL_GENOM_NUM,evaluateManage[0].NN_WEIGHT_NUM);
             GA_Unit.manager.SetGeneration(1000);
         }
 
@@ -505,7 +510,7 @@ namespace tetris
                 LogManager.GAResultWrite(GA_Unit.manager.GenerationCount,
                     this.LearningTypeCount,
                     this.LearningSetting[this.LearningTypeCount].AverageScore,
-                    evaluateManage.EvaluateWeight);
+                    evaluateManage[0].EvaluateWeight);
 
                 //ログ表示
                 String exec_log = @"";
@@ -556,7 +561,7 @@ namespace tetris
                     //次のタイプで繰り返し
                     //重みをGAから取得して実行開始
                     Genom ge = GA_Unit.manager.GetGenom(this.LearningTypeCount);
-                    this.evaluateManage.SetWeightData(ge.DNA);
+                    this.evaluateManage[0].SetWeightData(ge.DNA);
                     //繰り返し
                     this.GameStart = true;
                     this.Mode = GAME_MODE.MODE_WAIT;
@@ -652,7 +657,6 @@ namespace tetris
             }
         }
 
-
         //学習設定
         private void SettingLearn()
         {
@@ -667,9 +671,52 @@ namespace tetris
             //ここで重みをGAから取得して保持しておく
             Genom ge = GA_Unit.manager.GetGenom(0);
 
-            this.evaluateManage.SetWeightData(ge.DNA);
+            this.evaluateManage[0].SetWeightData(ge.DNA);
         }
 
+        //CPUの設定
+        private void SettingCPUPlayer()
+        {
+            if(MenuItemComOnly.Checked)
+            {
+                //学習モードのときは何もしない
+                return;
+            }
+
+            double[] CPU_1LineMode = {-0.99,-0.1,0.1,0.89,-0.8,-0.43,-19,-0.13,
+                                     -0.06,-0.25,-0.74,0.68,-0.36,-0.7,-0.36,-0.42,
+                                    -0.97,-0.93,0.19,0.68,0.08,-0.77,0.87,0.93,0.31,
+                                     0.23,-0.04,0.21,-0.54,0.55,0.39,-0.37,
+                                     0.29,-0.2,0.72,0.18,0.27,0.99,-0.97,
+                                    -0.78,-0.34,-0.35,-0.74,-0.79,0.64,-0.54,
+                                    -0.59,0.6,-0.08,0.11,0.44,0.3,-0.07,-0.25,0.35 };
+            double[] CPU_4LineMode = { 0.04, 0.2, 0.75, -0.51, 0.27, -0.08, -20, -80,
+                                    0.64, 0.78, 0.38, -0.54, -0.75, -0.29, -0.37, -0.25,
+                                    -0.18, 0.68, -0.45, -0.54, 0.45, -0.56, 0.81, 0.48,
+                                    0.66, 0.23, -0.41, -0.22, 0.47, 0.76, -0.81, 0.03,
+                                    0.92, 0.58, 0.64, 0.17, -0.28, 0.52, -0.16, -0.99,
+                                    -0.81, 0.96, -0.05, 0.09, -0.21, 0, -0.41, -0.74,
+                                    0.92, 0.51, 0.78, -0.52, 0.9, -0.53, 0.98 };
+
+            if (this.MenuItem_1P_CPU_1Line.Checked)
+            {
+                this.evaluateManage[0].SetWeightData(CPU_1LineMode);
+            }
+            else if (this.MenuItem_1P_CPU_4Line.Checked)
+            {
+                this.evaluateManage[0].SetWeightData(CPU_4LineMode);
+            }
+
+            if (this.MenuItem_2P_CPU_1Line.Checked)
+            {
+                this.evaluateManage[1].SetWeightData(CPU_1LineMode);
+            }
+            else if (this.MenuItem_2P_CPU_4Line.Checked)
+            {
+                this.evaluateManage[1].SetWeightData(CPU_4LineMode);
+            }
+
+        }
 
         /// <summary>
         /// AIによるフィールドの評価
@@ -680,7 +727,7 @@ namespace tetris
             aiManage.EvaluateField(this.nextManage[player],
                                          this.blockControle[player],
                                          this.fieldManage[player],
-                                         this.evaluateManage);
+                                         this.evaluateManage[player]);
 
         }
 
@@ -697,7 +744,7 @@ namespace tetris
         AIManage aiManage = new AIManage();
 
         //学習関係
-        EvaluateManage evaluateManage = new EvaluateManage();  //盤面評価
+        EvaluateManage[] evaluateManage;// = new EvaluateManage();  //盤面評価
         AIManage.LearningSetting[] LearningSetting;            //学習セッティング
         int LearningTypeCount = 0;
         GA_UNIT GA_Unit;

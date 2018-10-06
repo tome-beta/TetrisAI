@@ -15,17 +15,32 @@ namespace tetris
             if (MenuItem1Ponly.Checked)
             {
                 player_select = (int)PLAY_MODE.ONLY_1P;
-                //TODO ２プレイヤーをAIプレイヤーにしておく
-                this.PlayerAI[0] = false;
-                this.PlayerAI[1] = true;
 
+                if(this.MenuItem_1P_Human.Checked)
+                {
+                    this.PlayerAI[0] = false;
+                    this.PlayerAI[1] = true;
+                }
+                else
+                {
+                    this.PlayerAI[0] = true;
+                    this.PlayerAI[1] = false;
+                }
             }
             else if (MenuItemVS.Checked)
             {
                 player_select = (int)PLAY_MODE.VS;
-                //TODO ２プレイヤーをAIプレイヤーにしておく
-                this.PlayerAI[0] = false;
-                this.PlayerAI[1] = true;
+                if (this.MenuItem_1P_Human.Checked)
+                {
+                    this.PlayerAI[0] = false;
+                    this.PlayerAI[1] = true;
+                }
+                else
+                {
+                    this.PlayerAI[0] = true;
+                    this.PlayerAI[1] = true;
+                }
+
             }
             else if (MenuItemComOnly.Checked)
             {
