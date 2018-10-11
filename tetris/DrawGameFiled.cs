@@ -105,9 +105,9 @@ namespace tetris
             //フィールドのクリア
             gFiled[player].Clear(Color.White);
 
-#if DEBUG
+
             //デバッグ用にフィールドに線を引いておく
-            using (Pen pen = new Pen(Color.Gray))
+            using (Pen pen = new Pen(Color.DarkGray))
             {
                 for (int x = 1; x < 11; x++)
                 {
@@ -120,7 +120,7 @@ namespace tetris
                         new Point(20 * BlockInfo.BLOCK_WIDTH, y * BlockInfo.BLOCK_HEIGHT));
                 }
             }
-#endif
+
             if(fieldManage[0] != null)
             {
                 int[,] field = fieldManage[player].BlockField;
