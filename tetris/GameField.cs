@@ -155,6 +155,11 @@ namespace tetris
                                 break;
                             }
                             AIWaitCount = 0;
+
+                            //AIが決定した位置まで移動する
+                            this.blockControle[player].CurrentRot = (BlockInfo.BlockRot)this.aiManage.FinalRot;
+                            this.blockControle[player].CurrentPos.X = this.aiManage.FinalX;
+
                             //ハードドロップ
                             this.blockControle[player].HardDropCurrentBlock(this.fieldManage[player].BlockField);
 
