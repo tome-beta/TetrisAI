@@ -14,7 +14,7 @@ namespace tetris
     {
 
         public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類
-        public const int AI_MOVE_WAIT_FRAME = 60;   //AI操作のまち時間
+        public const int AI_MOVE_WAIT_FRAME = 3;   //AI操作のまち時間
 
         //描画先のpictureBoxの切り替え
         enum PLAYER_DEFINE
@@ -156,8 +156,40 @@ namespace tetris
                             }
                             AIWaitCount = 0;
 
+                            int[,] field = this.fieldManage[player].BlockField;
+                            //回転が合うまで
+                            if (this.blockControle[player].CurrentRot != (BlockInfo.BlockRot)this.aiManage.FinalRot)
+                            {
+                                if ((BlockInfo.BlockRot)this.aiManage.FinalRot == BlockInfo.BlockRot.ROT_270)
+                                {
+                                    //左回転実行
+                                    this.blockControle[player].RotateCurrentBlock(false, field);
+                                }
+                                else
+                                {
+                                    //右回転実行
+                                    this.blockControle[player].RotateCurrentBlock(true, field);
+
+                                }
+                                break;
+                            }
+                            else if(this.blockControle[player].CurrentPos.X != this.aiManage.FinalX)
+                            {
+                                if(this.blockControle[player].CurrentPos.X > this.aiManage.FinalX)
+                                {
+                                    //左移動
+                                    this.blockControle[player].MoveCurrentBlockLeft(field);
+                                }
+                                else
+                                {
+                                    //右移動
+                                    this.blockControle[player].MoveCurrentBlockRight(field);
+                                }
+                                break;
+                            }
+
                             //AIが決定した位置まで移動する
-                            this.blockControle[player].CurrentRot = (BlockInfo.BlockRot)this.aiManage.FinalRot;
+//                            this.blockControle[player].CurrentRot = (BlockInfo.BlockRot)this.aiManage.FinalRot;
                             this.blockControle[player].CurrentPos.X = this.aiManage.FinalX;
 
                             //ハードドロップ
