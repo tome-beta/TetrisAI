@@ -84,9 +84,10 @@ namespace tetris
                 if( max_score < score)
                 {
                     max_score = score;
-                    block_ctrl.CurrentRot = (BlockInfo.BlockRot)info.rot;
-                    block_ctrl.CurrentPos.X = info.x;
-                    block_ctrl.CurrentPos.Y = info.y;
+                    
+                    //動かす場所を記録しておく
+                    this.FinalRot = info.rot;
+                    this.FinalX = info.x;
                 }
 
 
@@ -161,5 +162,10 @@ namespace tetris
         private NextBlockManage AINextBlockManage = new NextBlockManage();
         private BlockControle AIBlockControle = new BlockControle();
         private FieldManage AIFieldManage = new FieldManage();
+
+        //AIの最終決定場所
+        public int FinalRot = 0;
+        public int FinalX = 0;
+
     }
 }
