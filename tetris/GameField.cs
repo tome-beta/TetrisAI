@@ -14,6 +14,7 @@ namespace tetris
     {
 
         public const int BLOCK_TYPE_NUM = 7;        //ミノは７種類
+        public const int AI_MOVE_WAIT_FRAME = 60;   //AI操作のまち時間
 
         //描画先のpictureBoxの切り替え
         enum PLAYER_DEFINE
@@ -111,6 +112,7 @@ namespace tetris
                             }
 
                             playerTurn = PLAYER_DEFINE.PLAYER_1;
+                            AIWaitCount = 0;
                         }
                     }
                     break;
@@ -147,6 +149,12 @@ namespace tetris
                         //AIの番なら自動操作
                         if (this.PlayerAI[player])
                         {
+                            AIWaitCount++;
+                            if(AIWaitCount < AI_MOVE_WAIT_FRAME)
+                            {
+                                break;
+                            }
+                            AIWaitCount = 0;
                             //ハードドロップ
                             this.blockControle[player].HardDropCurrentBlock(this.fieldManage[player].BlockField);
 
@@ -584,7 +592,11 @@ namespace tetris
         {
             int player = (int)playerTurn;
 
-            //TODO 
+            if (this.PlayerAI[player])
+            {
+                return;
+            }
+
             int[,] field = this.fieldManage[player].BlockField;
 
 
@@ -759,6 +771,7 @@ namespace tetris
         private bool GameOverFlag = false;
         private bool[] PlayerAI = new bool[(int)PLAYER_DEFINE.PLAYER_NUM];
         private bool AILearningMode = false;
+        private int AIWaitCount = 0;
 
         //キー入力持ち
         private bool HardDrop = false;
