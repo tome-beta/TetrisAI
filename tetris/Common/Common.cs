@@ -36,6 +36,6 @@ namespace tetris
             }
         }
         //データ配列
-        public static System.Random MyRandom = new Random();
+        public static System.Random MyRandom = new Random(Environment.TickCount);
     }
 }
